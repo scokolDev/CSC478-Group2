@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Service App</title>
+    <style>
+        /* CSS styles added here */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background-color: #333;
+            color: #fff;
+            padding: 10px 0;
+            text-align: center;
+        }
+        nav {
+            background-color: #444;
+            color: #fff;
+            text-align: center;
+            padding: 10px 0;
+        }
+        nav a {
+            color: #fff;
+            text-decoration: none;
+            margin: 0 10px;
+        }
+        main {
+            padding: 20px;
+        }
+        footer {
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            padding: 10px 0;
+            position: fixed;
+            width: 100%;
+            bottom: 0;
+        }
+        /* Hide the contact form */
+        #contactForm {
+            display: none;
+        }
+        #contactContainer {
+    width: 50%; /* Adjust the width */
+    margin: 0 auto; /* Center the container horizontally */
+}
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Service app</h1>
+</header>
+
+<nav>
+    <!-- Update the href attribute of the "Home" link to reload the current page -->
+    <a href="#" id="homeLink">Home</a>
+    <a href="#">About</a>
+    <a href="#">Services</a>
+    <!-- ID to the Contact link -->
+    <a href="#" id="contactLink">Contact</a>
+    <a href="#">Pro Application</a>
+</nav>
+
+
+<main>
+    <h2>Types of Services</h2>
+    <p>This is where More service info will go.</p>
+</main>
+
+<footer>
+    <p>&copy; 2024 &reg;</p>
+</footer>
+
+<!-- Contact form HTML code -->
+<div id="contactForm" style="display:none;">
+    <h2>Contact Us</h2>
+    <form action="#" method="POST">
+        <label for="name">Name:</label><br>
+        <input type="text" id="name" name="name"><br>
+
+        <label for="phone">Phone Number:</label><br>
+        <input type="tel" id="phone" name="phone"><br>
+
+        <label for="email">Email:</label><br>
+        <input type="email" id="email" name="email"><br>
+
+        <label for="request">What Are You Looking For?</label><br>
+        <select id="request" name="request">
+            <option value="select">Select Option</option>   <!-- Options can be changed as needed -->
+            <option value="option1">Option 1</option>
+            <option value="option2">Option 2</option>   
+            <option value="option3">Option 3</option>
+        </select><br>
+
+        <p>Have you tried our services before?</p>
+        <input type="radio" id="yes" name="services" value="yes">
+        <label for="yes">Yes</label><br>
+        <input type="radio" id="no" name="services" value="no">
+        <label for="no">No</label><br>
+
+        <label for="notes">Additional Notes?</label><br>
+        <textarea id="notes" name="notes" rows="4" cols="50"></textarea><br>
+
+        <input type="submit" value="Submit">
+    </form>
+</div>
+<!-- contact form -->
+<div id="contactForm">
+    <h2>Contact Us</h2>
+    <form action="#" method="POST">
+        <!-- Contact form -->
+    </form>
+</div>
+
+<script>
+    // JavaScript code to show the contact form when the "Contact" link is clicked
+    document.getElementById('contactLink').addEventListener('click', function() {
+        document.getElementById('contactForm').style.display = 'block';
+
+           // JavaScript code to reload the page when the "Home" link is clicked
+    document.getElementById('homeLink').addEventListener('click', function() {
+        location.reload();
+    });
+    });
+</script>
+
+
+
+</body>
+</html>

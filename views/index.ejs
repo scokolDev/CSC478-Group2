@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Scheduling App</title>
+</head>
+<body>
+  <h1>Scheduling App</h1>
+  <h1>Hi <%= name %></h1>
+<form action="/logout?_method=DELETE" method="POST">
+  <button type="submit">Log Out</button>
+</form>
+ 
+  <div id="schedule">
+    <!-- Schedule content will be rendered here -->
+  </div>
+  <form id="addEventForm">
+    <input type="text" id="eventName" placeholder="Event Name" required>
+    <input type="datetime-local" id="eventDateTime" required>
+    <button type="submit">Add Event</button>
+  </form>
+
+  <!-- JavaScript to handle form submission and dynamic content rendering -->
+  <script src="./script.js" type="text/JavaScript"></script>
+</body>
+</html>
