@@ -1,23 +1,20 @@
 // Import necessary modules
 const express = require('express');
 const scheduleController = require('./controllers/scheduleController');
-const bcrypt = require('bcrypt');
 const passport = require('passport')
 const methodOverride = require('method-override')
-
-const initializePassport = require('./passport-config')
-initializePassport(
-  passport,
-  email => users.find(user => user.email === email),
-  id => users.find(user => user.id === id)
-)
+const db = require('mongoose')
+const User = require('./models/users')
+const LocalStrategy = require('passport-local').Strategy
 
 
-const users = []
 
 // Create a router instance
 const router = express.Router();
 
+passport.use(new LocalStrategy({usernameField: 'email'}, User.authenticate()))
+passport.serializeUser(User.serializeUser())
+passport.deserializeUser(User.deserializeUser());
 router.use(passport.initialize())
 router.use(passport.session())
 router.use(methodOverride('_method'))
@@ -31,7 +28,7 @@ router.get('/', (req, res) => {
 
   router.get('/schedule', checkAuthenticated, (req, res) => {
     // Serve the index.html file
-    res.render('index.ejs', {name: req.user.name});
+    res.render('index.ejs', {name: req.user.firstName});
   });
 
 // Route handler for Login
@@ -54,19 +51,20 @@ router.get('/register', checkNotAuthenticated,  (req, res) => {
 });
 
 router.post('/register', checkNotAuthenticated, async (req, res) => {
-  const { name, email, password } = req.body
-  try {
-    const hashedPassword = await bcrypt.hash(password, 10)
-    users.push({
-      id: Date.now().toString(),
-      name: name,
-      email: email,
-      password: hashedPassword
+    User.register(
+      new User({
+        username: req.body.email,
+        email: req.body.email,
+        firstName: req.body.firstname,
+        lastName: req.body.lastname
+    }), req.body.password, function (err, msg) {
+      if (err) {
+        res.send(err)
+        //res.redirect('/register')
+      } else {
+        res.redirect('/login')
+      }
     })
-    res.redirect('/login')
-  } catch {
-    res.redirect('/register')
-  } 
 })
 
 router.delete('/logout', function(req, res, next) {
