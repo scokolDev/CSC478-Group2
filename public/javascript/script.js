@@ -67,5 +67,12 @@ document.addEventListener('DOMContentLoaded', () => {
   
     // Initial rendering of the schedule when the page loads
     renderSchedule();
+
+    var calendarEl = document.getElementById('calendar');
+    var calendar = new FullCalendar.Calendar(calendarEl, {
+      initialView: 'dayGridMonth'
+    });
+    calendar.render();
+
   });
   

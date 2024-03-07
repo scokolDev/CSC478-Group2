@@ -6,6 +6,7 @@ const methodOverride = require('method-override')
 const db = require('mongoose')
 const User = require('./models/users')
 const LocalStrategy = require('passport-local').Strategy
+const path = require('path')
 
 
 
@@ -18,6 +19,7 @@ passport.deserializeUser(User.deserializeUser());
 router.use(passport.initialize())
 router.use(passport.session())
 router.use(methodOverride('_method'))
+router.use(express.static(path.join(__dirname, 'public')));
 
 // Route handler for the root path
 router.get('/', (req, res) => {
@@ -74,10 +76,10 @@ router.delete('/logout', function(req, res, next) {
   });
 });
 
-router.get('/script.js', (req, res) => {
-    // Serve the index.html file
-    res.sendFile(__dirname + '/views/script.js');
-  });
+// router.get('/script.js', (req, res) => {
+//     // Serve the index.html file
+//     res.sendFile(__dirname + '/views/script.js');
+//   });
 
 // Use scheduleController middleware for '/api/events' routes
 router.use('/api/events', scheduleController);
