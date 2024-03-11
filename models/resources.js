@@ -1,4 +1,4 @@
-const db = require('mongoose')
+import db from 'mongoose'
 
 const resourceSchema = new db.Schema({
     name: String,
@@ -9,4 +9,4 @@ const resourceSchema = new db.Schema({
 
 })
 
-module.exports = db.model('Resource', resourceSchema)
+export default db.model('Resource', resourceSchema)

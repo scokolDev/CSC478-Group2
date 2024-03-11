@@ -1,15 +1,17 @@
 // Import necessary modules
-const express = require('express');
-const scheduleController = require('./controllers/scheduleController');
-const passport = require('passport')
-const methodOverride = require('method-override')
-const db = require('mongoose')
-const User = require('./models/users')
-const LocalStrategy = require('passport-local').Strategy
-const path = require('path')
+import express from 'express'
+import scheduleController from './controllers/scheduleController.js'
+import passport from 'passport'
+import methodOverride from 'method-override' 
+import db from 'mongoose'
+import User from './models/users.js'
+import LocalStrategy from 'passport-local'
+import path from 'path'
+import { fileURLToPath } from 'url'
 
 
-
+const __filename = fileURLToPath(import.meta.url); // get the resolved path to the file
+const __dirname = path.dirname(__filename); // get the name of the directory
 // Create a router instance
 const router = express.Router();
 
@@ -24,7 +26,7 @@ router.use(express.static(path.join(__dirname, 'public')));
 // Route handler for the root path
 router.get('/', (req, res) => {
     // Serve the index.html file
-    res.redirect('/login')
+    res.render('test.ejs')
   });
 
 
@@ -72,14 +74,10 @@ router.post('/register', checkNotAuthenticated, async (req, res) => {
 router.delete('/logout', function(req, res, next) {
   req.logout(function(err) {
     if (err) { return next(err); }
-    res.redirect('/login');
+    res.redirect('/');
   });
 });
 
-// router.get('/script.js', (req, res) => {
-//     // Serve the index.html file
-//     res.sendFile(__dirname + '/views/script.js');
-//   });
 
 // Use scheduleController middleware for '/api/events' routes
 router.use('/api/events', scheduleController);
@@ -100,4 +98,4 @@ function checkNotAuthenticated(req, res, next) {
 }
 
 // Export the router
-module.exports = router;
+export default router;

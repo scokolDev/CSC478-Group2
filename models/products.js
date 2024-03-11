@@ -1,4 +1,4 @@
-const db = require('mongoose')
+import db from 'mongoose'
 
 const productSchema = new db.Schema( {
     name: String,
@@ -9,4 +9,4 @@ const productSchema = new db.Schema( {
     timeSlot: Date
 })
 
-module.exports = db.model('Product', productSchema)
+export default db.model('Product', productSchema)

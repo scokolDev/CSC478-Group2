@@ -1,5 +1,5 @@
-const db = require('mongoose')
-const passportLocalMongoose = require('passport-local-mongoose')
+import db from 'mongoose'
+import passportLocalMongoose from 'passport-local-mongoose'
 
 const customerSchema = new db.Schema( {
     email: String,
@@ -13,4 +13,4 @@ const customerSchema = new db.Schema( {
 
 userSchema.plugin(passportLocalMongoose, { usernameField: 'email'})
 
-module.exports = db.model('Customer', customerSchema)
+export default db.model('Customer', customerSchema)

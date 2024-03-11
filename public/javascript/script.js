@@ -48,10 +48,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const events = await response.json();
         
-        // const events = await [
-        //     { id: 1, name: 'Meeting', dateTime: new Date() },
-        //     { id: 2, name: 'Presentation', dateTime: new Date() }
-        //   ];
 
         // Render each event in the schedule
         events.forEach((event) => {

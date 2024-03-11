@@ -1,4 +1,4 @@
-const db = require('mongoose')
+import db from 'mongoose'
 
 const orderSchema = new db.Schema({
     orderNumber: Number,
@@ -9,4 +9,4 @@ const orderSchema = new db.Schema({
 
 })
 
-module.exports = db.model('Order', orderSchema)
+export default db.model('Order', orderSchema)
