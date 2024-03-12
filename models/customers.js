@@ -11,6 +11,6 @@ const customerSchema = new db.Schema( {
 
 })
 
-userSchema.plugin(passportLocalMongoose, { usernameField: 'email'})
+customerSchema.plugin(passportLocalMongoose, { usernameField: 'email'})
 
 export default db.model('Customer', customerSchema)
