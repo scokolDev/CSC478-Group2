@@ -1,6 +1,5 @@
 // Import necessary modules
-const express = require('express');
-
+import express from 'express'
 // Create a router instance
 const router = express.Router();
 
@@ -20,4 +19,5 @@ router.post('/', (req, res) => {
 });
 
 // Export the router
-module.exports = router;
+//module.exports = router;
+export default router

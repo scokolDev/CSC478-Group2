@@ -48,10 +48,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const events = await response.json();
         
-        // const events = await [
-        //     { id: 1, name: 'Meeting', dateTime: new Date() },
-        //     { id: 2, name: 'Presentation', dateTime: new Date() }
-        //   ];
 
         // Render each event in the schedule
         events.forEach((event) => {
@@ -67,5 +63,12 @@ document.addEventListener('DOMContentLoaded', () => {
   
     // Initial rendering of the schedule when the page loads
     renderSchedule();
+
+    var calendarEl = document.getElementById('calendar');
+    var calendar = new FullCalendar.Calendar(calendarEl, {
+      initialView: 'dayGridMonth'
+    });
+    calendar.render();
+
   });
   
