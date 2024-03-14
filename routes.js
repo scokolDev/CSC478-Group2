@@ -42,14 +42,26 @@ router.get('/', (req, res) => {
 // Route handler for Login
 router.get('/login', checkNotAuthenticated, (req, res) => {
   // Serve the Login.ejs file
-  res.render('login.ejs');
+  res.render('admin_login.ejs');
 });
 
 router.post('/login', checkNotAuthenticated, passport.authenticate('local', {
-  successRedirect: '/schedule',
+  successRedirect: '/admin/dashboard',
   failureRedirect: '/login',
   failureFlash: true
 }))
+
+// Route handler for Admin Dashboard
+router.get('/admin/dashboard', checkAuthenticated, (req, res) => {
+  // Serve the Login.ejs file
+  res.render('admin_dash.ejs');
+});
+
+// Route handler for Admin Listings
+router.get('/admin/listings', checkAuthenticated, (req, res) => {
+  // Serve the Login.ejs file
+  res.render('admin_listings.ejs');
+});
 
 
 // Route handler for Register
