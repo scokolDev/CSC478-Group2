@@ -1,17 +1,9 @@
 import dotenv from 'dotenv'
 if (process.env.NODE_ENV !== 'production') {
-  //require('dotenv').config()
   dotenv.config()
 }
 
-// Import the Express module
-// const express = require('express');
-// const bodyParser = require('body-parser');
-// const routes = require('./routes');
-// const passport = require('passport')
-// const flash = require('express-flash')
-// const session = require('express-session');
-
+// Import the modules
 import express from 'express'
 import bodyParser from 'body-parser'
 import routes from './routes.js'

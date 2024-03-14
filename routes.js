@@ -1,6 +1,10 @@
 // Import necessary modules
 import express from 'express'
 import scheduleController from './controllers/scheduleController.js'
+import productController from './controllers/productController.js'
+import orderController from './controllers/orderController.js'
+import customerController from './controllers/customerController.js'
+import resourceController from './controllers/resourceController.js'
 import passport from 'passport'
 import methodOverride from 'method-override' 
 import db from 'mongoose'
@@ -82,7 +86,13 @@ router.delete('/logout', function(req, res, next) {
 // Use scheduleController middleware for '/api/events' routes
 router.use('/api/events', scheduleController);
 
-function checkAuthenticated(req, res, next) {
+//Use middleware for '/api/{controller}'
+router.use('/api/products', productController);
+router.use('/api/orders', orderController);
+router.use('/api/customers', customerController);
+router.use('/api/resources', resourceController);
+
+export function checkAuthenticated(req, res, next) {
   if (req.isAuthenticated()) {
     return next()
   }
