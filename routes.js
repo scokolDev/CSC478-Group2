@@ -39,15 +39,27 @@ router.get('/', (req, res) => {
     res.render('index.ejs', {name: req.user.firstName});
   });
 
-// Route handler for Login
+// Route handler for Customer Login
 router.get('/login', checkNotAuthenticated, (req, res) => {
+  // Serve the Login.ejs file
+  res.render('login.ejs');
+});
+
+// Route handler for Admin Login
+router.get('/admin/login', checkNotAuthenticated, (req, res) => {
   // Serve the Login.ejs file
   res.render('admin_login.ejs');
 });
 
 router.post('/login', checkNotAuthenticated, passport.authenticate('local', {
-  successRedirect: '/admin/dashboard',
+  successRedirect: '/schedule',
   failureRedirect: '/login',
+  failureFlash: true
+}))
+
+router.post('/admin/login', checkNotAuthenticated, passport.authenticate('local', {
+  successRedirect: '/admin/dashboard',
+  failureRedirect: '/admin/login',
   failureFlash: true
 }))
 
