@@ -4,8 +4,8 @@
 
 # Installation
 
-<code>npm install body-parser connect-mongo ejs express express-flash express-session fullcalendar method-override mongoose passport passport-local-mongoose</code><br>
-<code>npm install nodemon dotenv --save-dev </code>
+<p>Run the following command from the root directory.</p>
+<code>npm install </code><br>
 
 # Create .env file
 <code>
