@@ -4,9 +4,11 @@ const productSchema = new db.Schema( {
     name: String,
     description: String,
     price: Number,
+    priceType: ['Flat Rate', 'Per Hour', 'Per Day'],
     category: String,
     image: String,
-    timeSlot: Date
+    timeSlot: Date,
+    display: Boolean
 })
 
 export default db.model('Product', productSchema)
