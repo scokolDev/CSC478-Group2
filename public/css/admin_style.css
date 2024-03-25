@@ -19,14 +19,14 @@ header {
     margin: 0 auto;
 }
 .logoIcon{
-    background-image: url(logo.png);
+    background-image: url(/img/logo.png);
     background-size: contain;
     width: 220px;
     height: 100px;
 
 }
 .accountIcon{
-    background-image: url(accountIcon.png);
+    background-image: url(/img/accountIcon.png);
     background-size: contain;
     width: 100px;
     height: 100px;
@@ -183,7 +183,7 @@ header {
 
 
 main{
-    background-image: url(bg.jpg);
+    background-image: url(/img/bg.jpg);
     background-size: cover;
 }
 nav {

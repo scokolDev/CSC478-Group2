@@ -48,9 +48,9 @@ function updatePreview(name, image, description, price){
 //functionality of the preview button. takes the value entered in the service name, service description, and service price input boxes
 //then calls the updatePreview function with these values to display a preview
 document.getElementById("previewButton").addEventListener("click", function(){
-    serviceName = document.getElementById("name").value;
-    serviceDescription = document.getElementById("description").value;
-    servicePrice = document.getElementById("price").value;
+    serviceName = document.getElementById("name").value != "" ? document.getElementById("name").value : "Service Name";
+    serviceDescription = document.getElementById("description").value != "" ? document.getElementById("description").value : "Description of the service";
+    servicePrice = document.getElementById("price").value != "" ? document.getElementById("price").value : "1234";
     updatePreview(serviceName, "style/cleaningThumbnail.jpg", serviceDescription, servicePrice)
 })
 
@@ -59,17 +59,21 @@ document.getElementById("previewButton").addEventListener("click", function(){
 //when the page initially loads, the given serviceID in the URL is checked against all services in the PresetAppointmentArray to check if
 //a service with the given ID is within the (simulated) database. If the service is found within the database, updatePreview function is called to
 //display the given service, and all input fields are updated to reflect the values of the given service
+displayTemplate = true
 if(id == undefined){
     console.log("no service ID")
 }else{
-    console.log(id)
     for(i = 0; i<PresetAppointmentArray.length; i++){
         if(PresetAppointmentArray[i].serviceID == id){
+            displayTemplate = false
             updatePreview(PresetAppointmentArray[i].service, PresetAppointmentArray[i].image, PresetAppointmentArray[i].description, PresetAppointmentArray[i].price)
             document.getElementById("name").setAttribute("value", PresetAppointmentArray[i].service)
-            document.getElementById("description").setAttribute("value", PresetAppointmentArray[i].description)
+            document.getElementById("description").innerHTML = PresetAppointmentArray[i].description
             document.getElementById("price").setAttribute("value", PresetAppointmentArray[i].price)
             break
         }
     }
+}
+if(displayTemplate == true){
+    updatePreview("Service Name", "style/cleaningThumbnail.jpg", "Description of the service", "1234")
 }

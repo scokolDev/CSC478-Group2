@@ -75,6 +75,7 @@ function initAppointments(activeContainer, inactiveContainer, appArr){
 activeListingContainer = document.getElementById("activelistingsWrapper");
 inactiveListingContainer = document.getElementById("inactivelistingsWrapper")
 
+//PresetAppointmentArray
 initAppointments(activeListingContainer, inactiveListingContainer, PresetAppointmentArray)
 
 
