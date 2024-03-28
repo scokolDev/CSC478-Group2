@@ -8,26 +8,32 @@
 </head>
 <body>
 
-<header>
-    <div class="headerWrapper">
-        <a href="/"><div class="logoIcon"></div></a>
-        <a href="/login"><div class="accountIcon"></div></a>
-    </div>
-</header>
+    <header>
+        <div class="headerWrapper">
+            <a href="/"><div class="logoIcon"></div></a>
+            <div style="display: flex;">
+                <a href="/logout?_method=DELETE"><div class="logoutIcon"></div></a>
+                <a href="/admin/dashboard"><div class="accountIcon"></div></a>
+            </div>
+            
+        </div>
+    </header>
 
 <main>
-    <div class="mainWrapper">
+    <div class="mainWrapper" style="padding-top: 5%;">
         <div class="loginBox">
-            <form action="/admin/login" method="POST">
-                <div>
-                  <label for="email">Email</label>
-                  <input type="email" id="email" name="email" required>
+            <form action="/admin/login" class="loginForm" method="POST">
+                <div style="grid-area: 3/2/5/5;">
+                  <label for="email">Email</label><br>
+                  <input style="width: 90%; height: 50%;" type="email" id="email" name="email" required>
                 </div>
-                <div>
-                  <label for="password">Password</label>
-                  <input type="password" id="password" name="password" required>
+                <div style="grid-area: 5/2/7/5;">
+                  <label for="password">Password</label><br>
+                  <input style="width: 90%; height: 50%;" type="password" id="password" name="password" required>
                 </div>
-                <button type="submit">Login</button>
+                <button type="submit" style="grid-area: 7/2/8/5;">Login</button>
+                <p style="grid-area: 8/2/9/5; text-align: center;">or</p>
+                <a href="/admin/register" style="grid-area: 9/2/11/5; text-align: center;">create account</a>
               </form>
             </div>
     </div>
@@ -37,8 +43,6 @@
 <footer>
     <p>&copy; 2024 &reg;</p>
 </footer>
-
-
 
 </body>
 </html>

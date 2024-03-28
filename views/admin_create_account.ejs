@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/admin_style.css">
+    <title>Admin Dash</title>
+</head>
+<body>
+
+    <header>
+        <div class="headerWrapper">
+            <a href="/"><div class="logoIcon"></div></a>
+            <div style="display: flex;">
+                <a href="/logout?_method=DELETE"><div class="logoutIcon"></div></a>
+                <a href="/admin/dashboard"><div class="accountIcon"></div></a>
+            </div>
+            
+        </div>
+    </header>
+
+<main>
+    <div class="mainWrapper">
+        <form action="/admin/login" class="createAccountForm" method="POST">
+            <div>
+              <label for="organizationName">Organization Name</label><br>
+              <input style="width: 50%; height: 25%;" id="organizationName" name="organizationName" required>
+            </div>
+            <div>
+              <label for="organizationAdmin">Organization Admin Full Name</label><br>
+              <input style="width: 50%; height: 25%;" id="organizationAdmin" name="organizationAdmin" required>
+            </div>
+            <div>
+                <label for="website">Website</label><br>
+                <input style="width: 50%; height: 25%;" id="website" name="website" required>
+            </div>
+            <div>
+                <label for="phoneNumber">Phone Number</label><br>
+                <input style="width: 50%; height: 25%;" id="phoneNumber" name="phoneNumber" required>
+            </div>
+            <div>
+                <label for="password">password</label><br>
+                <input style="width: 50%; height: 25%;" id="password" type="password" name="password" required>
+            </div>
+            <div>
+                <label for="confirmPassword">Confirm Password</label><br>
+                <input style="width: 50%; height: 25%;" id="confirmPassword" type="password" name="confirmPassword" required>
+            </div>
+            <div>
+                <button type="submit" style="height: 50%; aspect-ratio: 4;">Create Account</button>
+            </div>
+        </form>
+    </div>
+</main>
+
+<footer>
+    <p>&copy; 2024 &reg;</p>
+</footer>
+
+</body>
+</html>

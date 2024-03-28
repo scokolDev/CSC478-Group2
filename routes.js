@@ -75,6 +75,17 @@ router.get('/admin/listings', checkAuthenticated, (req, res) => {
   res.render('admin_listings.ejs');
 });
 
+// Route handler for Admin Mopdify Listings
+router.get('/admin/modify_listing', checkAuthenticated, (req, res) => {
+  // Serve the Login.ejs file
+  res.render('admin_modify_listing.ejs');
+});
+
+// Route handler for Admin acccount
+router.get('/admin/register', checkNotAuthenticated, (req, res) => {
+  // Serve the Login.ejs file
+  res.render('admin_create_account.ejs');
+});
 
 // Route handler for Register
 router.get('/register', checkNotAuthenticated,  (req, res) => {
