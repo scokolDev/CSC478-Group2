@@ -75,5 +75,5 @@ if(id == undefined){
     }
 }
 if(displayTemplate == true){
-    updatePreview("Service Name", "style/cleaningThumbnail.jpg", "Description of the service", "1234")
+    updatePreview("Service Name", "/img/cleaningThumbnail.jpg", "Description of the service", "1234")
 }

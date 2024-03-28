@@ -64,19 +64,19 @@ router.post('/admin/login', checkNotAuthenticated, passport.authenticate('local'
 }))
 
 // Route handler for Admin Dashboard
-router.get('/admin/dashboard', checkAuthenticated, (req, res) => {
+router.get('/admin/dashboard', checkAdminAuthenticated, (req, res) => {
   // Serve the Login.ejs file
   res.render('admin_dash.ejs');
 });
 
 // Route handler for Admin Listings
-router.get('/admin/listings', checkAuthenticated, (req, res) => {
+router.get('/admin/listings', checkAdminAuthenticated, (req, res) => {
   // Serve the Login.ejs file
   res.render('admin_listings.ejs');
 });
 
 // Route handler for Admin Mopdify Listings
-router.get('/admin/modify_listing', checkAuthenticated, (req, res) => {
+router.get('/admin/modify_listing', checkAdminAuthenticated, (req, res) => {
   // Serve the Login.ejs file
   res.render('admin_modify_listing.ejs');
 });
@@ -133,6 +133,14 @@ export function checkAuthenticated(req, res, next) {
   }
 
   res.redirect('/login')
+}
+
+export function checkAdminAuthenticated(req, res, next) {
+  if (req.isAuthenticated()) {
+    return next()
+  }
+
+  res.redirect('/admin/login')
 }
 
 function checkNotAuthenticated(req, res, next) {
