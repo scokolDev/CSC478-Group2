@@ -74,28 +74,52 @@ document.getElementById("saveButton").addEventListener('click', async (event) =>
 
     try {
       // Send a POST request to add the product
-      const response = await fetch('/api/products', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ 
-          name: productName, 
-          description: productDesc,
-          price: productPrice,
-          priceType: productPriceType,
-          category: productCategory,
-          image: productImage,
-          display: productAvailable
-        })
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to add product');
+      if(id != undefined){
+        const response = await fetch('/api/products/' + id, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ 
+            name: productName, 
+            description: productDesc,
+            price: productPrice,
+            priceType: productPriceType,
+            category: productCategory,
+            image: productImage,
+            display: productAvailable
+          })
+        });
+        if (!response.ok) {
+          throw new Error('Failed to Edit product');
+        }
+  
+        // If product added successfully, fetch and render the updated schedule
+        console.log("Successfully Edited Product");
+      }else{
+        const response = await fetch('/api/products', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ 
+            name: productName, 
+            description: productDesc,
+            price: productPrice,
+            priceType: productPriceType,
+            category: productCategory,
+            image: productImage,
+            display: productAvailable
+          })
+        });
+        if (!response.ok) {
+          throw new Error('Failed to add product');
+        }
+  
+        // If product added successfully, fetch and render the updated schedule
+        console.log("Successfully added Product");
       }
-
-      // If product added successfully, fetch and render the updated schedule
-      console.log("Successfully added Product");
+      
     } catch (error) {
       console.error(error.message);
       alert('Failed to add product');
