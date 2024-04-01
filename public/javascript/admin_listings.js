@@ -72,12 +72,33 @@ function initAppointments(activeContainer, inactiveContainer, appArr){
 }
 
 //active and inactive html listing containers
-activeListingContainer = document.getElementById("activelistingsWrapper");
-inactiveListingContainer = document.getElementById("inactivelistingsWrapper")
+
 
 //PresetAppointmentArray
-initAppointments(activeListingContainer, inactiveListingContainer, PresetAppointmentArray)
+//initAppointments(activeListingContainer, inactiveListingContainer, RandAppointmentArray)
 
 
 
+activeListingContainer = document.getElementById("activelistingsWrapper");
+inactiveListingContainer = document.getElementById("inactivelistingsWrapper")
+async function displayProducts() {
+    activeListingContainer.innerHTML = '';
+    inactiveListingContainer.innerHTML = '';
+    try {
+      // fetch all products from the database
+      const response = await fetch('/api/products');
+      if(!response.ok) {
+        throw new Error('Failed to get products form Database');
+      }
 
+      const products = await response.json();
+      products.forEach((product) => {
+        addService((`${product.display}` == "true" ? activeListingContainer : inactiveListingContainer), `${product.name}`, "/img/cleaningthumbnail.jpg", `${product.description}`, `${product.price}`, `${product._id}`);
+      });
+    } catch (error) {
+      console.error(error.message);
+      alert("Failed to Fetch products")
+    }
+  }
+
+  displayProducts();
