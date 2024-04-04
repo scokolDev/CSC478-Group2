@@ -1,7 +1,7 @@
 // Import necessary modules
 import express from 'express'
 import Customer from '../models/customers.js'
-import { checkAuthenticated } from '../routes.js';
+import { checkAuthenticated } from '../routers/routes.js';
 
 // Create a router instance
 const router = express.Router();
@@ -9,7 +9,7 @@ const router = express.Router();
 //return all customers
 router.get('/', checkAuthenticated, async (req, res) => {
     try {
-        const customers = await Customer.find({})
+        const customers = await Customer.find({"organizationID": req.user.organizationID})
         res.status(200).json(customers)
     } catch  (error) {
         res.status(500).json({message: error.message})
@@ -19,6 +19,7 @@ router.get('/', checkAuthenticated, async (req, res) => {
 
 //Create Customer
 router.post('/', checkAuthenticated, async (req, res) => {
+    req.body.organizationID = req.user.organizationID
     try {
         const customer = await Customer.create(req.body)
         res.status(200).json(customer)
@@ -32,7 +33,7 @@ router.post('/', checkAuthenticated, async (req, res) => {
 router.get('/:id', checkAuthenticated, async (req, res) => {
     const {id} = req.params
     try {
-        const customer = await Customer.findById(id)
+        const customer = await Customer.findById(id, {"organizationID": req.user.organizationID})
         res.status(200).json(customer)
     } catch  (error) {
         res.status(500).json({message: error.message})

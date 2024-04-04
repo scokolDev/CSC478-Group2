@@ -1,7 +1,7 @@
 // Import necessary modules
 import express from 'express'
 import Order from '../models/orders.js'
-import { checkAuthenticated } from '../routes.js';
+import { checkAuthenticated } from '../routers/routes.js';
 
 // Create a router instance
 const router = express.Router();
@@ -9,7 +9,7 @@ const router = express.Router();
 //return all orders
 router.get('/', checkAuthenticated, async (req, res) => {
     try {
-        const orders = await Order.find({})
+        const orders = await Order.find({"organizationID": req.user.organizationID})
         res.status(200).json(orders)
     } catch  (error) {
         res.status(500).json({message: error.message})
@@ -19,6 +19,7 @@ router.get('/', checkAuthenticated, async (req, res) => {
 
 //Create Order
 router.post('/', checkAuthenticated, async (req, res) => {
+    req.body.organizationID = req.user.organizationID
     try {
         const order = await Order.create(req.body)
         res.status(200).json(order)
@@ -32,7 +33,7 @@ router.post('/', checkAuthenticated, async (req, res) => {
 router.get('/:id', checkAuthenticated, async (req, res) => {
     const {id} = req.params
     try {
-        const order = await Order.findById(id)
+        const order = await Order.findById(id, {"organizationID": req.user.organizationID})
         res.status(200).json(order)
     } catch  (error) {
         res.status(500).json({message: error.message})

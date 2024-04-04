@@ -6,13 +6,18 @@ if (process.env.NODE_ENV !== 'production') {
 // Import the modules
 import express from 'express'
 import bodyParser from 'body-parser'
-import routes from './routes.js'
+import routes from './routers/routes.js'
 import passport from 'passport'
 import flash from 'express-flash'
 import session from 'express-session'
 import mongoose from 'mongoose'
 import MongoStore from 'connect-mongo'
+import path from 'path'
+import { fileURLToPath } from 'url'
 
+
+const __filename = fileURLToPath(import.meta.url); // get the resolved path to the file
+const __dirname = path.dirname(__filename); // get the name of the directory
 
 //Database Connection
 mongoose.set('strictQuery', false)
@@ -36,6 +41,7 @@ app.use(session({
   store: new MongoStore({ mongoUrl: db.client.s.url })
 }))
 
+app.use(express.static(path.join(__dirname, 'public')));
 
 // Use body-parser middleware to parse JSON data
 app.use(bodyParser.json());

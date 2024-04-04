@@ -2,12 +2,28 @@ import db from 'mongoose'
 import passportLocalMongoose from 'passport-local-mongoose'
 
 const customerSchema = new db.Schema( {
-    email: String,
-    password: String,
-    firstName: String,
-    lastName: String,
+    email: {
+        type: String,
+        required: true,
+        unique: true 
+    },
+    password: {
+        type: String,
+        required: true 
+    },
+    firstName: {
+        type: String,
+        required: true 
+    },
+    lastName: {
+        type: String, 
+        required: true
+    },
     birthDate: Date,
-    organizationID: Number
+    organizationID: {
+        type: String, 
+        required: true 
+    },
 
 })
 

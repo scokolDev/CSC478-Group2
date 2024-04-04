@@ -1,11 +1,29 @@
 import db from 'mongoose'
 
 const resourceSchema = new db.Schema({
-    name: String,
+    name: {
+        type: String,
+        required: true,
+        unique: true
+    },
     image: String,
-    availability: Date,
-    services: String,
-    recurrenc: String
+    availability: {
+        type: Date,
+        required: true 
+    },
+    products: [],
+    recurrence: {
+        type: String,
+        required: true,
+    },
+    totalQuantity: {
+        type: Number,
+        required: true
+    },
+    availableQuantity: {
+        required: true,
+        type: Number
+    }
 
 })
 

@@ -1,21 +1,21 @@
 // Import necessary modules
 import express from 'express'
-import scheduleController from './controllers/scheduleController.js'
-import productController from './controllers/productController.js'
-import orderController from './controllers/orderController.js'
-import customerController from './controllers/customerController.js'
-import resourceController from './controllers/resourceController.js'
+import scheduleController from '../controllers/scheduleController.js'
+import productController from '../controllers/productController.js'
+import orderController from '../controllers/orderController.js'
+import customerController from '../controllers/customerController.js'
+import resourceController from '../controllers/resourceController.js'
+import organizationRouter from './organizationRouter.js'
+import adminRouter from './adminRouter.js'
+//import { checkAuthenticated, checkNotAuthenticated } from './adminRouter.js'
 import passport from 'passport'
 import methodOverride from 'method-override' 
-import db from 'mongoose'
-import User from './models/users.js'
+import User from '../models/users.js'
+import Customer from '../models/customers.js'
+import Organization from '../models/organizations.js'
 import LocalStrategy from 'passport-local'
-import path from 'path'
-import { fileURLToPath } from 'url'
 
 
-const __filename = fileURLToPath(import.meta.url); // get the resolved path to the file
-const __dirname = path.dirname(__filename); // get the name of the directory
 // Create a router instance
 const router = express.Router();
 
@@ -25,7 +25,7 @@ passport.deserializeUser(User.deserializeUser());
 router.use(passport.initialize())
 router.use(passport.session())
 router.use(methodOverride('_method'))
-router.use(express.static(path.join(__dirname, 'public')));
+
 
 // Route handler for the root path
 router.get('/', (req, res) => {
@@ -45,35 +45,11 @@ router.get('/login', checkNotAuthenticated, (req, res) => {
   res.render('login.ejs');
 });
 
-// Route handler for Admin Login
-router.get('/admin/login', checkNotAuthenticated, (req, res) => {
-  // Serve the Login.ejs file
-  res.render('admin_login.ejs');
-});
-
 router.post('/login', checkNotAuthenticated, passport.authenticate('local', {
   successRedirect: '/schedule',
   failureRedirect: '/login',
   failureFlash: true
 }))
-
-router.post('/admin/login', checkNotAuthenticated, passport.authenticate('local', {
-  successRedirect: '/admin/dashboard',
-  failureRedirect: '/admin/login',
-  failureFlash: true
-}))
-
-// Route handler for Admin Dashboard
-router.get('/admin/dashboard', checkAuthenticated, (req, res) => {
-  // Serve the Login.ejs file
-  res.render('admin_dash.ejs');
-});
-
-// Route handler for Admin Listings
-router.get('/admin/listings', checkAuthenticated, (req, res) => {
-  // Serve the Login.ejs file
-  res.render('admin_listings.ejs');
-});
 
 
 // Route handler for Register
@@ -81,6 +57,7 @@ router.get('/register', checkNotAuthenticated,  (req, res) => {
   // Serve the Register.ejs file
   res.render('register.ejs');
 });
+
 
 router.post('/register', checkNotAuthenticated, async (req, res) => {
     User.register(
@@ -91,13 +68,14 @@ router.post('/register', checkNotAuthenticated, async (req, res) => {
         lastName: req.body.lastname
     }), req.body.password, function (err, msg) {
       if (err) {
-        res.send(err)
-        //res.redirect('/register')
+        //res.send(err)
+        res.status(500).json({message: err.message})
       } else {
         res.redirect('/login')
       }
     })
 })
+
 
 router.delete('/logout', function(req, res, next) {
   req.logout(function(err) {
@@ -115,6 +93,8 @@ router.use('/api/products', productController);
 router.use('/api/orders', orderController);
 router.use('/api/customers', customerController);
 router.use('/api/resources', resourceController);
+router.use('/api/organizations', organizationRouter);
+router.use('/admin', adminRouter)
 
 export function checkAuthenticated(req, res, next) {
   if (req.isAuthenticated()) {
@@ -124,12 +104,13 @@ export function checkAuthenticated(req, res, next) {
   res.redirect('/login')
 }
 
-function checkNotAuthenticated(req, res, next) {
+export function checkNotAuthenticated(req, res, next) {
   if (req.isAuthenticated()) {
     return res.redirect('/schedule')
   }
   next()
 }
+
 
 // Export the router
 export default router;

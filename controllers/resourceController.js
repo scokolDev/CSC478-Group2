@@ -1,7 +1,7 @@
 // Import necessary modules
 import express from 'express'
 import Resource from '../models/resources.js'
-import { checkAuthenticated } from '../routes.js';
+import { checkAuthenticated } from '../routers/routes.js';
 
 // Create a router instance
 const router = express.Router();
@@ -9,7 +9,7 @@ const router = express.Router();
 //return all resources
 router.get('/', checkAuthenticated, async (req, res) => {
     try {
-        const resources = await Resource.find({})
+        const resources = await Resource.find({"organizationID": req.user.organizationID})
         res.status(200).json(resources)
     } catch  (error) {
         res.status(500).json({message: error.message})
@@ -19,6 +19,7 @@ router.get('/', checkAuthenticated, async (req, res) => {
 
 //Create Resource
 router.post('/', checkAuthenticated, async (req, res) => {
+    req.body.organizationID = req.user.organizationID
     try {
         const resource = await Resource.create(req.body)
         res.status(200).json(resource)
@@ -33,6 +34,13 @@ router.get('/:id', checkAuthenticated, async (req, res) => {
     const {id} = req.params
     try {
         const resource = await Resource.findById(id)
+        if(!resource){
+            return res.status(404).json({message: `cannot find any resource with ID ${id}`})
+        } else if (resource.organizationID && resource.organizationID != req.user.organizationID) {
+            return res.status(401).json({message: `Not authorized to access ${id}`})
+        } else if (!resource.organizationID) {
+            return res.status(401).json({message: `Not authorized to access global resources ${id}`})
+        }
         res.status(200).json(resource)
     } catch  (error) {
         res.status(500).json({message: error.message})

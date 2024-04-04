@@ -1,7 +1,7 @@
 // Import necessary modules
 import express from 'express'
 import Product from '../models/products.js'
-import { checkAuthenticated } from '../routes.js';
+import { checkAuthenticated } from '../routers/routes.js';
 
 // Create a router instance
 const router = express.Router();
@@ -9,7 +9,7 @@ const router = express.Router();
 //return all products
 router.get('/', checkAuthenticated, async (req, res) => {
     try {
-        const products = await Product.find({})
+        const products = await Product.find({ "organizationID": req.user.organizationID})
         res.status(200).json(products)
     } catch  (error) {
         res.status(500).json({message: error.message})
@@ -19,6 +19,7 @@ router.get('/', checkAuthenticated, async (req, res) => {
 
 //Create Product
 router.post('/', checkAuthenticated, async (req, res) => {
+    req.body.organizationID = req.user.organizationID;
     try {
         const product = await Product.create(req.body)
         res.status(200).json(product)
@@ -32,8 +33,15 @@ router.post('/', checkAuthenticated, async (req, res) => {
 router.get('/:id', checkAuthenticated, async (req, res) => {
     const {id} = req.params
     try {
-        const products = await Product.findById(id)
-        res.status(200).json(products)
+        const product = await Product.findById(id)
+        if(!product){
+            return res.status(404).json({message: `cannot find any product with ID ${id}`})
+        } else if (product.organizationID && product.organizationID != req.user.organizationID) {
+            return res.status(401).json({message: `Not authorized to access ${id}`})
+        } else if (!product.organizationID) {
+            return res.status(401).json({message: `Not authorized to access global products ${id}`})
+        }
+        res.status(200).json(product)
     } catch  (error) {
         res.status(500).json({message: error.message})
     }
@@ -44,10 +52,15 @@ router.get('/:id', checkAuthenticated, async (req, res) => {
 router.put('/:id', checkAuthenticated, async (req, res) => {
     const {id} = req.params
     try {
-        const product = await Product.findByIdAndUpdate(id, req.body)
+        const product = await Product.findByIdAndUpdate(id, {"organizationID": req.user.organizationID}, req.body)
         if(!product){
             return res.status(404).json({message: `cannot find any product with ID ${id}`})
+        } else if (product.organizationID && product.organizationID != req.user.organizationID) {
+            return res.status(401).json({message: `Not authorized to update product ${id}`})
+        } else if (product.organizationID === undefined) {
+            return res.status(401).json({message: `Not authorized to update global products ${id}`})
         }
+        console.log(product)
         const updatedProduct = await Product.findById(id);
         res.status(200).json(updatedProduct)
     } catch  (error) {
@@ -60,7 +73,7 @@ router.put('/:id', checkAuthenticated, async (req, res) => {
 router.delete('/:id', checkAuthenticated, async(req, res) =>{
     try {
         const {id} = req.params;
-        const product = await Product.findByIdAndDelete(id);
+        const product = await Product.findByIdAndDelete(id, {"organizationID": req.user.organizationID});
         if(!product){
             return res.status(404).json({message: `cannot find any product with ID ${id}`})
         }
