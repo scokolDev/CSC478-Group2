@@ -11,7 +11,11 @@
     <header>
         <div class="headerWrapper">
             <a href="/"><div class="logoIcon"></div></a>
-            <a href="/login"><div class="accountIcon"></div></a>
+            <div style="display: flex;">
+                <form action="/logout?_method=DELETE"  method="POST"><button class="logoutIcon"></button></form>
+                <a href="/admin/dashboard"><div class="accountIcon"></div></a>
+            </div>
+            
         </div>
     </header>
 
@@ -42,7 +46,6 @@
                 </div>
                 <div class="Calendar" id="Calendar"></div>
             </div>
-            
             <div class="SelectedAppointment">
                 <p style="text-align: center; width: 100%;" id="SelectedAppointmentHeader"></p>
                 <div class="SelectedAppointmentList" id="SelectedAppointmentList">
@@ -57,6 +60,7 @@
         </div>
     
     </main>
+
     
 
 </body>

@@ -19,14 +19,19 @@ header {
     margin: 0 auto;
 }
 .logoIcon{
-    background-image: url("../img/logo.png");
+    background-image: url(/img/logo.png);
     background-size: contain;
     width: 220px;
     height: 100px;
-
 }
 .accountIcon{
-    background-image: url("../img/accountIcon.png");
+    background-image: url(/img/accountIcon.png);
+    background-size: contain;
+    width: 100px;
+    height: 100px;
+}
+.logoutIcon{
+    background-image: url(/img/logoutIcon.png);
     background-size: contain;
     width: 100px;
     height: 100px;
@@ -116,7 +121,7 @@ header {
 .mainWrapper{
     background-color: #4d4d4d;
     max-width: 1000px;
-    height: 1000px;
+    min-height: 1000px;
     margin: 0 auto;
 }
 .loginBox{
@@ -124,23 +129,87 @@ header {
     width: 500px;
     height: 500px;
     margin: 0 auto;
+    border-radius: 15px;
+}
+.loginForm{
+    height: 100%;
+
+    display: grid;
+    grid-template-columns: 20% 20% 20% 20% 20%;
+    grid-template-rows: repeat(10, 1fr);
+}
+
+.createAccountForm{
+    height: 100vw;
+    padding: 5%;
+
+    display: grid;
+    grid-template-rows: 100%;
+    grid-template-rows: repeat(20, 1fr);
 }
 
 
 .listingsWrapper{
-    background-color: red;
-    height: 100%;
     width: 100%;
 
     display: grid;
-    
-    overflow: scroll;
+    grid-template-columns: 25% 25% 25% 25%;
+}
+.gridBox{
+    aspect-ratio: 2/3;
+}
+.listing{
+    background-color: white;
+    width: 90%;
+    height: 90%;
+    margin-top: 7.5%;
+    margin-left: 5%;
+    border-radius: 5%;
+    overflow: hidden;
+
+    display: grid;
+
+    grid-template-rows: 50% 10% 30% 10%;
+
 }
 
 
 
+
+.modifyListingWrapper{
+    background-color: #4d4d4d;
+    max-width: 1000px;
+    min-height: 1000px;
+    margin: 0 auto;
+    padding-top: 1%;
+
+    display: grid;
+    grid-template-columns: 35% 62% 3%;
+    grid-template-rows: 50% 50%
+
+
+}
+.modifyListingForm{
+    display: grid;
+    grid-template-rows:repeat(10, 1fr);
+    grid-template-columns:50% 50%;
+    row-gap: 2%;
+
+    background-color: rgb(110, 110, 110);
+    padding: 5%;
+    border-radius: 1%;
+}
+
+
+
+
+
+
+
+
+
 main{
-    background-image: url("../img/bg.jpg");
+    background-image: url(/img/bg.jpg);
     background-size: cover;
 }
 nav {

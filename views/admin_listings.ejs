@@ -11,14 +11,28 @@
     <header>
         <div class="headerWrapper">
             <a href="/"><div class="logoIcon"></div></a>
-            <a href="/admin/login"><div class="accountIcon"></div></a>
+            <div style="display: flex;">
+                <form action="/logout?_method=DELETE"  method="POST"><button class="logoutIcon"></button></form>
+                <a href="/admin/dashboard"><div class="accountIcon"></div></a>
+            </div>
+            
         </div>
     </header>
 
     <main>
         <div class="mainWrapper">
-            <div class="listingsWrapper">
+            <div style="width: 100%; font-size: 150%; text-align: center;">
+                <a href="/admin/modify_listing"><button>Add Listing</button></a>
+            </div>
 
+            <div style="width: 100%; font-size: 150%; text-align: center; color: green;">Active Listings:</div>
+            <div id="activelistingsWrapper" class="listingsWrapper">
+                
+
+            </div>
+            <div style="width: 100%; font-size: 150%; text-align: center; color: red;">Inactive Listings</div>
+
+            <div id="inactivelistingsWrapper" class="listingsWrapper">
 
             </div>
         </div>
@@ -29,6 +43,6 @@
 
 </body>
 
-<script src="/javascript/admin_dash.js"></script>
+<script src="/javascript/admin_listings.js"></script>
 
 </html>
