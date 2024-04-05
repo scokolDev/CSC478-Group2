@@ -93,7 +93,7 @@ async function displayProducts() {
 
       const products = await response.json();
       products.forEach((product) => {
-        addService((`${product.display}` == "true" ? activeListingContainer : inactiveListingContainer), `${product.name}`, "/img/cleaningthumbnail.jpg", `${product.description}`, `${product.price}`, `${product._id}`);
+        addService((product.display == true ? activeListingContainer : inactiveListingContainer), `${product.name}`, "/img/cleaningthumbnail.jpg", `${product.description}`, `${product.price}`, `${product._id}`);
       });
     } catch (error) {
       console.error(error.message);

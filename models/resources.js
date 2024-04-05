@@ -11,6 +11,7 @@ const resourceSchema = new db.Schema({
         type: Date,
         required: true 
     },
+    dayAvailability: [],
     products: [],
     recurrence: {
         type: String,
@@ -23,7 +24,9 @@ const resourceSchema = new db.Schema({
     availableQuantity: {
         required: true,
         type: Number
-    }
+    },
+    start: String,
+    end: String
 
 })
 
