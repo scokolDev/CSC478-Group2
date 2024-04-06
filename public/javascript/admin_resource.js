@@ -1,13 +1,108 @@
 resourceCounter = 0;
+async function saveById(rID){
+  resourceId = rID
+  resourceElement = document.getElementById(rID)
+  resourceName = resourceElement.getElementsByClassName("resourceNameInput")[0].value;
+  resourceAmount = resourceElement.getElementsByClassName("resourceAmountInput")[0].value;
+
+  resourceDayAvailability = []
+  resourceElement.getElementsByClassName("dayCheckbox")[0].checked ? resourceDayAvailability[0] = true : resourceDayAvailability[0] = false
+  resourceElement.getElementsByClassName("dayCheckbox")[1].checked ? resourceDayAvailability[1] = true : resourceDayAvailability[1] = false
+  resourceElement.getElementsByClassName("dayCheckbox")[2].checked ? resourceDayAvailability[2] = true : resourceDayAvailability[2] = false
+  resourceElement.getElementsByClassName("dayCheckbox")[3].checked ? resourceDayAvailability[3] = true : resourceDayAvailability[3] = false
+  resourceElement.getElementsByClassName("dayCheckbox")[4].checked ? resourceDayAvailability[4] = true : resourceDayAvailability[4] = false
+  resourceElement.getElementsByClassName("dayCheckbox")[5].checked ? resourceDayAvailability[5] = true : resourceDayAvailability[5] = false
+  resourceElement.getElementsByClassName("dayCheckbox")[6].checked ? resourceDayAvailability[6] = true : resourceDayAvailability[6] = false
+  resourceStart = resourceElement.getElementsByClassName("resourceStartAvailability")[0].value;
+  resourceEnd = resourceElement.getElementsByClassName("resourceEndAvailability")[0].value;
+
+
+  console.log(resourceName)
+  console.log(resourceAmount)
+  console.log(resourceDayAvailability)
+  console.log(resourceStart)
+  console.log(resourceEnd)
+  try {
+      // Send a PUT request to edit the resource
+      if(rID.substring(0, 4) != "temp"){
+        const productResponse = await fetch('/api/resources/' + rID, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ 
+            name: resourceName,
+            totalQuantity: resourceAmount,
+            availableQuantity: resourceAmount,
+            dayAvailability: resourceDayAvailability,
+            start: resourceStart,
+            end: resourceEnd,
+            
+            availability: Date.now(),
+            recurrence: "test"
+          })
+        });
+        if (!productResponse.ok) {
+          throw new Error('Failed to Edit resource');
+        }
+        // If product edited successfully, fetch and render the updated schedule
+        console.log("Successfully Edited resource");
+
+
+      // Send a POST request to add the resource
+      }else{
+        const response = await fetch('/api/resources', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ 
+            name: resourceName,
+            totalQuantity: resourceAmount,
+            availableQuantity: resourceAmount,
+            dayAvailability: resourceDayAvailability,
+            start: resourceStart,
+            end: resourceEnd,
+            
+            availability: Date.now(),
+            recurrence: "test"
+          })
+        });
+        if (!response.ok) {
+          throw new Error('Failed to add resource');
+        }
+  
+        // If product added successfully, fetch and render the updated schedule
+        console.log("Successfully added resource");
+      }
+      
+    } catch (error) {
+      console.error(error.message);
+      alert('Failed to add product');
+    }
+}
+
+
+
+document.getElementById("saveResources").addEventListener("click", async function(){
+  allResources = document.getElementsByClassName("resourceElement")
+  for(i = 0; i < allResources.length; i++){
+      saveById(allResources[i].id)
+  }
+});
+
+
+
 function addResource(wrapper, id, name, amount, dayAvailability, startTime, endTime){
 
+    //creating resource element
     resourceElement = document.createElement("div")
     resourceCounter++
     resourceElement.setAttribute("id", id)
     resourceElement.setAttribute("class", "resourceElement")
     wrapper.appendChild(resourceElement)
 
-
+    //input box for resource name
     resourceNameBox = document.createElement("input")
     resourceNameBox.setAttribute("type", "text")
     resourceNameBox.setAttribute("style", "width: 30%;")
@@ -16,15 +111,18 @@ function addResource(wrapper, id, name, amount, dayAvailability, startTime, endT
     }else{
         resourceNameBox.setAttribute("placeholder", "Resource Name")
     }
-    resourceNameBox.setAttribute("id", "name" + id)
+    resourceNameBox.setAttribute("class", "resourceNameInput")
     resourceElement.appendChild(resourceNameBox)
 
+
+    //wrapper for resource amount label and input box
     amountHolder = document.createElement("div")
     amountHolder.setAttribute("style", "width: 10%;")
+    //resource amount label
     amountText = document.createElement("div")
     amountText.innerHTML = "amount:";
     amountHolder.appendChild(amountText)
-
+    //resources amount input box
     amountInput = document.createElement("input")
     amountInput.setAttribute("type", "number")
     amountInput.setAttribute("min", "1")
@@ -33,15 +131,14 @@ function addResource(wrapper, id, name, amount, dayAvailability, startTime, endT
     }else{
         amountInput.setAttribute("value", "1")
     }
-    amountInput.setAttribute("id", "amount" + id)
-    amountInput.setAttribute("class", "numBox")
+    amountInput.setAttribute("class", "resourceAmountInput")
     amountHolder.appendChild(amountInput)
     resourceElement.appendChild(amountHolder);
 
-
+    //wrapper for day availablitiy of resource
     daysWrapper = document.createElement("div")
     daysWrapper.setAttribute("class", "daysWrapper")
-    
+    //sunday wrapper for sunday label and checkbox
     sundayWrapper = document.createElement("div")
     sunday = document.createElement("div")
     sunday.setAttribute("class", "dayLetter")
@@ -52,11 +149,10 @@ function addResource(wrapper, id, name, amount, dayAvailability, startTime, endT
     if(dayAvailability != undefined){
         if(dayAvailability[0]){sundayCheckBox.setAttribute("checked", "true")}
     }
-    sundayCheckBox.setAttribute("id", "sunday" + id)
     sundayWrapper.appendChild(sunday)
     sundayWrapper.appendChild(sundayCheckBox)
     daysWrapper.appendChild(sundayWrapper)
-
+    //monday wrapper for monday label and checkbox
     mondayWrapper = document.createElement("div")
     monday = document.createElement("div")
     monday.setAttribute("class", "dayLetter")
@@ -67,11 +163,10 @@ function addResource(wrapper, id, name, amount, dayAvailability, startTime, endT
     if(dayAvailability != undefined){
         if(dayAvailability[1]){mondayCheckBox.setAttribute("checked", "true")}
     }
-    mondayCheckBox.setAttribute("id", "monday" + id)
     mondayWrapper.appendChild(monday)
     mondayWrapper.appendChild(mondayCheckBox)
     daysWrapper.appendChild(mondayWrapper)
-
+    //tuesday wrapper for tuesday label and checkbox
     tuesdayWrapper = document.createElement("div")
     tuesday = document.createElement("div")
     tuesday.setAttribute("class", "dayLetter")
@@ -82,11 +177,10 @@ function addResource(wrapper, id, name, amount, dayAvailability, startTime, endT
     if(dayAvailability != undefined){
         if(dayAvailability[2]){tuesdayCheckBox.setAttribute("checked", "true")}
     }
-    tuesdayCheckBox.setAttribute("id", "tuesday" + id)
     tuesdayWrapper.appendChild(tuesday)
     tuesdayWrapper.appendChild(tuesdayCheckBox)
     daysWrapper.appendChild(tuesdayWrapper)
-
+    //wednesday wrapper for wednesday label and checkbox
     wednesdayWrapper = document.createElement("div")
     wednesday = document.createElement("div")
     wednesday.setAttribute("class", "dayLetter")
@@ -97,11 +191,10 @@ function addResource(wrapper, id, name, amount, dayAvailability, startTime, endT
     if(dayAvailability != undefined){
         if(dayAvailability[3]){wednesdayCheckBox.setAttribute("checked", "true")}
     }
-    wednesdayCheckBox.setAttribute("id", "wednesday" + id)
     wednesdayWrapper.appendChild(wednesday)
     wednesdayWrapper.appendChild(wednesdayCheckBox)
     daysWrapper.appendChild(wednesdayWrapper)
-
+    //thursday wrapper for thursday label and checkbox
     thursdayWrapper = document.createElement("div")
     thursday = document.createElement("div")
     thursday.setAttribute("class", "dayLetter")
@@ -112,11 +205,10 @@ function addResource(wrapper, id, name, amount, dayAvailability, startTime, endT
     if(dayAvailability != undefined){
         if(dayAvailability[4]){thursdayCheckBox.setAttribute("checked", "true")}
     }
-    thursdayCheckBox.setAttribute("id", "thursday" + id)
     thursdayWrapper.appendChild(thursday)
     thursdayWrapper.appendChild(thursdayCheckBox)
     daysWrapper.appendChild(thursdayWrapper)
-
+    //friday wrapper for friday label and checkbox
     fridayWrapper = document.createElement("div")
     friday = document.createElement("div")
     friday.setAttribute("class", "dayLetter")
@@ -127,11 +219,10 @@ function addResource(wrapper, id, name, amount, dayAvailability, startTime, endT
     if(dayAvailability != undefined){
         if(dayAvailability[5]){fridayCheckBox.setAttribute("checked", "true")}
     }
-    fridayCheckBox.setAttribute("id", "friday" + id)
     fridayWrapper.appendChild(friday)
     fridayWrapper.appendChild(fridayCheckBox)
     daysWrapper.appendChild(fridayWrapper)
-
+    //saturday wrapper for saturday label and checkbox
     saturdayWrapper = document.createElement("div")
     saturday = document.createElement("div")
     saturday.setAttribute("class", "dayLetter")
@@ -142,46 +233,45 @@ function addResource(wrapper, id, name, amount, dayAvailability, startTime, endT
     if(dayAvailability != undefined){
         if(dayAvailability[6]){saturdayCheckBox.setAttribute("checked", "true")}
     }
-    saturdayCheckBox.setAttribute("id", "saturday" + id)
     saturdayWrapper.appendChild(saturday)
     saturdayWrapper.appendChild(saturdayCheckBox)
     daysWrapper.appendChild(saturdayWrapper)
-
     resourceElement.appendChild(daysWrapper);
 
+    //wrapper for start and end time input
     TimeWrapper = document.createElement("div")
     TimeWrapper.setAttribute("class", "timeWrapper")
-
+    //start time label
     startLabel = document.createElement("label")
     startLabel.innerHTML = "Start:"
     TimeWrapper.appendChild(startLabel)
-
+    //start time input
     startInput = document.createElement("input")
     startInput.setAttribute("type", "time")
+    startInput.setAttribute("class", "resourceStartAvailability")
     if(startTime != undefined){
         startInput.setAttribute("value", startTime)
     }
-    startInput.setAttribute("id", "start" + id)
     TimeWrapper.appendChild(startInput)
     TimeWrapper.innerHTML += "<br><br>"
-
+    //end time label
     endLabel = document.createElement("label")
     endLabel.innerHTML = "End:"
     TimeWrapper.appendChild(endLabel)
-
+    //end time input
     endInput = document.createElement("input")
     endInput.setAttribute("type", "time")
+    endInput.setAttribute("class", "resourceEndAvailability")
     if(endTime != undefined){
         endInput.setAttribute("value", endTime)
     }
-    endInput.setAttribute("id", "end" + id)
     TimeWrapper.appendChild(endInput)
-
     resourceElement.appendChild(TimeWrapper)
 
-
+    //wrapper for delete button
     deleteWrapper = document.createElement("div")
     deleteWrapper.setAttribute("class", "deleteWrapper")
+    //delete button
     deleteButton = document.createElement("button")
     deleteButton.setAttribute("class", "deleteButton")
     deleteButton.setAttribute("type", "button")
@@ -198,98 +288,17 @@ function addResource(wrapper, id, name, amount, dayAvailability, startTime, endT
         
         } catch (error) {
             console.error(error.message);
-            alert("Failed to delete resource")
         }    
         document.getElementById(this.getAttribute("parentId")).remove()
     });
     deleteWrapper.appendChild(deleteButton)
-
-    saveButton = document.createElement("button")
-    saveButton.setAttribute("class", "deleteButton")
-    saveButton.setAttribute("type", "button")
-    saveButton.setAttribute("parentId", id)
-    saveButton.addEventListener("click", async function(){
-        resourceId = this.getAttribute("parentId");
-        resourceName = document.getElementById("name" + resourceId).value;
-        resourceAmount = document.getElementById("amount" + resourceId).value;
-        resourceDayAvailability = []
-        if(document.getElementById("sunday" + resourceId).checked){resourceDayAvailability[0] = true}
-        if(document.getElementById("monday" + resourceId).checked){resourceDayAvailability[1] = true}
-        if(document.getElementById("tuesday" + resourceId).checked){resourceDayAvailability[2] = true}
-        if(document.getElementById("wednesday" + resourceId).checked){resourceDayAvailability[3] = true}
-        if(document.getElementById("thursday" + resourceId).checked){resourceDayAvailability[4] = true}
-        if(document.getElementById("friday" + resourceId).checked){resourceDayAvailability[5] = true}
-        if(document.getElementById("saturday" + resourceId).checked){resourceDayAvailability[6] = true}
-        resourceStart = document.getElementById("start" + resourceId).value;
-        resourceEnd = document.getElementById("end" + resourceId).value;
-
-        try {
-            // Send a PUT request to edit the resource
-            if(id.substring(0, 4) != "temp"){
-              const productResponse = await fetch('/api/resources/' + resourceId, {
-                method: 'PUT',
-                headers: {
-                  'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ 
-                  name: resourceName,
-                  totalQuantity: resourceAmount,
-                  availableQuantity: resourceAmount,
-                  dayAvailability: resourceDayAvailability,
-                  start: resourceStart,
-                  end: resourceEnd,
-                  
-                  availability: Date.now(),
-                  recurrence: "test"
-                })
-              });
-              if (!productResponse.ok) {
-                throw new Error('Failed to Edit resource');
-              }
-              // If product edited successfully, fetch and render the updated schedule
-              console.log("Successfully Edited resource");
-      
-      
-            // Send a POST request to add the resource
-            }else{
-              const response = await fetch('/api/resources', {
-                method: 'POST',
-                headers: {
-                  'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ 
-                  name: resourceName,
-                  totalQuantity: resourceAmount,
-                  availableQuantity: resourceAmount,
-                  dayAvailability: resourceDayAvailability,
-                  start: resourceStart,
-                  end: resourceEnd,
-                  
-                  availability: Date.now(),
-                  recurrence: "test"
-                })
-              });
-              if (!response.ok) {
-                throw new Error('Failed to add resource');
-              }
-        
-              // If product added successfully, fetch and render the updated schedule
-              console.log("Successfully added resource");
-            }
-            
-          } catch (error) {
-            console.error(error.message);
-            alert('Failed to add product');
-          }
-    });
-    deleteWrapper.appendChild(saveButton)
     resourceElement.appendChild(deleteWrapper)
 }
 
 
 resourceHolder = document.getElementById("modifyListingFormResourceHolder")
 document.getElementById("addResource").addEventListener('click', async (event) => {
-    addResource(resourceHolder, "test", "computer Room", 23, [true, false, false, false, true, false, true], "13:00", "17:00")
+    //addResource(resourceHolder, "test", "computer Room", 23, [true, false, false, false, true, false, true], "13:00", "17:00")
     resourceCounter++;
     addResource(resourceHolder, "temp" + resourceCounter)
 });

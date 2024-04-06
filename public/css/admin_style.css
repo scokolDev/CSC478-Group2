@@ -217,7 +217,7 @@ header {
     display: flex;
     overflow: hidden;
 }
-.numBox{
+.resourceAmountInput{
     width: 100%;
 }
 .daysWrapper{
