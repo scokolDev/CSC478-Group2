@@ -1,5 +1,6 @@
 // Import necessary modules
 import express from 'express'
+import vhost from 'vhost'
 import scheduleController from '../controllers/scheduleController.js'
 import productController from '../controllers/productController.js'
 import orderController from '../controllers/orderController.js'
@@ -7,12 +8,12 @@ import customerController from '../controllers/customerController.js'
 import resourceController from '../controllers/resourceController.js'
 import organizationRouter from './organizationRouter.js'
 import adminRouter from './adminRouter.js'
+import locationRouter from './locationRouter.js'
 //import { checkAuthenticated, checkNotAuthenticated } from './adminRouter.js'
 import passport from 'passport'
 import methodOverride from 'method-override' 
 import User from '../models/users.js'
-import Customer from '../models/customers.js'
-import Organization from '../models/organizations.js'
+import { getOrgByDomain } from '../controllers/organizationController.js'
 import LocalStrategy from 'passport-local'
 
 
@@ -27,12 +28,26 @@ router.use(passport.session())
 router.use(methodOverride('_method'))
 
 
+
+
 // Route handler for the root path
-router.get('/', (req, res) => {
+router.get('/', (req, res, next) => {
+    if (req.vhost) {
+      req.body.orgdomain = req.vhost[0]
+      next()
+    } else {
+      res.render('test.ejs', {orgname: ''})
+    }
     // Serve the index.html file
-    res.render('test.ejs')
+    
   });
 
+  router.get('/', getOrgByDomain, (req, res) => {
+  
+    // Serve the index.html file
+    
+    res.render('test.ejs', {orgname: req.body.organizationName})
+  });
 
   router.get('/schedule', checkAuthenticated, (req, res) => {
     // Serve the index.html file
@@ -94,6 +109,8 @@ router.use('/api/orders', orderController);
 router.use('/api/customers', customerController);
 router.use('/api/resources', resourceController);
 router.use('/api/organizations', organizationRouter);
+router.use('/api/locations', locationRouter);
+
 router.use('/admin', adminRouter)
 
 export function checkAuthenticated(req, res, next) {

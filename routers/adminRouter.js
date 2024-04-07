@@ -7,6 +7,7 @@ import {
     authenticateAdmin,
     getAdminLogin,
     getAdminDash,
+    getAdminModifyListing,
     getAdminListings,
     getAdminRegister,
     registerAdmin,
@@ -36,6 +37,9 @@ router.get('/login', checkNotAuthenticated, getAdminLogin);
   
   // Route handler for Admin Listings
   router.get('/listings', checkAuthenticated, getAdminListings);
+
+  // Route handler for Admin Listings
+  router.get('/modify_listing', checkAuthenticated, getAdminModifyListing);
 
   router.get('/register', checkNotAuthenticated,  getAdminRegister);
   

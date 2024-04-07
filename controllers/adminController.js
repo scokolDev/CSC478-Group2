@@ -27,6 +27,11 @@ export const getAdminListings = (req, res) => {
     res.render('admin_listings.ejs');
   }
 
+export const getAdminModifyListing = (req, res) => {
+    // Serve the Login.ejs file
+    res.render('admin_modify_listing.ejs');
+  }
+
 export const getAdminRegister = (req, res) => {
     // Serve the Register.ejs file
     res.render('admin_register.ejs');

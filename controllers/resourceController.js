@@ -52,10 +52,15 @@ router.get('/:id', checkAuthenticated, async (req, res) => {
 router.put('/:id', checkAuthenticated, async (req, res) => {
     const {id} = req.params
     try {
-        const resource = await Resource.findByIdAndUpdate(id, req.body)
+        const resource = await Resource.findById(id)
         if(!resource){
             return res.status(404).json({message: `cannot find any resource with ID ${id}`})
+        } else if (resource.organizationID && resource.organizationID != req.user.organizationID) {
+            return res.status(401).json({message: `Not authorized to modify resource ${id}`})
+        } else if (resource.organizationID === undefined) {
+            return res.status(401).json({message: `Not authorized to modify global resources ${id}`})
         }
+        await Resource.findByIdAndUpdate(id, req.body)
         const updatedResource = await Resource.findById(id);
         res.status(200).json(updatedResource)
     } catch  (error) {
@@ -71,6 +76,10 @@ router.delete('/:id', checkAuthenticated, async(req, res) =>{
         const resource = await Resource.findByIdAndDelete(id);
         if(!resource){
             return res.status(404).json({message: `cannot find any resource with ID ${id}`})
+        } else if (resource.organizationID && resource.organizationID != req.user.organizationID) {
+            return res.status(401).json({message: `Not authorized to delete resource ${id}`})
+        } else if (resource.organizationID === undefined) {
+            return res.status(401).json({message: `Not authorized to delete global resources ${id}`})
         }
         res.status(200).json(resource);
         

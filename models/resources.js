@@ -7,11 +7,20 @@ const resourceSchema = new db.Schema({
         unique: true
     },
     image: String,
-    availability: {
-        type: Date,
-        required: true 
-    },
-    products: [],
+    availability: [{
+        M: Boolean,
+        T: Boolean,
+        W: Boolean,
+        Th: Boolean,
+        F: Boolean,
+        Sa: Boolean,
+        Su: Boolean
+
+    }],
+    products: [{
+        id: String,
+        price: Number
+    }],
     recurrence: {
         type: String,
         required: true,
@@ -23,6 +32,10 @@ const resourceSchema = new db.Schema({
     availableQuantity: {
         required: true,
         type: Number
+    },
+    organizationID: {
+        type: String,
+        required: true
     }
 
 })

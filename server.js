@@ -5,9 +5,9 @@ if (process.env.NODE_ENV !== 'production') {
 
 // Import the modules
 import express from 'express'
+import vhost from 'vhost'
 import bodyParser from 'body-parser'
 import routes from './routers/routes.js'
-import passport from 'passport'
 import flash from 'express-flash'
 import session from 'express-session'
 import mongoose from 'mongoose'
@@ -47,6 +47,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(bodyParser.json());
 
 // Define a route handler for the root path
+app.use(vhost('*.localhost', routes));
 app.use(routes);
 
 app.listen(3000, () => {

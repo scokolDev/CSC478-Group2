@@ -56,3 +56,16 @@ export const getOrgName = async (req, res, next) => {
     req.body.organizationName = organization.name
     next()
   }
+
+export const getOrgByDomain = async (req, res, next) => {
+    const organization = await Organization.findOne({domain: req.body.orgdomain})
+    if(!organization || organization == null) {
+        return res.status(404).json({message: "Page not found"})
+    }
+    
+    req.body.organizationName = organization.name
+    req.body.organizationID = organization._id;
+    console.log(organization)
+    
+    next() 
+}
