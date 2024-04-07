@@ -36,7 +36,9 @@ const resourceSchema = new db.Schema({
     organizationID: {
         type: String,
         required: true
-    }
+    },
+    start: String,
+    end: String
 
 })
 
