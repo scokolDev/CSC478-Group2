@@ -250,6 +250,12 @@ header {
     aspect-ratio: 1;
 }
 
+.resourceDisplay{
+    height: 10%; 
+    width: 100%; 
+    background-color: #444; 
+    display: flex;
+}
 
 
 

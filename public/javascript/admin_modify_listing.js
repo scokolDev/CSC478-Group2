@@ -75,6 +75,17 @@ document.getElementById("saveButton").addEventListener('click', async (event) =>
     const productAvailable = document.getElementById("active").checked ? true : false;
     const productCategory = "cleaning";
 
+
+    Allresources = document.getElementsByClassName("resourceDisplay")
+    assignedResources = []
+    for(i = 0; i < Allresources.length; i++){
+      if(Allresources[i].getElementsByClassName("resourceCheckbox")[0].checked){
+        assignedResources.push(Allresources[i].id)
+      }
+    }
+    console.log(assignedResources)
+
+
     try {
       // Send a PUT request to edit the product
       if(id != undefined){
@@ -131,7 +142,49 @@ document.getElementById("saveButton").addEventListener('click', async (event) =>
     }
   });
 
+  resourceContainer = document.getElementById("resourceHolder")
+  function addResource(resourceContainer, name, resourceID){
+    resourceElement = document.createElement("div")
+    resourceElement.setAttribute("class", "resourceDisplay")
+    resourceElement.setAttribute("id", resourceID)
 
+    resourceCheckbox = document.createElement("input")
+    resourceCheckbox.setAttribute("type", "checkbox")
+    resourceCheckbox.setAttribute("class", "resourceCheckbox")
+    resourceElement.appendChild(resourceCheckbox)
+
+    resourceLabel = document.createElement("div")
+    resourceLabel.innerHTML = name;
+    resourceLabel.setAttribute("style", "line-height: 200%;")
+    resourceElement.appendChild(resourceLabel)
+
+    resourceContainer.appendChild(resourceElement)
+  }
+  
+  async function loadResources(resourceContainer, activeResources) {
+      try {
+        // fetch all resources from the database
+        const response = await fetch('/api/resources');
+        if(!response.ok) {
+          throw new Error('Failed to get resources form Database');
+        }
+        const resources = await response.json();
+        if(resources.length == 0){resourceContainer.innerHTML = "no resources added yet"}
+        resources.forEach((resource) => {
+          isChecked = false;
+          if(activeResources != undefined){
+            for(i = 0; i < activeResources.length; i++){
+              activeResources[i] == `${resource._id}` ? isChecked = true : isChecked = false
+            }
+          }
+          addResource(resourceContainer, `${resource.name}`, `${resource._id}`, isChecked)
+        });
+      } catch (error) {
+        console.error(error.message);
+        alert("Failed to Fetch resources")
+      }
+  }
+  
 
 
   async function findExistingService() {
@@ -146,6 +199,7 @@ document.getElementById("saveButton").addEventListener('click', async (event) =>
         
         
         updatePreview(`${product.name}`, "/img/cleaningThumbnail.jpg", `${product.description}`, `${product.price}`)
+        loadResources(resourceContainer, product.resources)
         document.getElementById("name").setAttribute("value", `${product.name}`)
         switch(product.priceType[0]){
           case "Flat Rate": 
@@ -174,6 +228,7 @@ document.getElementById("saveButton").addEventListener('click', async (event) =>
 displayTemplate = true
 if(id == undefined){
     console.log("no service ID")
+    loadResources(resourceContainer)
 }else{
     displayTemplate = false
     findExistingService();
