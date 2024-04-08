@@ -1,15 +1,18 @@
 // Import necessary modules
 import express from 'express'
 import Resource from '../models/resources.js'
-import { checkAuthenticated } from '../routers/routes.js';
+import { checkAuthenticated, getVhost } from '../routers/routes.js';
+import { getOrgByDomain } from './organizationController.js';
 
 // Create a router instance
 const router = express.Router();
 
 //return all resources
-router.get('/', checkAuthenticated, async (req, res) => {
+router.get('/', getVhost, getOrgByDomain, async (req, res) => {
+    const orgID = req.user != undefined ? req.user.organizationID : req.body.organizationID
+    console.log(req.query.products)
     try {
-        const resources = await Resource.find({"organizationID": req.user.organizationID})
+        const resources = await Resource.find({});
         res.status(200).json(resources)
     } catch  (error) {
         res.status(500).json({message: error.message})

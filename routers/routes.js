@@ -74,6 +74,12 @@ router.get('/register', checkNotAuthenticated,  (req, res) => {
 });
 
 
+// Route handler for Order Form
+router.get('/order',  getVhost, getOrgByDomain, (req, res) => {
+  // Serve the Order From ejs file
+  res.render('order_form.ejs', {orgname: req.body.organizationName});
+});
+
 router.post('/register', checkNotAuthenticated, async (req, res) => {
     User.register(
       new User({
@@ -129,6 +135,16 @@ export function checkNotAuthenticated(req, res, next) {
   next()
 }
 
+export function getVhost(req, res, next) {
+  if (req.vhost) {
+    req.body.orgdomain = req.vhost[0]
+    next()
+  } else {
+    res.status(404).json({messaage: "Subdomain not found."})
+  }
+  // Serve the index.html file
+  
+};
 
 // Export the router
 export default router;
