@@ -65,7 +65,6 @@ export const getOrgByDomain = async (req, res, next) => {
     
     req.body.organizationName = organization.name
     req.body.organizationID = organization._id;
-    console.log(organization)
     
     next() 
 }

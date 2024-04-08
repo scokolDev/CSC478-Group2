@@ -12,7 +12,6 @@ import {
     getAdminRegister,
     registerAdmin,
     getAdminResource,
-    getAdminModifyListing,
 } from '../controllers/adminController.js'
 
 import Organization from '../models/organizations.js'

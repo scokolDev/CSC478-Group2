@@ -4,7 +4,7 @@ import vhost from 'vhost'
 import scheduleController from '../controllers/scheduleController.js'
 import productController from '../controllers/productController.js'
 import orderController from '../controllers/orderController.js'
-import customerController from '../controllers/customerController.js'
+import customerRouter from '../routers/customerRouter.js'
 import resourceController from '../controllers/resourceController.js'
 import organizationRouter from './organizationRouter.js'
 import adminRouter from './adminRouter.js'
@@ -106,12 +106,13 @@ router.use('/api/events', scheduleController);
 //Use middleware for '/api/{controller}'
 router.use('/api/products', productController);
 router.use('/api/orders', orderController);
-router.use('/api/customers', customerController);
+router.use('/api/customers', customerRouter);
 router.use('/api/resources', resourceController);
 router.use('/api/organizations', organizationRouter);
 router.use('/api/locations', locationRouter);
 
 router.use('/admin', adminRouter)
+router.use('/customer', customerRouter)
 
 export function checkAuthenticated(req, res, next) {
   if (req.isAuthenticated()) {
