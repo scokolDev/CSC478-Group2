@@ -124,7 +124,7 @@ export const registerCustomer = async (req, res) => {
       }), req.body.password, function (err, msg) {
         if (err) {
           //res.send(err)
-          res.status(500).json({messages: err.message})
+          res.status(500).json({message: err.message})
         } else {
           res.redirect('/customer/login')
         }
