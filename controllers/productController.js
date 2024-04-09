@@ -4,8 +4,12 @@ import Product from '../models/products.js'
 import { checkAuthenticated, getVhost } from '../routers/routes.js';
 import { getOrgByDomain } from './organizationController.js';
 
+
 // Create a router instance
 const router = express.Router();
+
+
+
 
 //return all products
 router.get('/', getVhost, getOrgByDomain, async (req, res) => {
@@ -89,5 +93,8 @@ router.delete('/:id', checkAuthenticated, async(req, res) =>{
         res.status(500).json({message: error.message})
     }
 })
+
+
+
 
 export default router

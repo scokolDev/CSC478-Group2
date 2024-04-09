@@ -15,10 +15,16 @@ import methodOverride from 'method-override'
 import User from '../models/users.js'
 import { getOrgByDomain } from '../controllers/organizationController.js'
 import LocalStrategy from 'passport-local'
+import AWS from 'aws-sdk'
+import multer from 'multer';
+import fs from 'fs'
 
 
 // Create a router instance
 const router = express.Router();
+
+const s3 = new AWS.S3();
+const upload = multer({ dest: 'uploads/' });
 
 passport.use(new LocalStrategy({usernameField: 'email'}, User.authenticate()))
 passport.serializeUser(User.serializeUser())
@@ -119,6 +125,26 @@ router.use('/api/locations', locationRouter);
 
 router.use('/admin', adminRouter)
 router.use('/customer', customerRouter)
+
+
+
+// An endpoint for uploading files
+router.post('/upload', upload.single('file'), function (req, res) {
+    const file = req.file;
+    const params = {
+        Bucket: 'csc478-group2-sba-bucket', // replace with your bucket name
+        Key: file.originalname, // File name you want to save as
+        Body: fs.createReadStream(file.path)
+    };
+
+    s3.upload(params, function (err, data) {
+        if (err) {
+            return res.status(500).send(err);
+        }
+
+        res.send({ message: 'File uploaded successfully', data });
+    });
+});
 
 export function checkAuthenticated(req, res, next) {
   if (req.isAuthenticated()) {
