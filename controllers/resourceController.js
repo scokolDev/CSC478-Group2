@@ -10,9 +10,10 @@ const router = express.Router();
 //return all resources
 router.get('/', getVhost, getOrgByDomain, async (req, res) => {
     const orgID = req.user != undefined ? req.user.organizationID : req.body.organizationID
-    console.log(req.query.products)
+    req.query.organizationID = orgID;
+    //const query = {products: {$in : [req.query.products]}};
     try {
-        const resources = await Resource.find({});
+        const resources = await Resource.find(req.query);
         res.status(200).json(resources)
     } catch  (error) {
         res.status(500).json({message: error.message})

@@ -53,7 +53,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         try {
             // fetch all resources from the database
-            const response = await fetch(`/api/resources?products=${productSelection}`);
+            const response = await fetch("/api/resources?" + `products=${productSelection}`);
             if(!response.ok) {
               throw new Error('Failed to get resources form Database');
             }

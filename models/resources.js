@@ -17,10 +17,7 @@ const resourceSchema = new db.Schema({
         Su: Boolean
 
     }],
-    products: [{
-        id: String,
-        price: Number
-    }],
+    products: [],
     recurrence: {
         type: String,
         required: true,
