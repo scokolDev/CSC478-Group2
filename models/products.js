@@ -22,7 +22,8 @@ const productSchema = new db.Schema( {
     organizationID: {
         type: String,
         required: true
-    }
+    },
+    resources: []
 })
 
 export default db.model('Product', productSchema)
