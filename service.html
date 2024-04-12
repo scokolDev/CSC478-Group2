@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Service App</title>
+    <link rel="stylesheet" href="service.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+
+    <header>
+        <h1>Service App</h1>
+        <div class="signin">
+            <a href="#" id="signInLink">Sign In</a>
+        </div>
+    </header>
+
+    <nav>
+        <a href="#" id="homeLink">Home</a>
+        <a href="#" id="aboutLink">About</a>
+        <a href="#" id="servicesLink">Services</a>
+        <a href="#" id="contactLink">Contact</a>
+        <a href="#" id="proApplicationLink">Pro Application</a>
+        <button class="book-now-button">Book Now</button>
+    </nav>
+<main>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 offset-md-3">
+                <div class="service-container" id="serviceContainer" style="display:none;">
+                    <div class="service-info-header">
+                        <h3>Cleaning Services Offered</h3>
+                        <p>We offer plenty of options when it comes to professional services. All ranked by set tier pricing.</p>
+                    </div>
+
+                    <section id="services">
+                        <div class="services-list">
+
+                        </div>
+
+                        <div class="pricing d-flex justify-content-between">
+                            <div class="pricing-item">
+                                <h4>Basic</h4>
+                                <p>$0</p>
+                                <p>Looking for a quick tidy?</p>
+                                <button><a href="#">Click Here to Learn More!</a></button>
+                            </div>
+                            <div class="pricing-item popular">
+                                <h4>Most Popular</h4>
+                                <p>Detailed</p>
+                                <p>$38/mo</p>
+                                <p>Kids make a mess?</p>
+                                <button><a href="#">Click Here to Learn More!</a></button>
+                            </div>
+                            <div class="pricing-item">
+                                <h4>Full Service</h4>
+                                <p>$70/mo</p>
+                                <p>After Party/Event</p>
+                                <button><a href="#">Click Here to Learn More!</a></button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+</main>
+
+    <main>
+        <main>
+            <section id="home">
+                <div class="container">
+                    <h2>Welcome to Service App</h2>
+                    <p>We provide high-quality cleaning services tailored to your needs. Whether you need a quick tidy or a detailed cleaning, we've got you covered.</p>
+                    <p>Explore our services and get started today!</p>
+                </div>
+            </section>
+    
+            <section id="reviews">
+                <div class="container">
+                    <h2>What Our Customers Say</h2>
+                    <div class="review">
+                        <p>"I am absolutely thrilled with the service I received from Service App! From the initial inquiry to the completion of the job, everything was handled with utmost professionalism and care. The cleaning team was not only efficient but also incredibly thorough, leaving no stone unturned in making my space spotless. What impressed me the most was their attention to detail and their willingness to tailor the service to my specific needs. Service App has definitely set the bar high for cleaning services, and I'll be recommending them to all my friends and family!" - Sarah J.</p>
+                    </div>
+                    <div class="review">
+                        <p>"Service App exceeded my expectations! The team arrived on time, equipped with all the necessary tools and supplies, and got to work right away. Their attention to detail is impeccable, and they didn't miss a spot. My home has never looked cleaner! I highly recommend Service App to anyone in need of professional cleaning services." - John D.</p>
+                    </div>
+                    <div class="review">
+                        <p>"I've been using Service App for several months now, and I couldn't be happier with the results. The team is always punctual, courteous, and efficient. They go above and beyond to ensure customer satisfaction, and it truly shows in the quality of their work. Thanks to Service App, I can enjoy a clean and tidy home without any hassle!" - Emily S.</p>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+
+    <footer>
+        <p>&copy; 2024 Service App</p>
+    </footer>
+
+<div id="aboutInfo" style="display:none;">
+    <h2>About Our Service App</h2>
+    <div class="about-content">
+        <h3>Bringing Shine to Every Space, One Sweep at a Time!</h3>
+        <p>At Service App, we understand the importance of a clean and healthy environment for both homes and businesses. With our professional cleaning services, we go beyond surface-level cleanliness to provide meticulous attention to detail, ensuring every nook and cranny is sparkling clean. Our team of dedicated cleaning professionals is committed to delivering exceptional results, using eco-friendly products and proven cleaning techniques to create a fresh and inviting space. Whether it's residential cleaning, commercial janitorial services, or specialized deep cleaning projects, trust Service App to exceed your expectations and leave your space impeccably clean, every time.</p>
+    </div>
+</div>
+
+
+    <div id="contactForm" style="display:none;">
+        <!-- Contact form content -->
+        <div id="contactForm">
+            <h2>Contact Us</h2>
+            <form action="#" method="POST">
+                <label class="form-label" for="contact-name">Name:</label><br>
+                <input type="text" id="contact-name" name="name"><br>
+
+                <label class="form-label" for="contact-phone">Phone Number:</label><br>
+                <input type="tel" id="contact-phone" name="phone"><br>
+
+                <label class="form-label" for="contact-email">Email:</label><br>
+                <input type="email" id="contact-email" name="email"><br>
+
+                <label class="form-label" for="contact-message">Message:</label><br>
+                <textarea id="contact-message" name="message"></textarea><br>
+
+                <input type="submit" value="Submit">
+            </form>
+        </div>
+    </div>
+
+    <div id="proApplicationForm" style="display:none;">
+        <h2>Pro Application</h2>
+        <form action="#" method="POST">
+            <label class="form-label" for="pro-name">Name:</label>
+            <input type="text" id="pro-name" name="name" required><br>
+
+            <label class="form-label" for="pro-email">Email:</label>
+            <input type="email" id="pro-email" name="email" required><br>
+
+            <label class="form-label" for="pro-phone">Phone Number:</label>
+            <input type="tel" id="pro-phone" name="phone" required><br>
+
+            <label class="form-label" for="pro-dob">Date of Birth:</label>
+            <input type="date" id="pro-dob" name="dob" required><br>
+
+            <label class="form-label" for="pro-address">Address:</label>
+            <textarea id="pro-address" name="address" required rows="4"></textarea><br>
+
+            <label class="form-label" for="pro-serviceType">Service Type:</label>
+            <select id="pro-serviceType" name="serviceType" required>
+                <option value="option1">Service Type 1</option>
+                <option value="option2">Service Type 2</option>
+                <option value="option3">Service Type 3</option>
+            </select><br>
+
+            <input type="submit" value="Submit">
+        </form>
+    </div>
+    <div class="booking-form-container" id="bookingFormContainer">
+        <div class="booking-form">
+            <h2>Booking Form</h2>
+            <form action="#" method="post" id="bookingForm">
+                <label for="name">Name:</label>
+                <input type="text" id="name" name="name" required>
+    
+                <label for="phone">Phone Number:</label>
+                <input type="tel" id="phone" name="phone" required>
+    
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" required>
+    
+                <label for="date">Booking Date:</label>
+                <input type="date" id="date" name="date" required>
+    
+                <label for="start-time">Start Time:</label>
+                <input type="time" id="start-time" name="start-time" required>
+    
+                <label for="end-time">End Time:</label>
+                <input type="time" id="end-time" name="end-time" required>
+    
+                <label for="hours">Number of Hours:</label>
+                <input type="number" id="hours" name="hours" min="1" required>
+    
+                <label for="comments">Additional Comments:</label>
+                <textarea id="comments" name="comments"></textarea>
+    
+                <button type="submit" id="submitBooking">Submit Booking</button>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Payment Information -->
+    <div class="payment-form-container" id="paymentFormContainer" style="display: none;">
+        <div class="payment-form">
+            <h2>Payment Information</h2>
+            <form action="#" method="post" id="paymentForm">
+                <label for="card-number">Card Number:</label>
+                <input type="text" id="card-number" name="card-number" required>
+    
+                <label for="expiry-date">Expiry Date:</label>
+                <input type="text" id="expiry-date" name="expiry-date" required>
+    
+                <label for="cvv">CVV:</label>
+                <input type="text" id="cvv" name="cvv" required>
+    
+                <button type="submit" id="submitPayment">Submit Payment</button>
+            </form>
+        </div>
+    </div>
+    
+
+    <script src="service.js"></script>
+
+</body>
+
+</html>
