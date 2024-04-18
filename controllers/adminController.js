@@ -3,11 +3,11 @@ import passport from 'passport'
 import User from '../models/users.js'
 import LocalStrategy from 'passport-local'
 
-passport.use(new LocalStrategy({usernameField: 'email'}, User.authenticate()))
+passport.use('user', new LocalStrategy({usernameField: 'email'}, User.authenticate()))
 passport.serializeUser(User.serializeUser())
 passport.deserializeUser(User.deserializeUser());
 
-export const authenticateAdmin = passport.authenticate('local', {
+export const authenticateAdmin = passport.authenticate('user', {
     successRedirect: '/admin/dashboard',
     failureRedirect: '/admin/login',
     failureFlash: true
@@ -19,7 +19,7 @@ export const getAdminDash = (req, res) => {
   }
 
 export const getAdminLogin = (req, res) => {
-    res.render('admin_login.ejs')
+    res.render('login.ejs')
 }
 
 export const getAdminListings = (req, res) => {

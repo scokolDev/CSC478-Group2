@@ -4,7 +4,7 @@ import vhost from 'vhost'
 import scheduleController from '../controllers/scheduleController.js'
 import productController from '../controllers/productController.js'
 import orderController from '../controllers/orderController.js'
-import customerRouter from '../routers/customerRouter.js'
+//import customerRouter from '../routers/customerRouter.js'
 import resourceController from '../controllers/resourceController.js'
 import organizationRouter from './organizationRouter.js'
 import adminRouter from './adminRouter.js'
@@ -26,7 +26,7 @@ const router = express.Router();
 const s3 = new AWS.S3();
 const upload = multer({ dest: 'uploads/' });
 
-passport.use(new LocalStrategy({usernameField: 'email'}, User.authenticate()))
+passport.use('user', new LocalStrategy({usernameField: 'email'}, User.authenticate()))
 passport.serializeUser(User.serializeUser())
 passport.deserializeUser(User.deserializeUser());
 router.use(passport.initialize())
@@ -42,7 +42,7 @@ router.get('/', (req, res, next) => {
       req.body.orgdomain = req.vhost[0]
       next()
     } else {
-      res.render('test.ejs', {orgname: ''})
+      res.render('index.ejs', {orgname: ''})
     }
     // Serve the index.html file
     
@@ -66,7 +66,7 @@ router.get('/login', checkNotAuthenticated, (req, res) => {
   res.render('login.ejs');
 });
 
-router.post('/login', checkNotAuthenticated, passport.authenticate('local', {
+router.post('/login', checkNotAuthenticated, passport.authenticate('user', {
   successRedirect: '/schedule',
   failureRedirect: '/login',
   failureFlash: true
@@ -118,13 +118,13 @@ router.use('/api/events', scheduleController);
 //Use middleware for '/api/{controller}'
 router.use('/api/products', productController);
 router.use('/api/orders', orderController);
-router.use('/api/customers', customerRouter);
+//router.use('/api/customers', customerRouter);
 router.use('/api/resources', resourceController);
 router.use('/api/organizations', organizationRouter);
 router.use('/api/locations', locationRouter);
 
 router.use('/admin', adminRouter)
-router.use('/customer', customerRouter)
+//router.use('/customer', customerRouter)
 
 
 

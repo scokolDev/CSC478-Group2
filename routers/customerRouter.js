@@ -20,7 +20,7 @@ import {
 
 import LocalStrategy from 'passport-local'
 const router = express.Router();
-passport.use(new LocalStrategy({usernameField: 'email'}, Customer.authenticate()))
+passport.use('customer', new LocalStrategy({usernameField: 'email'}, Customer.authenticate()))
 passport.serializeUser(Customer.serializeUser())
 passport.deserializeUser(Customer.deserializeUser());
 router.use(passport.initialize())

@@ -5,11 +5,11 @@ import { checkAuthenticated } from '../routers/routes.js';
 import passport from 'passport'
 import LocalStrategy from 'passport-local'
 
-passport.use(new LocalStrategy({usernameField: 'email'}, Customer.authenticate()))
+passport.use('customer', new LocalStrategy({usernameField: 'email'}, Customer.authenticate()))
 passport.serializeUser(Customer.serializeUser())
 passport.deserializeUser(Customer.deserializeUser());
 
-export const authenticateCustomer = passport.authenticate('local', {
+export const authenticateCustomer = passport.authenticate('customer', {
     successRedirect: '/customer/dashboard',
     failureRedirect: '/customer/login',
     failureFlash: true
