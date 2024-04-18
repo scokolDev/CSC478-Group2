@@ -1,11 +1,13 @@
 now = new Date(Date.now());
 console.log(now);
+
+appointmentsList = document.getElementById("AppointmentsList")
+appointmentListOnDay = document.getElementById("SelectedAppointmentList")
+Calendar = document.getElementById("Calendar");
+
+appointmentDates = []
 DisplayedMonth = now.getMonth();
 DisplayedYear = now.getFullYear();
-
-appointmentListOnDay = document.getElementById("SelectedAppointmentList")
-appointmentsList = document.getElementById("AppointmentsList")
-Calendar = document.getElementById("Calendar")
 
 //returns a month name in string form given the month number
 function monthNumToString(monthNumber){
@@ -38,28 +40,10 @@ function monthNumToString(monthNumber){
 
 }
 
-async function getProductById(Prodid){
-    try {
-
-        const response = await fetch('/api/products/' + Prodid);
-        if(!response.ok) {
-            throw new Error('Failed to get products form Database');
-        }
-    
-        const product = await response.json();
-        console.log(product)
-        return product
-      } catch (error) {
-        console.error(error.message);
-        alert("Failed to Fetch product")
-      }
-}
-
-
 //displays all appointments on a given day, fills in box under calendar when user clicks on a calendar day
 async function displayAppointmentsOnDay(year, month, day){
     document.getElementById("SelectedAppointmentList").innerHTML = '';
-    
+
     try {
         // fetch all orders from the database
         const response = await fetch('/api/orders');
@@ -71,8 +55,6 @@ async function displayAppointmentsOnDay(year, month, day){
         orders.forEach((order) => {
             if(order.products[0]  != "test"){
             
-            curProduct = getProductById(order.products[0])
-            
             scheduledTime = order.startTime
              
             orderYear = parseInt(scheduledTime.substring(0, 4))
@@ -80,8 +62,7 @@ async function displayAppointmentsOnDay(year, month, day){
             orderDay = parseInt(scheduledTime.substring(8, 10))
 
             if(orderYear == year && orderMonth == parseInt(month) + 1 && orderDay == day){
-                console.log("added appointment to day")
-                addAppointment(appointmentListOnDay, order._id, order.products[0], order.resourceID, true)
+                addAppointment(appointmentListOnDay, order._id, order.products[0], order.resourceID, false)
             }    
             }    
         });
@@ -91,9 +72,10 @@ async function displayAppointmentsOnDay(year, month, day){
       }
 }
 
-
+//function to add an apointment to a specified container
 async function addAppointment(container, orderID, productID, resourceID, isSmall){
     try {
+        //TODO Fix get order by id
         const orderResponse = await fetch('/api/orders');
         const orders = await orderResponse.json();
         let currentOrder
@@ -102,48 +84,77 @@ async function addAppointment(container, orderID, productID, resourceID, isSmall
                 currentOrder = order
             }
         });
+
+
         const productResponse = await fetch('/api/products/' + productID);
         const resourceResponse = await fetch('/api/resources/' + resourceID);
 
-        // if(!orderResponse.ok || !productResponse.ok || !resourceResponse.ok) {
-        //     throw new Error('Failed to get orders from Database');
-        //   }
         
         const order = currentOrder
         const product = await productResponse.json();
         const resource = await resourceResponse.json();
         
 
-        console.log(order)
-
         scheduledTime = order.startTime
-        scheduledEndTime = order.endTime
+        startDate = new Date(parseInt(scheduledTime.substring(0,4)), parseInt(scheduledTime.substring(5, 7)), parseInt(scheduledTime.substring(8, 10))) 
         if(isSmall){
-            let appointment = document.createElement("div");
-            appointment.setAttribute("class", "AppointmentObject");
-            appointment.innerHTML += '<div style="grid-area: 1/1/3/5;">' + `${product.name}` + '</div>'
-            TimeRange = parseInt(scheduledTime.substring(11, 13))%12 + ":" + scheduledTime.substring(14, 16) + (parseInt(scheduledTime.substring(11, 13)) > 11 ? "pm" : "am")
-            appointment.innerHTML += '<div style="grid-area: 1/5/3/8; text-align: center;">' + TimeRange + '</div>'
-            appointment.innerHTML += '<div style="grid-area: 3/7/5/8; text-align: center;">' + '$' + `${product.price}` + '</div>' 
-            appointment.innerHTML += '<div style="grid-area: 3/1/5/7;">' + `${order.customerID}` + '</div>' 
+            let appointmentHeader = '';
+            let isExistingDate = false
+            for(i = 0; i < appointmentDates.length; i++){
+                if(appointmentDates[i].getDate() == parseInt(scheduledTime.substring(8, 10)) &&
+                appointmentDates[i].getMonth() == parseInt(scheduledTime.substring(5, 7)) &&
+                appointmentDates[i].getFullYear() == parseInt(scheduledTime.substring(0,4))){
+                    appointmentHeader = document.getElementById(appointmentDates[i].getMonth() + appointmentDates[i].getDate() + appointmentDates[i].getFullYear())
+                    isExistingDate = true
+                }
+            }
+            if(!isExistingDate){
+                appointmentHeader = document.createElement("div")
+                appointmentHeader.innerHTML = '-' + monthNumToString(parseInt(scheduledTime.substring(5, 7))) + ', ' + parseInt(scheduledTime.substring(8, 10)) + ' ' + parseInt(scheduledTime.substring(0,4))
+                appointmentHeader.setAttribute("id", parseInt(scheduledTime.substring(5, 7)) + parseInt(scheduledTime.substring(8, 10)) + parseInt(scheduledTime.substring(0,4)))
+                appointmentHeader.setAttribute("style", "text-align: left; margin-top: 5%;")
+                appointmentDates.push(startDate)
+            }
+
+
+            let appointment = document.createElement("div")
+            appointment.setAttribute("style", "text-align: center; display:flex; justify-content: space-between; margin-top: 3%; background-color:lightblue; border-radius:5px; padding-left: 5%; padding-right:5%;")
+
+            appointmentName = document.createElement("div")
+            appointmentName.innerHTML = product.name
+
+            appointmentTime = document.createElement("div")
+            appointmentTime.innerHTML = parseInt(scheduledTime.substring(11, 13))%12 + ":" + scheduledTime.substring(14, 16) + (parseInt(scheduledTime.substring(11, 13)) > 11 ? "pm" : "am")
+            appointment.appendChild(appointmentName)
+            appointment.appendChild(appointmentTime)
             appointment.setAttribute("orderID", orderID)
             appointment.addEventListener("click", function() {
-                location.href = '/admin/order_details?ID=' + appointment.getAttribute("orderID")
+                location.href = '/order_details?ID=' + appointment.getAttribute("orderID")
             })
-            container.appendChild(appointment)
+
+            appointmentHeader.appendChild(appointment)
+            if(!isExistingDate){
+                container.appendChild(appointmentHeader)
+            }
+            
         }else{
-            let appointment = document.createElement("div");
-            appointment.setAttribute("class", "AppointmentObjectLarge");
-            appointment.innerHTML += '<div style="grid-area: 1/1/2/8;">' + product.name + '</div>'
-            TimeRange = monthNumToString(parseInt(scheduledTime.substring(5, 7))) + ", " + parseInt(scheduledTime.substring(8, 10)) + " " + parseInt(scheduledTime.substring(0,4)) +  " at "
-            TimeRange += parseInt(scheduledTime.substring(11, 13))%12 + ":" + scheduledTime.substring(14, 16) + (parseInt(scheduledTime.substring(11, 13)) > 11 ? "pm" : "am")
-            //TimeRange += " to " + parseInt(scheduledEndTime.substring(11, 13))%12 + ":" + scheduledEndTime.substring(14, 16) + (parseInt(scheduledEndTime.substring(11, 13)) > 11 ? "pm" : "am")
-            appointment.innerHTML += '<div style="grid-area: 2/1/3/8; text-align: center;">' + TimeRange + '</div>'
-            appointment.innerHTML += '<div style="grid-area: 3/7/4/8; text-align: center;">' + '$' + product.price + '</div>'
-            appointment.innerHTML += '<div style="grid-area: 3/1/4/7;">' + `${order.customerID}` + '</div>'
+            let appointment = document.createElement("div")
+            appointment.setAttribute("style", "text-align: center; display:flex; justify-content: space-between; margin-top: 3%; background-color:lightblue; border-radius:5px; padding-left: 5%; padding-right:5%;")
+
+            appointmentName = document.createElement("div")
+            appointmentName.innerHTML = product.name
+
+            appointmentTime = document.createElement("div")
+            temptimeStr = parseInt(scheduledTime.substring(11, 13))%12 + ":" + scheduledTime.substring(14, 16) + (parseInt(scheduledTime.substring(11, 13)) > 12 ? "pm" : "am")
+            appointmentTime.innerHTML = temptimeStr
+
+            console.log(scheduledTime + " ---------- " + temptimeStr)
+
+            appointment.appendChild(appointmentName)
+            appointment.appendChild(appointmentTime)
             appointment.setAttribute("orderID", orderID)
             appointment.addEventListener("click", function() {
-                location.href = '/admin/order_details?ID=' + appointment.getAttribute("orderID")
+                location.href = '/order_details?ID=' + appointment.getAttribute("orderID")
             })
             container.appendChild(appointment)
         }
@@ -154,8 +165,6 @@ async function addAppointment(container, orderID, productID, resourceID, isSmall
         alert("Failed to Fetch orders")
       }
 }
-
-
 
 //fills upcoming appointments box on the far left of site. Takes all appointments from appointmentArr and displays them in upcoming appointments
 async function displayAppointments(){
@@ -170,10 +179,14 @@ async function displayAppointments(){
         const orders = await response.json();
         
         orders.forEach((order) => {
-            console.log(order)
-            if(order.products[0] != "test"){
-                addAppointment(appointmentsList, order._id, order.products[0], order.resourceID, false)
-            }  
+            //addAppointment(appointmentsList, order._id, order.products[0], order.resourceID, true)
+            if(parseInt(order.startTime.substring(0, 4)) >= now.getFullYear()){
+                 if(parseInt(order.startTime.substring(5, 7)) >= now.getMonth()){
+                     if(parseInt(order.startTime.substring(8, 10)) >= now.getDate()){
+                         addAppointment(appointmentsList, order._id, order.products[0], order.resourceID, true)
+                     }
+                 }
+            }
         });
       } catch (error) {
         console.error(error.message);
@@ -181,6 +194,7 @@ async function displayAppointments(){
       }
 }
 
+//checks to see if there is any orders on the given date, and if so changes the style of the dayElement
 async function OrderOnDay(dayDate, dayElement){
     try {
         // fetch all orders from the database
@@ -199,7 +213,7 @@ async function OrderOnDay(dayDate, dayElement){
 
             
             if(orderYear == dayDate.getFullYear() && orderMonth == dayDate.getMonth() + 1 && orderDay == dayDate.getDate()){
-                dayElement.style.backgroundColor  = "green"
+                dayElement.style.color  = "green"
             }
         });
       } catch (error) {
@@ -209,8 +223,7 @@ async function OrderOnDay(dayDate, dayElement){
       }
 }
 
-//initializes calendar with all days for a given month in a given year
-//handles coloring 
+//initialize the Calendar to display the given month index on the given year
 function initCalendar(monthIndex, year){
     Calendar.innerHTML = '';
     document.getElementById("monthMarker").innerHTML = monthNumToString(monthIndex+1) + ", " + year;
@@ -235,29 +248,26 @@ function initCalendar(monthIndex, year){
         
         day.addEventListener("click", function(){
             if(document.getElementById("selectedDay") != null){
-                document.getElementById("selectedDay").style.border = "1px solid black"
+                document.getElementById("selectedDay").style.backgroundColor = "white"
                 document.getElementById("selectedDay").removeAttribute("id")
             }
-            document.getElementById("SelectedAppointmentHeader").innerHTML = "Appointments on " + monthNumToString(parseInt(day.getAttribute("month")) + 1) + ", " + day.getAttribute("day") + " " + day.getAttribute("year")
             day.setAttribute("id", "selectedDay")
             displayAppointmentsOnDay(day.getAttribute("year"), day.getAttribute("month"), day.getAttribute("day"))
-            day.style.border = "5px solid red"
+            day.style.backgroundColor = "lightblue"
         })
 
         if(curDate.getMonth() == now.getMonth() && curDate.getFullYear() == now.getFullYear()){
             if(curDate.getDate() == now.getDate()){
-                document.getElementById("SelectedAppointmentHeader").innerHTML = "Appointments on " + monthNumToString(parseInt(day.getAttribute("month")) + 1) + ", " + day.getAttribute("day") + " " + day.getAttribute("year")
                 day.setAttribute("id", "selectedDay")
                 displayAppointmentsOnDay(day.getAttribute("year"), day.getAttribute("month"), day.getAttribute("day"))
-                day.style.border = "5px solid red"
+                day.style.backgroundColor = "lightblue"
             }
         }
         else{
             if(curDate.getDate() == 1){
-                document.getElementById("SelectedAppointmentHeader").innerHTML = "Appointments on " + monthNumToString(parseInt(day.getAttribute("month")) + 1) + ", " + day.getAttribute("day") + " " + day.getAttribute("year")
                 day.setAttribute("id", "selectedDay")
                 displayAppointmentsOnDay(day.getAttribute("year"), day.getAttribute("month"), day.getAttribute("day"))
-                day.style.border = "5px solid red"
+                day.style.backgroundColor = "lightblue"
             }
         }
         Calendar.appendChild(day);
@@ -265,13 +275,6 @@ function initCalendar(monthIndex, year){
         curDate = new Date(year, monthIndex, curDay);
     }
 }
-
-
-
-
-initCalendar(DisplayedMonth, DisplayedYear)
-displayAppointments()
-
 
 //functionality for prev button above calander; goes back one month and updates calander object
 document.getElementById("CalPrev").addEventListener("click", function() {
@@ -283,6 +286,7 @@ document.getElementById("CalPrev").addEventListener("click", function() {
     }
     initCalendar(DisplayedMonth, DisplayedYear);
 })
+
 //functionality for next button above calander; goes forward one month and updates calander object
 document.getElementById("CalNext").addEventListener("click", function() {
     if(DisplayedMonth == 11){
@@ -293,3 +297,10 @@ document.getElementById("CalNext").addEventListener("click", function() {
     }
     initCalendar(DisplayedMonth, DisplayedYear);
 })
+
+
+
+
+
+initCalendar(DisplayedMonth, DisplayedYear)
+displayAppointments()

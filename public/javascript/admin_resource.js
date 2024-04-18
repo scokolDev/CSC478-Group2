@@ -51,6 +51,7 @@ async function saveById(rID){
 
       // Send a POST request to add the resource
       }else{
+        console.log("--------------")
         const response = await fetch('/api/resources', {
           method: 'POST',
           headers: {
@@ -78,7 +79,7 @@ async function saveById(rID){
       
     } catch (error) {
       console.error(error.message);
-      alert('Failed to add product');
+      alert('Failed to add resource');
     }
 }
 
@@ -88,6 +89,7 @@ document.getElementById("saveResources").addEventListener("click", async functio
   allResources = document.getElementsByClassName("resourceElement")
   for(i = 0; i < allResources.length; i++){
       saveById(allResources[i].id)
+      console.log(allResources[i].id)
   }
 });
 
@@ -311,8 +313,8 @@ async function displayResources() {
       if(!response.ok) {
         throw new Error('Failed to get resources form Database');
       }
-
       const resources = await response.json();
+      console.log(resources)
       resources.forEach((resource) => {
         addResource(resourceHolder, `${resource._id}`, `${resource.name}`, `${resource.totalQuantity}`, resource.dayAvailability, `${resource.start}`, `${resource.end}`)
       });

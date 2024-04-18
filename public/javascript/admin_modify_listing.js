@@ -57,6 +57,21 @@ document.getElementById("previewButton").addEventListener("click", function(){
     updatePreview(serviceName, "/img/cleaningThumbnail.jpg", serviceDescription, servicePrice)
 })
 
+
+document.getElementById("deleteButton").addEventListener("click", async function(){
+    try {
+      const response = await fetch('/api/products/' + id, {
+          method: 'DELETE'
+      });
+      if(!response.ok) {
+          throw new Error('Failed to find product in Database');
+      }
+
+    } catch (error) {
+      console.error(error.message);
+    }
+})
+
 document.getElementById("saveButton").addEventListener('click', async (event) => {
     event.preventDefault();
 
@@ -75,9 +90,8 @@ document.getElementById("saveButton").addEventListener('click', async (event) =>
     const productAvailable = document.getElementById("active").checked ? true : false;
     const productCategory = "cleaning";
 
-
-    Allresources = document.getElementsByClassName("resourceDisplay")
     assignedResources = []
+    Allresources = document.getElementsByClassName("resourceDisplay")
     for(i = 0; i < Allresources.length; i++){
       if(Allresources[i].getElementsByClassName("resourceCheckbox")[0].checked){
         assignedResources.push(Allresources[i].id)
@@ -98,6 +112,7 @@ document.getElementById("saveButton").addEventListener('click', async (event) =>
             name: productName, 
             description: productDesc,
             price: productPrice,
+            resources: assignedResources,
             priceType: productPriceType,
             category: productCategory,
             image: productImage,
@@ -122,6 +137,7 @@ document.getElementById("saveButton").addEventListener('click', async (event) =>
             name: productName, 
             description: productDesc,
             price: productPrice,
+            resources: assignedResources,
             priceType: productPriceType,
             category: productCategory,
             image: productImage,
@@ -143,7 +159,7 @@ document.getElementById("saveButton").addEventListener('click', async (event) =>
   });
 
   resourceContainer = document.getElementById("resourceHolder")
-  function addResource(resourceContainer, name, resourceID){
+  function addResource(resourceContainer, name, resourceID, ischecked){
     resourceElement = document.createElement("div")
     resourceElement.setAttribute("class", "resourceDisplay")
     resourceElement.setAttribute("id", resourceID)
@@ -151,6 +167,7 @@ document.getElementById("saveButton").addEventListener('click', async (event) =>
     resourceCheckbox = document.createElement("input")
     resourceCheckbox.setAttribute("type", "checkbox")
     resourceCheckbox.setAttribute("class", "resourceCheckbox")
+    if(ischecked){resourceCheckbox.setAttribute("checked", true)}
     resourceElement.appendChild(resourceCheckbox)
 
     resourceLabel = document.createElement("div")
@@ -160,7 +177,7 @@ document.getElementById("saveButton").addEventListener('click', async (event) =>
 
     resourceContainer.appendChild(resourceElement)
   }
-  
+
   async function loadResources(resourceContainer, activeResources) {
       try {
         // fetch all resources from the database
@@ -174,7 +191,9 @@ document.getElementById("saveButton").addEventListener('click', async (event) =>
           isChecked = false;
           if(activeResources != undefined){
             for(i = 0; i < activeResources.length; i++){
-              activeResources[i] == `${resource._id}` ? isChecked = true : isChecked = false
+              if(!isChecked){
+                activeResources[i] == `${resource._id}` ? isChecked = true : isChecked = false
+              }
             }
           }
           addResource(resourceContainer, `${resource.name}`, `${resource._id}`, isChecked)
@@ -229,6 +248,7 @@ displayTemplate = true
 if(id == undefined){
     console.log("no service ID")
     loadResources(resourceContainer)
+    document.getElementById("deleteButton").setAttribute("style", "visibility: hidden")
 }else{
     displayTemplate = false
     findExistingService();

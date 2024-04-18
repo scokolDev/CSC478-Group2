@@ -50,9 +50,10 @@ router.get('/:id', checkAuthenticated, async (req, res) => {
 
 //Update Product
 router.put('/:id', checkAuthenticated, async (req, res) => {
+    req.body.organizationID = req.user.organizationID;
     const {id} = req.params
     try {
-        const product = await Product.findByIdAndUpdate(id, {"organizationID": req.user.organizationID}, req.body)
+        const product = await Product.findByIdAndUpdate(id, req.body)
         if(!product){
             return res.status(404).json({message: `cannot find any product with ID ${id}`})
         } else if (product.organizationID && product.organizationID != req.user.organizationID) {
@@ -60,8 +61,10 @@ router.put('/:id', checkAuthenticated, async (req, res) => {
         } else if (product.organizationID === undefined) {
             return res.status(401).json({message: `Not authorized to update global products ${id}`})
         }
+
         console.log(product)
         const updatedProduct = await Product.findById(id);
+        
         res.status(200).json(updatedProduct)
     } catch  (error) {
         res.status(500).json({message: error.message})

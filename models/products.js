@@ -16,13 +16,14 @@ const productSchema = new db.Schema( {
         type: String,
         required: true 
     },
+    resources: {
+        type: [],
+        required: true
+    },
     image: String,
     timeSlot: Date,
     display: Boolean,
-    organizationID: {
-        type: String,
-        required: true
-    }
+    organizationID: String,
 })
 
 export default db.model('Product', productSchema)

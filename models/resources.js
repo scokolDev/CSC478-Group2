@@ -1,6 +1,7 @@
 import db from 'mongoose'
 
 const resourceSchema = new db.Schema({
+    organizationID: String,
     name: {
         type: String,
         required: true,

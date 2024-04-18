@@ -42,6 +42,11 @@ export const getAdminModifyListing = (req, res) => {
   res.render('admin_modify_listing.ejs')
 }
 
+export const getAdminOrderDetails = (req, res) => {
+  // Serve the admin_order_details.ejs file
+  res.render('admin_order_details.ejs')
+}
+
 export const registerAdmin = async (req, res) => {
     try {
       const organization = await Organization.create({

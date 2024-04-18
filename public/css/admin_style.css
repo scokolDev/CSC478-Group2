@@ -194,7 +194,7 @@ header {
     height: 100vh;
 
     grid-template-rows:repeat(15, 1fr);
-    grid-template-columns:50% 50%;
+    grid-template-columns:repeat(3, 1fr);
     row-gap: 2%;
 
     background-color: rgb(110, 110, 110);
@@ -255,6 +255,7 @@ header {
     width: 100%; 
     background-color: #444; 
     display: flex;
+    margin-bottom: 1%;
 }
 
 

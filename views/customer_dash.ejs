@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/customer_style.css" >
+    <title>Customer Dashboard</title>
+</head>
+<body>
+
+    <header>
+        <div class="headerWrapper">
+            <a href="/"><div class="logoIcon"></div></a>
+            <div style="display: flex;">
+                <form action="/logout?_method=DELETE"  method="POST"><button class="logoutIcon"></button></form>
+                <a href="/admin/dashboard"><div class="accountIcon"></div></a>
+            </div>
+            
+        </div>
+    </header>
+
+    <main>
+        <div class="customerDashMainWrapper">
+            <!-- <div class="AppointmentsListWrapper">
+                <p>Upcoming Appointments</p>
+                <div class="AppointmentsList" id="AppointmentsList">
+
+                </div>
+            </div> -->
+            <div class="customerDashboardButtons">
+                <button class="dashboardButton">view all orders</button>
+                <button class="dashboardButton">change account information</button>
+                <button class="dashboardButton">Update Payment information</button>
+            </div>
+            <div class="customerCalendarPanel">
+                <div>Appointments on Day</div>
+                <div class="CalendarWrapper">
+                    <div class="CalendarHeader">
+                        <button id="CalPrev" style="width: 15%; aspect-ratio: 1;">prev</button>
+                        <p id="monthMarker" style="width: 50%;"></p>
+                        <button id="CalNext" style="width: 15%; aspect-ratio: 1;">next</button>
+                    </div>
+                    <div class="CalendarHeader">
+                        <div style="text-align: center; width: 10%;"><p>Sun</p></div>
+                        <div style="text-align: center; width: 10%;"><p>Mon</p></div>
+                        <div style="text-align: center; width: 10%;"><p>Tue</p></div>
+                        <div style="text-align: center; width: 10%;"><p>Wed</p></div>
+                        <div style="text-align: center; width: 10%;"><p>Thr</p></div>
+                        <div style="text-align: center; width: 10%;"><p>Fri</p></div>
+                        <div style="text-align: center; width: 10%;"><p>Sat</p></div>
+                    </div>
+                    <div class="Calendar" id="Calendar"></div>
+                </div>
+                <div id="SelectedAppointmentList">
+
+                </div>
+            </div>
+            <div class="customerUpcomingPanel" >
+                <div>All Upcoming Appointments</div>
+                <div id="AppointmentsList">
+                </div>
+                
+            </div>
+
+            <!-- <div class="SelectedAppointment">
+                <p style="text-align: center; width: 100%;" id="SelectedAppointmentHeader"></p>
+                <div class="SelectedAppointmentList" id="SelectedAppointmentList">
+                </div>
+            </div> -->
+
+
+            <!-- <div style="display: flex; justify-content: space-around; align-items: center;" class="ButtonHolder">
+                <a style="height: 50%; aspect-ratio: 1; background-color: white;" href="/admin/listings"><div style="text-align: center;">Listings</div></a>
+                <a style="height: 50%; aspect-ratio: 1; background-color: white;" href="/admin/resources"><div style="text-align: center;">resources</div></a>
+                <a style="height: 50%; aspect-ratio: 1; background-color: white;" href="/admin/login"><div style="text-align: center;">Change Profile</div></a>
+            </div> -->
+        </div>
+    
+    </main>
+
+    
+
+</body>
+
+<script src="/javascript/customer_dash.js" ></script>
+
+</html>

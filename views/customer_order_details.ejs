@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/customer_style.css" >
+    <title>Customer Dashboard</title>
+</head>
+<body>
+
+    <header>
+        <div class="headerWrapper">
+            <a href="/"><div class="logoIcon"></div></a>
+            <div style="display: flex;">
+                <form action="/logout?_method=DELETE"  method="POST"><button class="logoutIcon"></button></form>
+                <a href="/admin/dashboard"><div class="accountIcon"></div></a>
+            </div>
+            
+        </div>
+    </header>
+
+    <main>
+        <div class="orderDetailsWrapper">
+            <div style="font-size: var(--largeText);" id="orgName">Organization name</div>
+            <br>
+            <br>
+            <div style="font-size: var(--midText);" id="orderNumber">Order Number: </div>
+            <br>
+            <div style="font-size: var(--midText);" id="orderStatus">status: </div>
+            <br>
+            <br>
+            <div style="font-size: var(--midText);">Product Purchased:</div>
+            <br>
+            <div style="margin-left: 50px; font-size: var(--smallText);" id="productName">Product Name: </div>
+            <br>
+            <div style="margin-left: 50px; font-size: var(--smallText);" id="productDescription">Product Description: </div>
+            <br>
+            <div style="margin-left: 50px; font-size: var(--smallText);" id="productPricing">Product pricing: </div>
+            <br>
+            <br>
+            <div style="font-size: var(--midText);">Resource Scheduled: </div>
+            <br>
+            <div style="margin-left: 50px; font-size: var(--smallText);" id="resourceName">Resource Name: </div>
+            <br>
+            <br>
+            <div style="font-size: var(--midText);">Scheduled Time: </div>
+            <br>
+            <div style="margin-left: 50px; font-size: var(--smallText);" id="startTime">Start Date and Time: </div>
+            <br>
+            <div style="margin-left: 50px; font-size: var(--smallText);">to</div>
+            <br>
+            <div style="margin-left: 50px; font-size: var(--smallText);" id="endTime">End Date and Time: </div>
+            <br>
+            <br>
+            <div style="font-size: var(--midText);">Price Paid: </div>
+            <br>
+            <div style="margin-left: 50px; font-size: var(--smallText);" id="cost">$</div>
+
+            <div style="display: flex; height: 10%; justify-content: space-between;">
+                <button style="aspect-ratio: 1;" onclick="deleteOrder()">
+                    Cancel Order
+                </button>
+                <button style="aspect-ratio: 1;" onclick="location.href = '/dashboard'"> 
+                    return to Dashboard
+                </button>
+            </div>
+        </div>
+    
+    </main>
+
+    
+
+</body>
+
+<script src="/javascript/order_details.js" ></script>
+
+</html>

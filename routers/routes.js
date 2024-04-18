@@ -58,6 +58,18 @@ router.get('/register', checkNotAuthenticated,  (req, res) => {
   res.render('register.ejs');
 });
 
+// Route handler for customer dashboard
+router.get('/dashboard', checkAuthenticated,  (req, res) => {
+  // Serve the customer_dash.ejs file
+  res.render('customer_dash.ejs');
+});
+
+// Route handler for customer order details page
+router.get('/order_details', checkAuthenticated,  (req, res) => {
+  // Serve the customer_order_details.ejs file
+  res.render('customer_order_details.ejs');
+});
+
 
 router.post('/register', checkNotAuthenticated, async (req, res) => {
     User.register(
