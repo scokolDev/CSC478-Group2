@@ -3,17 +3,14 @@ import express from 'express'
 import Customer from '../models/customers.js'
 import { checkAuthenticated } from '../routers/routes.js';
 import passport from 'passport'
-import LocalStrategy from 'passport-local'
 
-passport.use('customer', new LocalStrategy({usernameField: 'email'}, Customer.authenticate()))
-passport.serializeUser(Customer.serializeUser())
-passport.deserializeUser(Customer.deserializeUser());
 
-export const authenticateCustomer = passport.authenticate('customer', {
-    successRedirect: '/customer/dashboard',
-    failureRedirect: '/customer/login',
-    failureFlash: true
-  })
+// export const authenticateCustomer = passport.authenticate('customer', {
+//     successRedirect: '/customer/dashboard',
+//     failureRedirect: '/customer/login',
+//     failureFlash: true
+//   })
+
 // Create a router instance
 const router = express.Router();
 
@@ -90,11 +87,11 @@ export const deleteCustomer = async(req, res) =>{
 
 export const getCustomerDash = (req, res) => {
     // Serve the Customer Dash file
-    res.render('customer_dash.ejs', {orgName: req.body.organizationName});
+    res.render('customer_dash.ejs', {firstName: req.user.firstName});
   }
 
 export const getCustomerLogin = (req, res) => {
-    res.render('customer_login.ejs')
+    res.render('customer_login.ejs', {message: req.failureFlash})
 }
 
 export const getCustomerOrders = (req, res) => {
@@ -139,5 +136,6 @@ export const getDomain = async (req, res) => {
         return req.body.orgdomain = req.vhost[0]
       }
 }
+
 
 export default router

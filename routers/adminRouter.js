@@ -4,7 +4,7 @@ import User from '../models/users.js'
 import { checkNotAuthenticated, checkAuthenticated} from './routes.js'
 import { getOrgName } from '../controllers/organizationController.js'
 import {
-    authenticateAdmin,
+    // authenticateAdmin,
     getAdminLogin,
     getAdminDash,
     getAdminModifyListing,
@@ -15,21 +15,17 @@ import {
 } from '../controllers/adminController.js'
 
 import Organization from '../models/organizations.js'
-import LocalStrategy from 'passport-local'
 
 
 
 
 const router = express.Router();
-passport.use('user', new LocalStrategy({usernameField: 'email'}, User.authenticate()))
-passport.serializeUser(User.serializeUser())
-passport.deserializeUser(User.deserializeUser());
-router.use(passport.initialize())
+
 router.use(passport.session())
 
 
 
-router.post('/login', checkNotAuthenticated, authenticateAdmin)
+// router.post('/login', checkNotAuthenticated, authenticateAdmin)
 
 router.get('/login', checkNotAuthenticated, getAdminLogin);
   

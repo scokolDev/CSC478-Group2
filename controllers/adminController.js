@@ -1,17 +1,13 @@
 import Organization from '../models/organizations.js'
 import passport from 'passport'
 import User from '../models/users.js'
-import LocalStrategy from 'passport-local'
 
-passport.use('user', new LocalStrategy({usernameField: 'email'}, User.authenticate()))
-passport.serializeUser(User.serializeUser())
-passport.deserializeUser(User.deserializeUser());
+// export const authenticateAdmin = passport.authenticate('user', {
+//     successRedirect: '/admin/dashboard',
+//     failureRedirect: '/admin/login',
+//     failureFlash: true
+//   })
 
-export const authenticateAdmin = passport.authenticate('user', {
-    successRedirect: '/admin/dashboard',
-    failureRedirect: '/admin/login',
-    failureFlash: true
-  })
 
 export const getAdminDash = (req, res) => {
     // Serve the Login.ejs file
@@ -19,7 +15,7 @@ export const getAdminDash = (req, res) => {
   }
 
 export const getAdminLogin = (req, res) => {
-    res.render('login.ejs')
+    res.render('login.ejs', {error: req.failureFlash})
 }
 
 export const getAdminListings = (req, res) => {

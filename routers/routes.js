@@ -4,17 +4,15 @@ import vhost from 'vhost'
 import scheduleController from '../controllers/scheduleController.js'
 import productController from '../controllers/productController.js'
 import orderController from '../controllers/orderController.js'
-//import customerRouter from '../routers/customerRouter.js'
+import customerRouter from '../routers/customerRouter.js'
 import resourceController from '../controllers/resourceController.js'
 import organizationRouter from './organizationRouter.js'
 import adminRouter from './adminRouter.js'
 import locationRouter from './locationRouter.js'
-//import { checkAuthenticated, checkNotAuthenticated } from './adminRouter.js'
 import passport from 'passport'
 import methodOverride from 'method-override' 
 import User from '../models/users.js'
 import { getOrgByDomain } from '../controllers/organizationController.js'
-import LocalStrategy from 'passport-local'
 import AWS from 'aws-sdk'
 import multer from 'multer';
 import fs from 'fs'
@@ -26,14 +24,10 @@ const router = express.Router();
 const s3 = new AWS.S3();
 const upload = multer({ dest: 'uploads/' });
 
-passport.use('user', new LocalStrategy({usernameField: 'email'}, User.authenticate()))
-passport.serializeUser(User.serializeUser())
-passport.deserializeUser(User.deserializeUser());
-router.use(passport.initialize())
-router.use(passport.session())
+
+router.use(passport.session());
+
 router.use(methodOverride('_method'))
-
-
 
 
 // Route handler for the root path
@@ -57,7 +51,7 @@ router.get('/', (req, res, next) => {
 
   router.get('/schedule', checkAuthenticated, (req, res) => {
     // Serve the index.html file
-    res.render('index.ejs', {name: req.user.firstName});
+    res.render('index-main.ejs', {name: req.user.firstName});
   });
 
 // Route handler for Customer Login
@@ -71,6 +65,7 @@ router.post('/login', checkNotAuthenticated, passport.authenticate('user', {
   failureRedirect: '/login',
   failureFlash: true
 }))
+
 
 
 // Route handler for Register
@@ -118,13 +113,13 @@ router.use('/api/events', scheduleController);
 //Use middleware for '/api/{controller}'
 router.use('/api/products', productController);
 router.use('/api/orders', orderController);
-//router.use('/api/customers', customerRouter);
+router.use('/api/customers', customerRouter);
 router.use('/api/resources', resourceController);
 router.use('/api/organizations', organizationRouter);
 router.use('/api/locations', locationRouter);
 
 router.use('/admin', adminRouter)
-//router.use('/customer', customerRouter)
+router.use('/customer', customerRouter)
 
 
 

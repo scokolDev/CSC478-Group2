@@ -26,7 +26,6 @@ router.post('/', checkAuthenticated, async (req, res) => {
     req.body.organizationID = req.user.organizationID
     try {
         const resource = await Resource.create(req.body)
-        console.log(resource)
         res.status(200).json(resource)
     } catch  (error) {
         res.status(500).json({message: error.message})
@@ -46,7 +45,6 @@ router.get('/:id', checkAuthenticated, async (req, res) => {
         } else if (!resource.organizationID) {
             return res.status(401).json({message: `Not authorized to access global resources ${id}`})
         }
-        console.log(resource)
         res.status(200).json(resource)
     } catch  (error) {
         res.status(500).json({message: error.message})

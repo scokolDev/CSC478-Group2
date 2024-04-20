@@ -14,6 +14,9 @@ import mongoose from 'mongoose'
 import MongoStore from 'connect-mongo'
 import path from 'path'
 import { fileURLToPath } from 'url'
+import passport from 'passport'
+import PassportConfig from './config/passport.js'
+import authRouter from './routers/authRouter.js'
 
 
 const __filename = fileURLToPath(import.meta.url); // get the resolved path to the file
@@ -23,6 +26,7 @@ const __dirname = path.dirname(__filename); // get the name of the directory
 mongoose.set('strictQuery', false)
 mongoose.connect(process.env.MONGODB_CONNECT)
 const db = mongoose.connection
+
 
 
 
@@ -41,14 +45,22 @@ app.use(session({
   store: new MongoStore({ mongoUrl: db.client.s.url })
 }))
 
+app.use(passport.initialize());
+app.use(passport.session())
+PassportConfig(passport);
+
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Use body-parser middleware to parse JSON data
 app.use(bodyParser.json());
 
 // Define a route handler for the root path
+app.use('/auth', authRouter);
 app.use(vhost('*.localhost', routes));
 app.use(routes);
+
+
+
 
 app.listen(3000, () => {
   console.log('Server is running on http://localhost:3000');
