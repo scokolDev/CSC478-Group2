@@ -56,6 +56,7 @@ router.get('/:id', checkAuthenticated, async (req, res) => {
 
 //Update Product
 router.put('/:id', checkAuthenticated, async (req, res) => {
+    req.body.organizationID = req.user.organizationID;
     const {id} = req.params
     try {
         const product = await Product.findById(id)
@@ -68,6 +69,7 @@ router.put('/:id', checkAuthenticated, async (req, res) => {
         }
         await Product.findByIdAndUpdate(id, req.body)
         const updatedProduct = await Product.findById(id);
+        
         res.status(200).json(updatedProduct)
     } catch  (error) {
         res.status(500).json({message: error.message})

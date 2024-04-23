@@ -54,6 +54,7 @@ router.get('/:id', checkAuthenticated, async (req, res) => {
 
 //Update Resource
 router.put('/:id', checkAuthenticated, async (req, res) => {
+    req.body.organizationID = req.user.organizationID
     const {id} = req.params
     try {
         const resource = await Resource.findById(id)

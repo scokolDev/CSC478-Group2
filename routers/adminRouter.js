@@ -7,11 +7,12 @@ import {
     // authenticateAdmin,
     getAdminLogin,
     getAdminDash,
-    getAdminModifyListing,
     getAdminListings,
     getAdminRegister,
     registerAdmin,
     getAdminResource,
+    getAdminModifyListing,
+    getAdminOrderDetails,
 } from '../controllers/adminController.js'
 
 import Organization from '../models/organizations.js'
@@ -41,7 +42,7 @@ router.get('/login', checkNotAuthenticated, getAdminLogin);
   // Route handler for Admin Resources
   router.get('/modify_listing', checkAuthenticated, getAdminModifyListing);
 
-  
+  router.get('/order_details', checkAuthenticated, getAdminOrderDetails);
 
   router.get('/register', checkNotAuthenticated,  getAdminRegister);
   

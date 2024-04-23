@@ -35,7 +35,7 @@ function addService(container, service, image, description, price, serviceId){
 
     let NameBox = document.createElement("div")
     NameBox.innerHTML = service;
-    NameBox.setAttribute("style", "text-align: center; font-size: 150%;")
+    NameBox.setAttribute("style", "text-align: center; font-size: 150%; overflow:hidden;")
     listing.appendChild(NameBox)
 
     let descriptionBox = document.createElement("div")

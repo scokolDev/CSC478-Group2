@@ -24,11 +24,6 @@ export const getAdminListings = (req, res) => {
     res.render('admin_listings.ejs');
   }
 
-export const getAdminModifyListing = (req, res) => {
-    // Serve the Login.ejs file
-    res.render('admin_modify_listing.ejs');
-  }
-
 export const getAdminRegister = (req, res) => {
     // Serve the Register.ejs file
     res.render('admin_register.ejs');
@@ -37,6 +32,16 @@ export const getAdminRegister = (req, res) => {
 export const getAdminResource = (req, res) => {
     // Serve the resource.ejs file
     res.render('admin_resources.ejs')
+}
+
+export const getAdminModifyListing = (req, res) => {
+  // Serve the admin_modify_listing.ejs file
+  res.render('admin_modify_listing.ejs')
+}
+
+export const getAdminOrderDetails = (req, res) => {
+  // Serve the admin_order_details.ejs file
+  res.render('admin_order_details.ejs')
 }
 
 export const registerAdmin = async (req, res) => {

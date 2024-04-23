@@ -1,22 +1,14 @@
 import db from 'mongoose'
 
 const resourceSchema = new db.Schema({
+    organizationID: String,
     name: {
         type: String,
         required: true,
         unique: true
     },
     image: String,
-    availability: [{
-        M: Boolean,
-        T: Boolean,
-        W: Boolean,
-        Th: Boolean,
-        F: Boolean,
-        Sa: Boolean,
-        Su: Boolean
-
-    }],
+    availability: [],
     products: [],
     recurrence: {
         type: String,
@@ -29,10 +21,6 @@ const resourceSchema = new db.Schema({
     availableQuantity: {
         required: true,
         type: Number
-    },
-    organizationID: {
-        type: String,
-        required: true
     },
     start: String,
     end: String
