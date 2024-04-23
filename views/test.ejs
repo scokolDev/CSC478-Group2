@@ -42,23 +42,23 @@
                         </div>
 
                         <div class="pricing d-flex justify-content-between">
-                            <div class="pricing-item">
-                                <h4 id="service1Name">Basic</h4>
-                                <p id="service1Price">$0</p>
-                                <p id="service1Desc">Looking for a quick tidy?</p>
-                                <button><a href="#">Click Here to Learn More!</a></button>
+                            <div class="pricing-item" id="service1Display">
+                                <h4 class="serviceName">Basic</h4>
+                                <p class="servicePrice">$0</p>
+                                <p class="serviceDesc">Looking for a quick tidy?</p>
+                                <button class="serviceBookNowButton"><a href="#">Click to Book Now</a></button>
                             </div>
-                            <div class="pricing-item popular">
-                                <h4 id="service2Name">Most Popular</h4>
-                                <p id="service2Price">Detailed</p>
-                                <p id="service2Desc">$38/mo</p>
-                                <button><a href="#">Click Here to Learn More!</a></button>
+                            <div class="pricing-item" id="service2Display">
+                                <h4 class="serviceName">Most Popular</h4>
+                                <p class="servicePrice">Detailed</p>
+                                <p class="serviceDesc">$38/mo</p>
+                                <button class="serviceBookNowButton"><a href="#">Click to Book Now</a></button>
                             </div>
-                            <div class="pricing-item">
-                                <h4 id="service3Name">Full Service</h4>
-                                <p id="service3Price">$70/mo</p>
-                                <p id="service3Desc">After Party/Event</p>
-                                <button><a href="#">Click Here to Learn More!</a></button>
+                            <div class="pricing-item" id="service3Display">
+                                <h4 class="serviceName">Full Service</h4>
+                                <p class="servicePrice">$70/mo</p>
+                                <p class="serviceDesc">After Party/Event</p>
+                                <button class="serviceBookNowButton"><a href="#">Click to Book Now</a></button>
                             </div>
                         </div>
                     </div>
@@ -155,7 +155,7 @@
             <input type="submit" value="Submit">
         </form>
     </div>
-    <div class="booking-form-container" id="bookingFormContainer" style="width: 75vw;">
+    <div class="booking-form-container" id="bookingFormContainer" style="width: 75vw; display: none;">
         <div class="booking-form">
             <h2>Booking Form</h2>
             <form action="#" method="post" id="bookingForm">
@@ -191,8 +191,9 @@
                 <label for="resources">Select a resource</label>
                 <select name="resources" id="resourceList" onchange="updateScheduleSelector(this.options[this.selectedIndex].id)">
                 </select>
-                <div id="scheduleWrapper" style="display: none;">
-                    <div style="display: flex; justify-content: space-between;">
+                <div id="scheduleWrapper" style="display: none; grid-template-columns: 50% 50%; grid-template-rows: repeat(6, 1fr);">
+                    
+                    <div style="display: flex; justify-content: space-between; grid-area: 1/1/2/3;">
                         <div id="resourceName" style="color: black;">
 
                         </div>
@@ -203,21 +204,30 @@
 
                         </div>
                     </div>
-                    <label id="start-date-wrapper" for="start-date">Booking Date:</label>
-                    <input type="date" id="start-date" name="start-date" onchange="updateHours()" required>
+
+                    <div style="grid-area: 2/1/3/2;">
+                        <label id="start-date-wrapper" for="start-date">Booking Date:</label>
+                        <input type="date" id="start-date" name="start-date" onchange="updateHours()" required>
+                    </div>
                     
-                    <div id="end-date-wrapper" style="display: none;">
+                    
+                    <div id="end-date-wrapper" style=" grid-area: 3/1/4/2;">
                         <label for="end-date">End Date:</label>
                         <input type="date" id="end-date" name="end-date" onchange="updateHours()" required>
                     </div>
 
-                    <label for="start-time">Start Time:</label>
-                    <input type="time" id="start-time" name="start-time" onchange="updateHours()" required>
+                    <div style="grid-area: 4/1/5/2;">
+                        <label for="start-time">Start Time:</label>
+                        <input type="time" id="start-time" name="start-time" onchange="updateHours()" required>
+                    </div>
+                    
+                    <div style="grid-area: 5/1/6/2;">
+                        <label for="end-time">End Time:</label>
+                        <input type="time" id="end-time" name="end-time" onchange="updateHours()" required>
+                    </div>
+                    
 
-                    <label for="end-time">End Time:</label>
-                    <input type="time" id="end-time" name="end-time" onchange="updateHours()" required>
-
-                    <div style="display: flex; justify-content: space-evenly; align-items: center;">
+                    <div style="display: flex; justify-content: space-evenly; align-items: center; grid-area: 6/1/7/3;">
                         
                         <div>
                             <label for="total-time" id="total-time-label">Number of Hours:</label>
@@ -238,6 +248,32 @@
                             <input id="full-price" name="full-price" readonly>
                         </div>
                         
+                    </div>
+
+                    <div class="customerCalendarPanel">
+                        <div style="color: black;" id="enter-date-message">
+                            Select Start Date:
+                        </div>
+                        <div class="CalendarWrapper">
+                            <div class="CalendarHeader">
+                                <button type="button" id="CalPrev" style="width: 15%; aspect-ratio: 1;">prev</button>
+                                <p id="monthMarker" style="width: 50%; color: black;"></p>
+                                <button type="button" id="CalNext" style="width: 15%; aspect-ratio: 1;">next</button>
+                            </div>
+                            <div class="CalendarHeader">
+                                <div style="text-align: center; width: 10%; color:black;"><p>Sun</p></div>
+                                <div style="text-align: center; width: 10%; color:black;"><p>Mon</p></div>
+                                <div style="text-align: center; width: 10%; color:black;"><p>Tue</p></div>
+                                <div style="text-align: center; width: 10%; color:black;"><p>Wed</p></div>
+                                <div style="text-align: center; width: 10%; color:black;"><p>Thr</p></div>
+                                <div style="text-align: center; width: 10%; color:black;"><p>Fri</p></div>
+                                <div style="text-align: center; width: 10%; color:black;"><p>Sat</p></div>
+                            </div>
+                            <div class="Calendar" id="Calendar"></div>
+                        </div>
+                        <div id="SelectedAppointmentList">
+        
+                        </div>
                     </div>
                 </div>
                 

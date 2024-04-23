@@ -19,12 +19,57 @@ document.addEventListener('DOMContentLoaded', function() {
     service3Name = document.getElementById("service3Name")
     service3Price = document.getElementById("service3Price")
     service3Desc = document.getElementById("service3Desc")
+
+    resourceList = document.getElementById("resourceList")
+    productsList = document.getElementById("productsList")
+    
+
+    // Function to toggle visibility of bookingForm
+    function toggleBookingForm(selectedProductId) {
+
+         // Hide all other forms and sections
+        document.getElementById('aboutInfo').style.display = 'none';
+        document.getElementById('contactForm').style.display = 'none';
+        document.getElementById('proApplicationForm').style.display = 'none';
+        document.getElementById('serviceContainer').style.display = 'none';
+        document.getElementById('home').style.display = 'none';
+        document.getElementById('reviews').style.display = 'none';
+
+        // Display only the booking form
+        document.getElementById('bookingFormContainer').style.display = 'block';
+        selectedProductId != undefined ? loadProducts(productsList, selectedProductId) : loadProducts(productsList)
+    
+    }
+
+    function setServiceDisplay(container, name, description, price, priceType, id){
+        container.getElementsByClassName("serviceName")[0].innerHTML = name
+        priceStr = "$" + price
+        console.log(priceType)
+        switch(priceType){
+            case("Per Hour"):
+                priceStr += "/Hour"
+                break
+            case("Per Day"):
+                priceStr += "/Day"
+                break
+        }
+        container.getElementsByClassName("servicePrice")[0].innerHTML = priceStr
+        container.getElementsByClassName("serviceDesc")[0].innerHTML = description
+        container.getElementsByClassName("serviceBookNowButton")[0].addEventListener("click", function(){
+            toggleBookingForm(id)
+        })
+
+    }
+    
+
     // Event listener for the "Services" button
     document.getElementById('servicesLink').addEventListener('click', async function(event) {
         event.preventDefault();
         document.getElementById('aboutInfo').style.display = 'none';
         document.getElementById('contactForm').style.display = 'none';
         document.getElementById('proApplicationForm').style.display = 'none';
+        document.getElementById('bookingFormContainer').style.display = 'none';
+       
 
         try {
             // fetch all products from the database
@@ -34,15 +79,37 @@ document.addEventListener('DOMContentLoaded', function() {
             }
       
             const products = await response.json();
-            let productsDisplayed = 0
-            products.forEach((product) => {
-                if(productsDisplayed < 3){
-                    productsDisplayed++
-                    document.getElementById("service" + productsDisplayed + "Name").innerHTML = product.name
-                    document.getElementById("service" + productsDisplayed + "Price").innerHTML = product.price
-                    document.getElementById("service" + productsDisplayed + "Desc").innerHTML = product.description
+            
+            let selectedIndecies = []
+            
+            serviceContainer1 = document.getElementById("service1Display")
+            serviceContainer2 = document.getElementById("service2Display")
+            serviceContainer3 = document.getElementById("service3Display")
+            if(products.length > 3){
+                while(selectedIndecies.length < 3){
+                    rand = Math.floor(Math.random() * products.length)
+                    if(!selectedIndecies.includes(rand)){
+                        selectedIndecies.push(rand)
+                    }
                 }
-            });
+                currentProduct = products[selectedIndecies[0]]
+                setServiceDisplay(serviceContainer1, currentProduct.name, currentProduct.description, currentProduct.price, currentProduct.priceType[0], currentProduct._id)
+                
+                currentProduct = products[selectedIndecies[1]]
+                setServiceDisplay(serviceContainer2, currentProduct.name, currentProduct.description, currentProduct.price, currentProduct.priceType[0], currentProduct._id)
+                
+                currentProduct = products[selectedIndecies[2]]
+                setServiceDisplay(serviceContainer3, currentProduct.name, currentProduct.description, currentProduct.price, currentProduct.priceType[0], currentProduct._id)
+            
+            
+            }else{
+                let productsDisplayed = 0
+                products.forEach((product) => {
+                    productsDisplayed++
+                    container = document.getElementById("service" + productsDisplayed + "Display")
+                    setServiceDisplay(container, product.name, product.description, product.price, product.priceType, product._id)
+                })
+            }
           } catch (error) {
     
             console.error(error.message);
@@ -99,7 +166,7 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('serviceContainer').style.display = 'none';
         document.getElementById('home').style.display = 'none'; // Hide the home section
         document.getElementById('reviews').style.display = 'none'; // Hide the testimonials section
-        document.getElementById('.book-now-button').style.display = 'none'; // Hide the testimonials section
+        bookingForm.style.display = 'none'; // Hide the testimonials section
     });
 
     // Event listener for displaying the contact form
@@ -111,7 +178,7 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('serviceContainer').style.display = 'none';
         document.getElementById('home').style.display = 'none'; // Hide the home section
         document.getElementById('reviews').style.display = 'none'; // Hide the testimonials section
-        document.getElementById('.book-now-button').style.display = 'none'; // Hide the testimonials section
+        bookingForm.style.display = 'none'; // Hide the testimonials section
     });
 
     // Event listener for displaying the pro application form
@@ -123,32 +190,10 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('serviceContainer').style.display = 'none';
         document.getElementById('home').style.display = 'none'; // Hide the home section
         document.getElementById('reviews').style.display = 'none'; // Hide the testimonials section
-        document.getElementById('.book-now-button').style.display = 'none'; // Hide the testimonials section
+        bookingForm.style.display = 'none'; // Hide the testimonials section
     });
 
-resourceList = document.getElementById("resourceList")
-productsList = document.getElementById("productsList")
-   // Function to toggle visibility of bookingForm
-function toggleBookingForm() {
-    var bookingForm = document.getElementById('bookingFormContainer');
-    if (bookingForm.style.display === 'none' || bookingForm.style.display === '') {
-        // Hide all other forms and sections
-        document.getElementById('aboutInfo').style.display = 'none';
-        document.getElementById('contactForm').style.display = 'none';
-        document.getElementById('proApplicationForm').style.display = 'none';
-        document.getElementById('serviceContainer').style.display = 'none';
-        document.getElementById('home').style.display = 'none';
-        document.getElementById('reviews').style.display = 'none';
 
-        // Display only the booking form
-        bookingForm.style.display = 'block';
-    } else {
-        // Hide the booking form
-        bookingForm.style.display = 'none';
-    }
-    loadProducts(productsList)
-    
-}
 
 
     // Event listener for clicking the "Book Now" button
@@ -197,6 +242,159 @@ function toggleBookingForm() {
 // 
 // Booking form javascript
 // 
+//returns a month name in string form given the month number
+function monthNumToString(monthNumber){
+    switch(monthNumber){
+        case 1:
+            return "January";
+        case 2:
+            return "February";
+        case 3:
+            return "March";
+        case 4:
+            return "April";
+        case 5:
+            return "May";
+        case 6:
+            return "June";
+        case 7:
+            return "July";
+        case 8:
+            return "August";
+        case 9:
+            return "Setember";
+        case 10:
+            return "October";
+        case 11:
+            return "November";
+        case 12:
+            return "December";
+    }
+
+}
+function getDayIndex(day){
+    switch(day){
+        case("sunday"):
+        return 0;
+
+        case("monday"):
+        return 1;
+
+        case("tuesday"):
+        return 2;
+
+        case("wednsday"):
+        return 3;
+
+        case("thursday"):
+        return 4;
+
+        case("friday"):
+        return 5;
+
+        case("saturday"):
+        return 6;
+    }
+}
+now = new Date(Date.now());
+DisplayedMonth = now.getMonth();
+DisplayedYear = now.getFullYear();
+Calendar = document.getElementById("Calendar")
+selectDateMessage = document.getElementById("enter-date-message")
+selectedResourceDayAvailability = []
+isSelectStart = true;
+//initialize the Calendar to display the given month index on the given year
+function initCalendar(monthIndex, year, dayAvailability){
+    Calendar.innerHTML = '';
+    document.getElementById("monthMarker").innerHTML = monthNumToString(monthIndex+1) + ", " + year;
+    curDay = 1;
+    curDate = new Date(year, monthIndex, curDay);
+    
+    
+    for(i = 0; i < curDate.getDay(); i++){
+        Calendar.innerHTML += '<div></div>';
+    }
+    
+    while(curDate.getMonth() == monthIndex){
+        let day = document.createElement("button");
+        day.setAttribute("class", "CalDayActive");
+        day.setAttribute("type", "button");
+        //OrderOnDay(curDate, day)
+
+        day.innerHTML = curDate.getDate();
+        day.setAttribute("year", curDate.getFullYear())
+        day.setAttribute("month", curDate.getMonth())
+        day.setAttribute("day", curDate.getDate())
+        
+        if(dayAvailability[curDate.getDay()]){
+            day.style.backgroundColor = "lightblue"
+            day.addEventListener("click", function(){
+                if(isSelectStart){
+                    if(document.getElementById("selectedStartDay") != null){
+                        document.getElementById("selectedStartDay").style.backgroundColor = "lightblue"
+                        document.getElementById("selectedStartDay").removeAttribute("id")
+                    }
+                    tempDate = new Date(day.getAttribute("year"), day.getAttribute("month"), day.getAttribute("day"))
+                    console.log(tempDate.toISOString())
+                    document.getElementById("start-date").value = tempDate.toISOString().substr(0, 10);
+                    day.setAttribute("id", "selectedStartDay")
+                    //displayAppointmentsOnDay(day.getAttribute("year"), day.getAttribute("month"), day.getAttribute("day"))
+                    day.style.backgroundColor = "lightgreen"
+                    selectDateMessage.innerHTML = "Select End Date"
+                    if(priceType == "Per Hour"){
+                        selectDateMessage.innerHTML = "Click to Change Start Date"
+                    }else{
+                        isSelectStart = false;
+                    }
+                    
+                    updateHours()
+                }else{
+                    if(document.getElementById("selectedEndDay") != null){
+                        document.getElementById("selectedEndDay").style.backgroundColor = "lightblue"
+                        document.getElementById("selectedEndDay").removeAttribute("id")
+                    }
+                    tempDate = new Date(day.getAttribute("year"), day.getAttribute("month"), day.getAttribute("day"))
+                    console.log(tempDate.toISOString())
+                    document.getElementById("end-date").value = tempDate.toISOString().substr(0, 10);
+                    day.setAttribute("id", "selectedEndDay")
+                    //displayAppointmentsOnDay(day.getAttribute("year"), day.getAttribute("month"), day.getAttribute("day"))
+                    day.style.backgroundColor = "lightcoral"
+                    selectDateMessage.innerHTML = "Click to Change Start Date"
+                    isSelectStart = true;
+                    updateHours()
+                }
+                
+            })
+        }   
+        Calendar.appendChild(day);
+        curDay++
+        curDate = new Date(year, monthIndex, curDay);
+    }
+    
+}
+
+//functionality for prev button above calander; goes back one month and updates calander object
+document.getElementById("CalPrev").addEventListener("click", function() {
+    if(DisplayedMonth == 0){
+        DisplayedMonth = 11;
+        DisplayedYear = DisplayedYear - 1;
+    }else{
+        DisplayedMonth--;
+    }
+    initCalendar(DisplayedMonth, DisplayedYear, selectedResourceDayAvailability);
+})
+
+//functionality for next button above calander; goes forward one month and updates calander object
+document.getElementById("CalNext").addEventListener("click", function() {
+    if(DisplayedMonth == 11){
+        DisplayedMonth = 0;
+        DisplayedYear = DisplayedYear + 1;
+    }else{
+        DisplayedMonth++;
+    }
+    initCalendar(DisplayedMonth, DisplayedYear, selectedResourceDayAvailability);
+})
+
 
 
 
@@ -245,32 +443,9 @@ function clearOrderInputs(){
     scheduleWrapper.style.display = "none"
 }
 
-function getDayIndex(day){
-    switch(day){
-        case("sunday"):
-        return 0;
 
-        case("monday"):
-        return 1;
 
-        case("tuesday"):
-        return 2;
-
-        case("wednsday"):
-        return 3;
-
-        case("thursday"):
-        return 4;
-
-        case("friday"):
-        return 5;
-
-        case("saturday"):
-        return 6;
-    }
-}
-
-async function loadProducts(container){
+async function loadProducts(container, selectedID){
     container.innerHTML = "<option disabled selected value> select a product </option>"
     try {
         // fetch all products from the database
@@ -284,7 +459,10 @@ async function loadProducts(container){
             productListing = document.createElement("option")
             productListing.innerHTML =  `${product.name}`
             productListing.setAttribute("id", `${product._id}`)
-
+            if(product._id == selectedID){
+                productListing.setAttribute("selected", true)
+                updateResources(product._id)
+            }
             container.appendChild(productListing)
         });
       } catch (error) {
@@ -420,7 +598,7 @@ async function sendOrderToDB(){
     birthDateValues = inputBirthDate.value.split("-")
     dateBirthDateObj = new Date(parseInt(birthDateValues[0]), parseInt(birthDateValues[1]), parseInt(birthDateValues[2]))
     try{
-        const response = await fetch('/api/customers', {
+        const response = await fetch('/api/customer/register', {
             method: 'POST',
             headers: {
             'Content-Type': 'application/json'
@@ -438,7 +616,7 @@ async function sendOrderToDB(){
             throw new Error('Failed to add customer');
         }
 
-        // If product added successfully,  and render the updated schedule
+        // If customer added successfully,  and render the updated schedule
         console.log("Successfully added customer");
     } catch (error) {
         console.error(error.message);
@@ -523,7 +701,8 @@ async function updateScheduleSelector(resourceID){
         console.error(error.message);
         alert("Failed to Fetch products")
     }
-
+    selectedResourceDayAvailability = dayAvailability
+    initCalendar(DisplayedMonth, DisplayedYear, dayAvailability)
     resourceNameBox.innerHTML = resourceName
     resourceDaysBox.innerHTML = ''
     for(i = 0; i < dayAvailability.length; i++){
@@ -553,7 +732,7 @@ async function updateScheduleSelector(resourceID){
         }
     }
     resourceTimesBox.innerHTML = resourceStart + " - " + resourceEnd
-    scheduleWrapper.style.display = "block"
+    scheduleWrapper.style.display = "grid"
 }
 
 async function updateResources(prodId){
@@ -574,16 +753,16 @@ async function updateResources(prodId){
         
         switch(priceType){
             case("Flat Rate"):
-                endDateWrapper.style = "display:block;"
+                endDateWrapper.style.display = "block"
                 totalTimeLabel.innerHTML = "Number of Hours:"
                 break
             case("Per Hour"):
-                endDateWrapper.style = "display:none;"
+                endDateWrapper.style.display = "none"
                 totalTimeLabel.innerHTML = "Number of Hours:"
                 inputRate.value += "/Hour"
                 break
             case("Per Day"):
-                endDateWrapper.style = "display:block;"
+                endDateWrapper.style.display = "block"
                 totalTimeLabel.innerHTML = "Number of Days:"
                 inputRate.value += "/Day"
                 break
