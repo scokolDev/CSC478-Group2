@@ -1,6 +1,7 @@
 import Organization from '../models/organizations.js'
 import passport from 'passport'
 import User from '../models/users.js'
+import { updateRoute53 } from './organizationController.js'
 
 // export const authenticateAdmin = passport.authenticate('user', {
 //     successRedirect: '/admin/dashboard',
@@ -44,6 +45,8 @@ export const registerAdmin = async (req, res) => {
         name: req.body.organizationName,
         domain: req.body.organizationDomain
       });
+
+      updateRoute53(req.body.organizationDomain);
   
       User.register(
         new User({
