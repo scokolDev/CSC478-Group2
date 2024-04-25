@@ -37,7 +37,7 @@ router.get('/modify_order', checkAuthenticated, getCustomerModifyOrder);
 
 router.get('/register', checkNotAuthenticated,  getCustomerRegister);
 
-router.post('/register', checkNotAuthenticated, registerCustomer)
+router.post('/register', checkNotAuthenticated, getVhostregisterCustomer)
 
 router.get('/', getCustomers)
 router.get('/:id', getCustomerByID)

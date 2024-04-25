@@ -54,9 +54,11 @@ app.use(express.static(path.join(__dirname, 'public')));
 // Use body-parser middleware to parse JSON data
 app.use(bodyParser.json());
 
+const domain = process.env.NODE_ENV === 'production' ? 'servicebookingapp.xyz' : 'localhost';
+
 // Define a route handler for the root path
 app.use('/auth', authRouter);
-app.use(vhost('*.localhost', routes));
+app.use(vhost('*.' + domain, routes));
 app.use(routes);
 
 

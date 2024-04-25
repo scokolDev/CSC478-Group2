@@ -117,7 +117,7 @@ export const registerCustomer = async (req, res) => {
           email: req.body.email,
           firstName: req.body.firstname,
           lastName: req.body.lastname,
-          organizationID: "TESTID"
+          organizationID: req.body.organizationID
       }), req.body.password, function (err, msg) {
         if (err) {
           //res.send(err)

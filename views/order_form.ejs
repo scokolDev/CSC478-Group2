@@ -4,35 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Order Form</title>
-    <!-- <script type='importmap'>
-        {
-          "imports": {
-            "@fullcalendar/core": "https://cdn.skypack.dev/@fullcalendar/core@6.1.11",
-            "@fullcalendar/daygrid": "https://cdn.skypack.dev/@fullcalendar/daygrid@6.1.11"
-          }
-        }
-      </script>
-      <script type='module'>
-        import { Calendar } from '@fullcalendar/core'
-        import dayGridPlugin from '@fullcalendar/daygrid'
-  
-        document.addEventListener('DOMContentLoaded', function() {
-          const calendarEl = document.getElementById('calendar')
-          const calendar = new Calendar(calendarEl, {
-            plugins: [dayGridPlugin],
-            headerToolbar: {
-              left: 'prev,next today',
-              center: 'title',
-              right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek'
-            }
-          })
-          calendar.render()
-        })
-      </script> -->
+    <link rel="stylesheet" href="/css/styles.css" />
+    <script src="https://js.stripe.com/v3/"></script>
+    <script>
+      var stripePublicKey = '<%= stripeKey %>'
+    </script>
 </head>
 <body>
     <h1><%= orgname %> Order Form</h1>
-<form action="/customer/order" method="POST" id="orderForm">
+<form id="orderForm">
   <div>
     <label for="firstName">First Name</label>
     <input type="text" id="firstName" name="firstname" required>
@@ -77,15 +57,30 @@
 
     </select> 
   </div>
-  <div id="calender">
+
+  <div>
+    <label for="hours" hidden>Hours</label>
+    <input type="number" id="hours" name="hours" hidden>
+  </div>
+  <div id="card">
+    <!-- <div id="cardNumber-element">
+
+    </div>
+    <div id="cardExpiry-element">
+  
+    </div>
+    <div id="cardCvc-element">
+  
+    </div> -->
+    <div id="card-element">
+
+    </div>
 
   </div>
-  <div>
-    <label for="hours">Hours</label>
-    <input type="number" id="hours" name="hours" required hidden="true">
-  </div>
-  <button type="submit">Create Order</button>
+
+  <button type="submit" id="orderBtn">Create Order</button>
 </form>
-<script src="/javascript/order_form.js"></script>
+<div id="messages" role="alert" style="display: none;"></div>
+<script src="/javascript/order_form.js" defer></script>
 </body>
 </html>

@@ -78,7 +78,7 @@ router.get('/register', checkNotAuthenticated,  (req, res) => {
 // Route handler for Order Form
 router.get('/order',  getVhost, getOrgByDomain, (req, res) => {
   // Serve the Order From ejs file
-  res.render('order_form.ejs', {orgname: req.body.organizationName});
+  res.render('order_form.ejs', {orgname: req.body.organizationName, stripeKey: process.env.STRIPE_PUBLIC_KEY});
 });
 
 router.post('/register', checkNotAuthenticated, async (req, res) => {
