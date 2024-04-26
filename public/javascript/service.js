@@ -552,9 +552,9 @@ function updateHours(){
                 startDateObj = new Date(parseInt(sDate[0]), parseInt(sDate[1]), parseInt(sDate[2]), parseInt(stimes[0]), parseInt(stimes[1]))
                 endDateObj = new Date(parseInt(sDate[0]), parseInt(sDate[1]), parseInt(sDate[2]), parseInt(etimes[0]), parseInt(etimes[1]))
             
-
                 //calculate total number of hours across selected start time and end time
-                hours = (endDateObj - startDateObj)/60
+                hours = (endDateObj - startDateObj)/(1000 * 60 * 60)
+
 
                 //setting the total time box and total price box
                 inputHours.value = hours.toFixed(2)
@@ -818,11 +818,26 @@ async function updateScheduleSelector(resourceID){
 
     //get the selected resource from database
     try {
-        const resourceResponse = await fetch('/api/resources/' + resourceID);
+        // const resourceResponse = await fetch('/api/resources/' + resourceID);
+        // if(!resourceResponse.ok) {
+        //     throw new Error('Failed to get resources form Database');
+        // }
+        // const resource = await resourceResponse.json();
+        //TODO: Fix resource retrieval
+        // fetch resource from the database
+        const resourceResponse = await fetch('/api/resources');
+        
         if(!resourceResponse.ok) {
-            throw new Error('Failed to get resources form Database');
+            throw new Error('Failed to get resources from Database');
         }
-        const resource = await resourceResponse.json();
+        const resources = await resourceResponse.json();
+        console.log(resources)
+        for(j = 0; j < resources.length; j++){
+            if(resources[j]._id == resourceID){
+                resource = resources[j]
+            }
+        }
+        //end of temporary code section
 
         //retrieving selected resource data
         dayAvailability = resource.availability
@@ -894,13 +909,29 @@ async function updateProductInformation(prodId){
 
     //get the selected product from database to find all coupled resources
     try {
+
+        //TODO: Fix product retrieval
         // fetch product from the database
-        const response = await fetch('/api/products/' + prodId);
+        const response = await fetch('/api/products');
+        
         if(!response.ok) {
           throw new Error('Failed to get product from Database');
         }
-        const product = await response.json();
+        const products = await response.json();
+        console.log(products)
+        for(i = 0; i < products.length; i++){
+            if(products[i]._id == prodId){
+                product = products[i]
+            }
+        }
+        //end of temporary code section
 
+
+
+
+
+
+        
         //set global selected product rate variable and set input rate field
         selectedProductRate = parseFloat(product.price).toFixed(2)
         inputRate.value = "$" + selectedProductRate
@@ -930,11 +961,28 @@ async function updateProductInformation(prodId){
         for(i = 0; i < product.resources.length; i++){
 
             //retrieve the resource from the database
-            const resourceResponse = await fetch('/api/resources/' + product.resources[i]);
+            // const resourceResponse = await fetch('/api/resources/' + product.resources[i]);
+            // if(!resourceResponse.ok) {
+            //     throw new Error('Failed to get resources from Database');
+            // }
+            // const resource = await resourceResponse.json();
+
+            //TODO: Fix resource retrieval
+            // fetch resource from the database
+            const resourceResponse = await fetch('/api/resources');
+        
             if(!resourceResponse.ok) {
                 throw new Error('Failed to get resources from Database');
             }
-            const resource = await resourceResponse.json();
+            const resources = await resourceResponse.json();
+            console.log(resources)
+            for(j = 0; j < resources.length; j++){
+                if(resources[j]._id == product.resources[i]){
+                    resource = resources[j]
+                }
+            }
+            //end of temporary code section
+
 
             //create option for resource drop down menu with resource name and resource id
             resourceListing = document.createElement("option")
