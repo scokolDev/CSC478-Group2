@@ -1,7 +1,7 @@
 import express from 'express'
 import passport from 'passport'
 import Customer from '../models/customers.js'
-import { checkNotAuthenticated, checkAuthenticated} from './routes.js'
+import { checkNotAuthenticated, checkAuthenticated, getVhost } from './routes.js'
 import { getOrgByDomain } from '../controllers/organizationController.js'
 import {
     // authenticateCustomer,
@@ -37,7 +37,7 @@ router.get('/modify_order', checkAuthenticated, getCustomerModifyOrder);
 
 router.get('/register', checkNotAuthenticated,  getCustomerRegister);
 
-router.post('/register', checkNotAuthenticated, registerCustomer)
+router.post('/register', checkNotAuthenticated, getVhost, getOrgByDomain, registerCustomer)
 
 router.get('/', getCustomers)
 router.get('/:id', getCustomerByID)
