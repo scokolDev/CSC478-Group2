@@ -252,6 +252,7 @@ Calendar = document.getElementById("Calendar")
 selectDateMessage = document.getElementById("enter-date-message")
 
 selectedResourceDayAvailability = []
+selectedResourceBookedDates = []
 
 inputFirstName = document.getElementById("first-name")
 inputLastName = document.getElementById("last-name")
@@ -316,31 +317,36 @@ function monthNumToString(monthNumber){
 
 }
 
-// function getDayIndex(day){
-//     switch(day){
-//         case("sunday"):
-//         return 0;
+//checks to see is onDate date value is compatible with a resource dayAvailability and bookedDates
+//
+//onDate: date to check if availible
+//dayAvailability: dayAvailability of resource
+//bookedDates:bookedDates of resource
+//
+//returns true: resource is availible onDate
+//returns true: resource is not availible onDate
+function checkAvailible(onDate, dayAvailability, bookedDates){
 
-//         case("monday"):
-//         return 1;
+    //check if resource is avilable on day of week date falls on
+    if(dayAvailability[onDate.getDay()]){
 
-//         case("tuesday"):
-//         return 2;
+        //iterate through all bookedDates in bookedDates array
+        for(i = 0; i < bookedDates.length; i++){
 
-//         case("wednsday"):
-//         return 3;
-
-//         case("thursday"):
-//         return 4;
-
-//         case("friday"):
-//         return 5;
-
-//         case("saturday"):
-//         return 6;
-//     }
-// }
-
+            //convert bookedDate start and end times to date objects
+            bookedSDate = new Date(parseInt(bookedDates[i].start.substring(0,4)), parseInt(bookedDates[i].start.substring(5,7))-1, parseInt(bookedDates[i].start.substring(8,10))) 
+            bookedEDate = new Date(parseInt(bookedDates[i].end.substring(0,4)), parseInt(bookedDates[i].end.substring(5,7))-1, parseInt(bookedDates[i].end.substring(8,10))) 
+            
+            //if date falls between start and end date of booked date, resource is unavailable
+            if(bookedSDate <= onDate && bookedEDate >= onDate){
+                return false
+            }
+        }
+        return true
+    }
+    return false
+    
+}
 
 
 //initialize the Calendar to select booking dates on booking form
@@ -348,7 +354,7 @@ function monthNumToString(monthNumber){
 //monthIndex: month to be displayed on the calendar
 //year: year to be displayed on the calendar
 //dayAvailability: a boolean array of days that the selected resources is available on
-function initCalendar(monthIndex, year, dayAvailability){
+function initCalendar(monthIndex, year, dayAvailability, bookedDates){
     Calendar.innerHTML = '';
     document.getElementById("monthMarker").innerHTML = monthNumToString(monthIndex+1) + ", " + year;
     curDay = 1;
@@ -372,7 +378,8 @@ function initCalendar(monthIndex, year, dayAvailability){
         console.log(dayAvailability)
 
         //checking if resource is available on current day
-        if(dayAvailability[curDate.getDay()]){
+        
+        if(checkAvailible(curDate, dayAvailability, bookedDates)){
             day.style.backgroundColor = "lightblue"
 
             //functionality when user clicks on an available 
@@ -444,7 +451,7 @@ document.getElementById("CalPrev").addEventListener("click", function() {
     }else{
         DisplayedMonth--;
     }
-    initCalendar(DisplayedMonth, DisplayedYear, selectedResourceDayAvailability);
+    initCalendar(DisplayedMonth, DisplayedYear, selectedResourceDayAvailability, selectedResourceBookedDates);
 })
 
 //functionality for next button above calander; goes forward one month and updates calander object
@@ -455,7 +462,7 @@ document.getElementById("CalNext").addEventListener("click", function() {
     }else{
         DisplayedMonth++;
     }
-    initCalendar(DisplayedMonth, DisplayedYear, selectedResourceDayAvailability);
+    initCalendar(DisplayedMonth, DisplayedYear, selectedResourceDayAvailability, selectedResourceBookedDates);
 })
 
 //clear all input boxes within the schedule selector wrapper
@@ -475,6 +482,7 @@ function clearOrderInputs(){
 //container: drop down menu to hold products
 //selectedID: optional - will select the product with this id
 async function loadProducts(container, selectedID){
+    //add a placeholder option to dropdown menu
     container.innerHTML = "<option disabled selected value> select a product </option>"
     try {
         // fetch all products from the database
@@ -508,8 +516,6 @@ async function loadProducts(container, selectedID){
 
 //function to update the schedule selector wrapper with proper values after user enters schedule inputs
 function updateHours(){
-    //console.log("--------" + priceType + "---------")
-
     //making sure that all inputs are filled prior to updating calculations
     if(inputEndTime.value != "" && inputStartTime.value != "" && inputStartDate.value != ""){
 
@@ -680,11 +686,12 @@ async function sendOrderToDB(){
                     firstName: inputFirstName.value,
                     LastName: inputLastName.value,
                     email: inputEmail.value,
-                    password: inputPassword.value,
-                    birthDate: dateBirthDateObj,
-                    organizationID: "temp org id"
+                    //password: inputPassword.value,
+                    birthDate: dateBirthDateObj
+                    //organizationID: "temp org id"
             })
         });
+        console.log(response)
         if (!response.ok) {
             throw new Error('Failed to add customer');
         }
@@ -704,16 +711,19 @@ async function sendOrderToDB(){
     //create date object for selected start date
     sdate = inputStartDate.value.split("-")
     stimes = inputStartTime.value.split(":")
-    startDateTime = new Date(parseInt(sdate[0]), parseInt(sdate[1])-1, parseInt(sdate[2]), parseInt(stimes[0]), parseInt(stimes[1]))
+    startDateTime = new Date(parseInt(sdate[0]), parseInt(sdate[1])-1, parseInt(sdate[2]), (parseInt(stimes[0])-5), parseInt(stimes[1]))
     //create date object for selected end date based on selected product price type
     if(priceType == "Per Hour"){
         etimes = inputEndTime.value.split(":")
-        endDateTime = new Date(parseInt(sdate[0]), parseInt(sdate[1])-1, parseInt(sdate[2]), parseInt(etimes[0]), parseInt(etimes[1]))
+        endDateTime = new Date(parseInt(sdate[0]), parseInt(sdate[1])-1, parseInt(sdate[2]), (parseInt(etimes[0])-5), parseInt(etimes[1]))
     }else{
         edate = inputEndDate.value.split("-")
         etimes = inputEndTime.value.split(":")
-        endDateTime = new Date(parseInt(edate[0]), parseInt(edate[1])-1, parseInt(edate[2]), parseInt(etimes[0]), parseInt(etimes[1]))    
+        endDateTime = new Date(parseInt(edate[0]), parseInt(edate[1])-1, parseInt(edate[2]), (parseInt(etimes[0])-5), parseInt(etimes[1]))    
     }
+
+    console.log(startDateTime)
+    console.log(endDateTime)
 
     //create order object
     try{
@@ -732,6 +742,7 @@ async function sendOrderToDB(){
                     resourceID: resourceId
             })
         });
+        sentOrder = await response.json()
         if (!response.ok) {
             throw new Error('Failed to add order');
         }
@@ -742,6 +753,42 @@ async function sendOrderToDB(){
         console.error(error.message);
         alert('Failed to add order');
     }
+
+
+
+
+    let prevBookingDates = []
+    const existingResponse = await fetch('/api/resources/' + resourceId)
+    const existingResourceJSON = await existingResponse.json()
+
+        
+    prevBookingDates = existingResourceJSON.bookedDates
+        
+    prevBookingDates.push({"orderId":sentOrder._id, "start":startDateTime, "end":endDateTime})
+    console.log(prevBookingDates)
+    const response = await fetch('/api/resources/' + resourceId, {
+        method: 'PUT',
+        headers: {
+        'Content-Type': 'application/json'
+        },
+            body: JSON.stringify({ 
+            bookedDates: prevBookingDates
+        })
+    });
+    console.log(response.json())
+
+    // try{
+        
+    //     if (!response.ok) {
+    //         throw new Error('Failed to add order');
+    //     }
+
+    //     // If product added successfully,  and render the updated schedule
+    //     console.log("Successfully added order");
+    // } catch (error) {
+    //     console.error(error.message);
+    //     alert('Failed to add order');
+    // }
 }
 
 //submit Booking functionality
@@ -755,7 +802,7 @@ document.getElementById("submitBooking").addEventListener("click", async functio
     await sendOrderToDB();
 
     //redirect to dashboard
-    location.href = "/dashboard"
+    //location.href = "/dashboard"
 })
 
 //creates the schedule selector section with proper fields based off of the selected product and selected resource
@@ -766,6 +813,7 @@ async function updateScheduleSelector(resourceID){
 
     //boolean array to hold days of the week the resource can be scheduled on
     let dayAvailability = []
+    let bookedDates = []
     let resourceName, resourceStart, resourceEnd
 
     //get the selected resource from database
@@ -778,6 +826,7 @@ async function updateScheduleSelector(resourceID){
 
         //retrieving selected resource data
         dayAvailability = resource.availability
+        bookedDates = resource.bookedDates
         resourceName = resource.name
         resourceStart = resource.start
         resourceEnd = resource.end
@@ -787,8 +836,9 @@ async function updateScheduleSelector(resourceID){
     }
 
     //initialize the calendar for selecting booking date
-    initCalendar(DisplayedMonth, DisplayedYear, dayAvailability)
+    initCalendar(DisplayedMonth, DisplayedYear, dayAvailability, bookedDates)
     selectedResourceDayAvailability = dayAvailability
+    selectedResourceBookedDates = 
 
     //displaying the resource name
     resourceNameBox.innerHTML = resourceName
