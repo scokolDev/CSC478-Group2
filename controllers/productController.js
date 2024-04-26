@@ -40,6 +40,7 @@ router.get('/:id', checkAuthenticated, async (req, res) => {
     const {id} = req.params
     try {
         const product = await Product.findById(id)
+        res.status(200).json(product)
         if(!product){
             return res.status(404).json({message: `cannot find any product with ID ${id}`})
         } else if (product.organizationID && product.organizationID != req.user.organizationID) {
@@ -47,7 +48,7 @@ router.get('/:id', checkAuthenticated, async (req, res) => {
         } else if (!product.organizationID) {
             return res.status(401).json({message: `Not authorized to access global products ${id}`})
         }
-        res.status(200).json(product)
+        
     } catch  (error) {
         res.status(500).json({message: error.message})
     }
