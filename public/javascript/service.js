@@ -736,7 +736,7 @@ async function CreateCustomer(){
             // If customer added successfully
             console.log("Successfully added customer");
 
-            return response
+            return await response.json()
         } catch (error) {
             console.error(error.message);
             alert('Failed to add customer');
@@ -779,7 +779,7 @@ async function sendOrderToDB(){
             'Content-Type': 'application/json'
             },
                 body: JSON.stringify({ 
-                    customerID: "temp",//customer._id,
+                    customerID: customer._id,
                     products: tempProducts,
                     startTime: startDateTime,
                     endTime: endDateTime,
