@@ -124,7 +124,7 @@ export const registerCustomer = async (req, res) => {
             } else {
             //res.redirect('/customers/login')
             console.log(msg)
-            return res.status(200).json(msg)
+            return res.status(200).json(Customer)
             }
         })
     } catch (err) {

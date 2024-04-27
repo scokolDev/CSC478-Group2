@@ -280,10 +280,17 @@ resourceDaysBox = document.getElementById("resourceDays")
 resourceTimesBox = document.getElementById("resourceTimes")
 scheduleWrapper = document.getElementById("scheduleWrapper")
 
+existingCustomerRadio = document.getElementById("existingCustomerRadio")
+newCustomerRadio = document.getElementById("newCustomerRadio")
+existingCustomerInputs = document.getElementById("existingCustomerInputs")
+newCustomerInputs = document.getElementById("newCustomerInputs")
+
+
 let hours = 0
 let priceType = "flat rate"
 let selectedProductRate = 0
-let isSelectStart = true;
+let isSelectStart = true
+let isNewCustomer = true
 
 
 //returns a month name in string form given the month number
@@ -317,6 +324,19 @@ function monthNumToString(monthNumber){
 
 }
 
+
+function updateCustomerInputs(){
+    console.log(existingCustomerRadio.checked)
+    if(existingCustomerRadio.checked){
+        newCustomerInputs.style.display = "none"
+        existingCustomerInputs.style.display = "block"
+        isNewCustomer = false
+    }else{
+        existingCustomerInputs.style.display = "none"
+        newCustomerInputs.style.display = "block"
+        isNewCustomer = true
+    }
+}   
 //checks to see is onDate date value is compatible with a resource dayAvailability and bookedDates
 //
 //onDate: date to check if availible
@@ -683,40 +703,51 @@ async function verifyInput(){
     return true
 }
 
+async function CreateCustomer(){
+    if(!isNewCustomer){
+        existingPassword = document.getElementById("existingPassword")
+        existingEmail = document.getElementById("existingEmail")
+        //
 
+
+        //code to fetch customer with given email and password
+
+
+        //
+    }else{
+        //create customer object
+        try{
+            const response = await fetch('/customer/register', {
+                method: 'POST',
+                headers: {
+                'Content-Type': 'application/json'
+                },
+                    body: JSON.stringify({ 
+                        firstname: inputFirstName.value,
+                        lastname: inputLastName.value,
+                        email: inputEmail.value,
+                        password: inputPassword.value
+                })
+            });
+            if (!response.ok) {
+                throw new Error('Failed to add customer');
+            }
+
+            // If customer added successfully
+            console.log("Successfully added customer");
+
+            return response
+        } catch (error) {
+            console.error(error.message);
+            alert('Failed to add customer');
+        }
+    }
+}
 //function to create customer object and order object with booking form informaion, and send objects to database
 async function sendOrderToDB(){
-    //create date object out of inputted birth date
-    birthDateValues = inputBirthDate.value.split("-")
-    dateBirthDateObj = new Date(parseInt(birthDateValues[0]), parseInt(birthDateValues[1]), parseInt(birthDateValues[2]))
 
-    //create customer object
-    try{
-        const response = await fetch('/customer/register', {
-            method: 'POST',
-            headers: {
-            'Content-Type': 'application/json'
-            },
-                body: JSON.stringify({ 
-                    firstname: inputFirstName.value,
-                    lastname: inputLastName.value,
-                    email: inputEmail.value,
-                    password: inputPassword.value
-                    //birthDate: dateBirthDateObj
-                    //organizationID: "temp org id"
-            })
-        });
-        console.log(response)
-        if (!response.ok) {
-            throw new Error('Failed to add customer');
-        }
-
-        // If customer added successfully
-        console.log("Successfully added customer");
-    } catch (error) {
-        console.error(error.message);
-        alert('Failed to add customer');
-    }
+    customer = await CreateCustomer()
+    console.log(customer)
 
     //getting id of selected product and selected resource from booking form
     tempProducts = []
@@ -748,7 +779,7 @@ async function sendOrderToDB(){
             'Content-Type': 'application/json'
             },
                 body: JSON.stringify({ 
-                    customerID: "customer number",
+                    customerID: "temp",//customer._id,
                     products: tempProducts,
                     startTime: startDateTime,
                     endTime: endDateTime,
