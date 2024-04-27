@@ -3,6 +3,10 @@ inactiveListingContainer = document.getElementById("inactivelistingsWrapper")
 
 //function used to create html element with product listing information and add it to a specified container
 //
+//(Requirement 2.0.0) - creats html element to display product
+//(Requirement 2.1.0) - adds product elements to active and incative product containers
+//(Requirement 2.3.0) - adds event listener to product element to redirect user to modify product page
+//
 //container: html container to append the product listing to
 //service: product name
 //image: product image path
@@ -58,6 +62,10 @@ function addService(container, service, image, description, price, priceType, pr
 }
 
 //displays all products from the database on the page
+//
+//(Requirement 2.0.0) - gets all products from database to display
+//(Requirement 2.1.0) - splits active and inactive products for display
+//
 async function displayProducts() {
     //clear active and inactive containers
     activeListingContainer.innerHTML = '';

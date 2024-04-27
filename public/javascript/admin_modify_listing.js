@@ -21,6 +21,8 @@ const id = urlParams.get('serviceID');
 //function to update the preview box on the upper left of the page. Creates all html elements to display
 //a preview of what a listing would look like given the name, image, description, and price of the listing
 //
+//(Requirement 2.3.1) - updates product preview to preview how product would look with entered information
+//
 //name: product name
 //image: image path
 //description: product description
@@ -61,6 +63,9 @@ function updatePreview(name, image, description, price){
 
 //functionality of the preview button. takes the value entered in the service name, service description, and service price input boxes
 //then calls the updatePreview function with these values to display a preview
+//
+//(Requirement 2.3.1) - calls updatePreview() function to update product preview
+//
 document.getElementById("previewButton").addEventListener("click", function(){
 
     //get product name, description, and price from input fields, or pass in default values if user did not enter anything
@@ -73,6 +78,9 @@ document.getElementById("previewButton").addEventListener("click", function(){
 })
 
 //functionality of the delete button, this button deletes the product from the database
+//
+//(Requirement 2.3.2) - deletes product
+//
 document.getElementById("deleteButton").addEventListener("click", async function(){
 
     //delete the product from the database
@@ -91,6 +99,9 @@ document.getElementById("deleteButton").addEventListener("click", async function
 })
 
 //functionality for the save button, this button saves the product with all user updated values to the database
+//
+//(Requirement 2.3.2) - saves product with updated information to database
+//
 document.getElementById("saveButton").addEventListener('click', async function(){
     
     //retrieve all product attributes from user input fields

@@ -40,29 +40,32 @@ function monthNumToString(monthNumber){
 
 }
 
-//returns the product object with the given Prodid
-//
-//Prodid: id of product to be returned
-async function getProductById(Prodid){
-    //retrieve product from database using prodID
-    try {
-        const response = await fetch('/api/products/' + Prodid);
-        if(!response.ok) {
-            throw new Error('Failed to get products form Database');
-        }
-        const product = await response.json();
+// //returns the product object with the given Prodid
+// //
+// //Prodid: id of product to be returned
+// async function getProductById(Prodid){
+//     //retrieve product from database using prodID
+//     try {
+//         const response = await fetch('/api/products/' + Prodid);
+//         if(!response.ok) {
+//             throw new Error('Failed to get products form Database');
+//         }
+//         const product = await response.json();
 
-        //return product object
-        return product.name
+//         //return product object
+//         return product.name
 
-      //handle error
-      } catch (error) {
-        console.error(error.message);
-        return
-      }
-}
+//       //handle error
+//       } catch (error) {
+//         console.error(error.message);
+//         return
+//       }
+// }
+
 
 //converts all given order information into an html object and stores the object in the given container
+//
+//(Requirement 1.0.0) - displays order information
 //
 //container: container to put html object in
 //orderID: id of order to be displayed
@@ -86,7 +89,7 @@ async function addAppointment(container, order, isSmallDisplay){
         TimeRange = parseInt(scheduledTime.substring(11, 13))%12 + ":" + scheduledTime.substring(14, 16) + (parseInt(scheduledTime.substring(11, 13)) > 11 ? "pm" : "am")
         appointment.innerHTML += '<div style="grid-area: 1/5/3/8; text-align: center;">' + TimeRange + '</div>'
         appointment.innerHTML += '<div style="grid-area: 3/7/5/8; text-align: center;">' + '$' + product.price + '</div>' 
-        appointment.innerHTML += '<div style="grid-area: 3/1/5/7;">' + order.customerID + '</div>' 
+        appointment.innerHTML += '<div style="grid-area: 3/1/5/7;">order #: ' + order.orderNumber + '</div>' 
         appointment.setAttribute("orderID", order._id)
         appointment.addEventListener("click", function() {
             location.href = '/admin/order_details?ID=' + appointment.getAttribute("orderID")
@@ -100,7 +103,7 @@ async function addAppointment(container, order, isSmallDisplay){
         TimeRange += parseInt(scheduledTime.substring(11, 13))%12 + ":" + scheduledTime.substring(14, 16) + (parseInt(scheduledTime.substring(11, 13)) > 11 ? "pm" : "am")
         appointment.innerHTML += '<div style="grid-area: 2/1/3/8; text-align: center;">' + TimeRange + '</div>'
         appointment.innerHTML += '<div style="grid-area: 3/7/4/8; text-align: center;">' + '$' + product.price + '</div>'
-        appointment.innerHTML += '<div style="grid-area: 3/1/4/7;">' + order.customerID + '</div>'
+        appointment.innerHTML += '<div style="grid-area: 3/1/4/7;">order #: ' + order.orderNumber + '</div>'
         appointment.setAttribute("orderID", order._id)
         appointment.addEventListener("click", function() {
             location.href = '/admin/order_details?ID=' + appointment.getAttribute("orderID")
@@ -110,6 +113,8 @@ async function addAppointment(container, order, isSmallDisplay){
 }
 
 //displays all appointments on a given day, fills in box under calendar when user clicks on a calendar day
+//
+//(Requirement 1.0.3) - displays orders on a given day
 //
 //year: year of day to display all orders on
 //month: month of day to display all orders on
@@ -152,6 +157,9 @@ async function displayAppointmentsOnDay(year, month, day){
 }
 
 //fills upcoming appointments box on the far left of site. Takes all appointments from appointmentArr and displays them in upcoming appointments
+//
+//(Requirement 1.0.1) - displays upcoming orders
+//
 async function displayAppointments(){
 
     //clear selectedAppointmentsList on page
@@ -216,6 +224,8 @@ async function OrderOnDay(dayDate, dayElement){
 
 //initializes calendar with all days for a given month in a given year
 //handles coloring 
+//
+//(Requirement 1.0.2) - displays interactable calendar
 //
 //monthIndex: index of month to be displayed
 //year: year to be displayed

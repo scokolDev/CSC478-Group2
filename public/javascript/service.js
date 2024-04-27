@@ -518,7 +518,7 @@ async function loadProducts(container, selectedID){
 function updateHours(){
     //making sure that all inputs are filled prior to updating calculations
     if(inputEndTime.value != "" && inputStartTime.value != "" && inputStartDate.value != ""){
-
+        console.log("-------------------------")
         switch(priceType){ 
             case("Flat Rate"):
                 if(inputEndDate.value != ""){
@@ -615,11 +615,26 @@ async function verifyInput(){
     selectedResourceID = resourceList.options[resourceList.selectedIndex].id
     try {
         // fetch resource from the database
-        const response = await fetch('/api/resources/' + selectedResourceID);
-        if(!response.ok) {
-          throw new Error('Failed to verify resource from database');
+        // const response = await fetch('/api/resources/' + selectedResourceID);
+        // if(!response.ok) {
+        //   throw new Error('Failed to verify resource from database');
+        // }
+        // const resource = await response.json();
+        //TODO: Fix resource retrieval
+        // fetch resource from the database
+        const resourceResponse = await fetch('/api/resources');
+        
+        if(!resourceResponse.ok) {
+            throw new Error('Failed to get resources from Database');
         }
-        const resource = await response.json();
+        const resources = await resourceResponse.json();
+        console.log(resources)
+        for(j = 0; j < resources.length; j++){
+            if(resources[j]._id == selectedResourceID){
+                resource = resources[j]
+            }
+        }
+        //end of temporary code section
 
         //resource name
         resourceName = resource.name
@@ -726,8 +741,8 @@ async function sendOrderToDB(){
     console.log(endDateTime)
 
     //create order object
-    try{
-        const response = await fetch('/api/orders', {
+    //try{
+        const OrderResponse = await fetch('/api/orders', {
             method: 'POST',
             headers: {
             'Content-Type': 'application/json'
@@ -738,28 +753,43 @@ async function sendOrderToDB(){
                     startTime: startDateTime,
                     endTime: endDateTime,
                     status: "processing",
-                    organizationID: "org id",
                     resourceID: resourceId
             })
         });
-        sentOrder = await response.json()
-        if (!response.ok) {
+        sentOrder = await OrderResponse.json()
+        if (!OrderResponse.ok) {
             throw new Error('Failed to add order');
         }
 
         // If product added successfully,  and render the updated schedule
         console.log("Successfully added order");
-    } catch (error) {
-        console.error(error.message);
-        alert('Failed to add order');
-    }
+    // } catch (error) {
+    //     console.error(error.message);
+    //     alert('Failed to add order');
+    // }
 
 
 
 
     let prevBookingDates = []
-    const existingResponse = await fetch('/api/resources/' + resourceId)
-    const existingResourceJSON = await existingResponse.json()
+    // const existingResponse = await fetch('/api/resources/' + resourceId)
+    // const existingResourceJSON = await existingResponse.json()
+
+    //TODO: Fix resource retrieval
+    // fetch resource from the database
+    const resourceResponse = await fetch('/api/resources');
+        
+    if(!resourceResponse.ok) {
+        throw new Error('Failed to get resources from Database');
+    }
+    const resources = await resourceResponse.json();
+    console.log(resources)
+    for(j = 0; j < resources.length; j++){
+        if(resources[j]._id == resourceId){
+            existingResourceJSON = resources[j]
+        }
+    }
+    //end of temporary code section
 
         
     prevBookingDates = existingResourceJSON.bookedDates
@@ -853,7 +883,7 @@ async function updateScheduleSelector(resourceID){
     //initialize the calendar for selecting booking date
     initCalendar(DisplayedMonth, DisplayedYear, dayAvailability, bookedDates)
     selectedResourceDayAvailability = dayAvailability
-    selectedResourceBookedDates = 
+    selectedResourceBookedDates = bookedDates
 
     //displaying the resource name
     resourceNameBox.innerHTML = resourceName

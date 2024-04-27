@@ -102,7 +102,7 @@ async function addAppointment(order){
     //add event listener to html object to redirect user to order details of clicked order
     appointment.setAttribute("orderID", order._id)
     appointment.addEventListener("click", function() {
-        location.href = '/admin/order_details?ID=' + appointment.getAttribute("orderID")
+        location.href = '/customer/order_details?ID=' + appointment.getAttribute("orderID")
     })
 
     //append order html element to appointments list

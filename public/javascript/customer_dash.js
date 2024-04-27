@@ -81,6 +81,28 @@ async function displayAppointmentsOnDay(year, month, day){
       }
 }
 
+
+function createOrderDateHeader(container, date){
+
+    //try to get appointmentHeader by id if appointment header for given date already exists
+    appointmentHeader = document.getElementById(date.getTime())
+
+
+    //if no appointment header for the desired date already exists, create the desired appointment header
+    if(appointmentHeader == null){
+        appointmentHeader = document.createElement("div")
+        appointmentHeader.setAttribute("style", "text-align: left; margin-top: 5%;")
+        appointmentHeader.setAttribute("id", date.getTime())
+        appointmentHeader.innerHTML = '-' + monthNumToString(date.getMonth()) + ', ' + date.getDate() + ' ' + date.getFullYear()
+        appointmentDates.push(date)
+    }
+
+    //add appointmentHeader to given appointment container
+    container.appendChild(appointmentHeader)
+
+    return appointmentHeader
+}
+
 //creates an html element to respresent an order and appends it to a specified container
 //
 //container: container to append order html object to
@@ -102,17 +124,8 @@ async function addAppointment(container, order, isWithDateHeader){
             startDate = new Date(parseInt(scheduledTime.substring(0,4)), parseInt(scheduledTime.substring(5, 7)), parseInt(scheduledTime.substring(8, 10))) 
             
             //get appointment header if an appointment header for the desired date already exists
-            let appointmentHeader = document.getElementById(parseInt(scheduledTime.substring(5, 7)) + parseInt(scheduledTime.substring(8, 10)) + parseInt(scheduledTime.substring(0,4)));
+            let appointmentHeader = createOrderDateHeader(container, startDate)
             
-            let isExistingDate = appointmentHeader != null
-            //if no appointment header for the desired date already exists, create the desired appointment header
-            if(!isExistingDate){
-                appointmentHeader = document.createElement("div")
-                appointmentHeader.innerHTML = '-' + monthNumToString(parseInt(scheduledTime.substring(5, 7))) + ', ' + parseInt(scheduledTime.substring(8, 10)) + ' ' + parseInt(scheduledTime.substring(0,4))
-                appointmentHeader.setAttribute("id", parseInt(scheduledTime.substring(5, 7)) + parseInt(scheduledTime.substring(8, 10)) + parseInt(scheduledTime.substring(0,4)))
-                appointmentHeader.setAttribute("style", "text-align: left; margin-top: 5%;")
-                appointmentDates.push(startDate)
-            }
 
             //create order html element with all order information
             let appointment = document.createElement("div")
@@ -132,11 +145,6 @@ async function addAppointment(container, order, isWithDateHeader){
 
             //add order to appointment header object
             appointmentHeader.appendChild(appointment)
-
-            //add appointment header to page if appointment header didnt previously exist
-            if(!isExistingDate){
-                container.appendChild(appointmentHeader)
-            }
         
         //isWithDateHeader is not selected, just display order info with no date header
         }else{

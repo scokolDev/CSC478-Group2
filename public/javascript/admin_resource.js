@@ -5,6 +5,9 @@ resourceHolder = document.getElementById("modifyListingFormResourceHolder")
 //saves a resource to the database given a resource id, if the resource already exists in the database,
 //a put request is sent to edit the resource, otherwise a post request is sent to create the resource
 //
+//(Requirement 3.1.0) - creates a new company resource in database with new resource information
+//(Requirement 3.2.0) - updates an existing resource with updated information
+//
 //rID: resource id to be saved
 async function saveById(rID){
 
@@ -85,6 +88,9 @@ async function saveById(rID){
 
 
 //functionality for the save button to save all resources on page to database
+//
+//(Requirement 3.4.0) - calls saveById() function to save all resources
+//
 document.getElementById("saveResources").addEventListener("click", async function(){
   
   //get all resources on page and store them in array
@@ -98,6 +104,9 @@ document.getElementById("saveResources").addEventListener("click", async functio
 
 
 //creates an html element to hold all relevent resource information and displays it on the page
+//
+//(Requirement 3.0.0) - creates html element to represent resource and displays it for user
+//(Requirement 3.3.0) - adds delete button to resource element to delete resource from database
 //
 //wrapper: container to store resource html element in
 //id: resource id
@@ -312,6 +321,9 @@ function addResource(wrapper, id, name, amount, dayAvailability, startTime, endT
 
 
 //functionality for add resource button, calls addResource function to create a new blank resource html object on page
+//
+//(Requirement 3.1.0) - creates a new company resource
+//
 document.getElementById("addResource").addEventListener('click', async function(){
 
     //increment amount of temporary resources on page
@@ -323,6 +335,9 @@ document.getElementById("addResource").addEventListener('click', async function(
 
 
 //gets all resources from the database and calls addResource function to create a new resource html element for each resource in database
+//
+//(Requirement 3.0.0) - calls addResources to display all company resources
+//
 async function displayResources() {
 
     // fetch all resources from the database
