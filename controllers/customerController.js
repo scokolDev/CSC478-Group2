@@ -123,7 +123,6 @@ export const registerCustomer = async (req, res) => {
             res.status(500).json({message: err.message})
             } else {
             //res.redirect('/customers/login')
-            console.log(msg)
             return res.status(200).json(msg)
             }
         })
