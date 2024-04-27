@@ -2,6 +2,8 @@
 import express from 'express'
 import Order from '../models/orders.js'
 import { checkAuthenticated } from '../routers/routes.js';
+import { getVhost } from '../routers/routes.js';
+import { getOrgByDomain } from './organizationController.js';
 
 // Create a router instance
 const router = express.Router();
@@ -18,8 +20,7 @@ router.get('/', checkAuthenticated, async (req, res) => {
 })
 
 //Create Order
-router.post('/', checkAuthenticated, async (req, res) => {
-    req.body.organizationID = req.user.organizationID
+router.post('/', getVhost, getOrgByDomain, async (req, res) => {
     try {
         const order = await Order.create(req.body)
         res.status(200).json(order)

@@ -692,17 +692,17 @@ async function sendOrderToDB(){
 
     //create customer object
     try{
-        const response = await fetch('/api/customer/register', {
+        const response = await fetch('/customer/register', {
             method: 'POST',
             headers: {
             'Content-Type': 'application/json'
             },
                 body: JSON.stringify({ 
-                    firstName: inputFirstName.value,
-                    LastName: inputLastName.value,
+                    firstname: inputFirstName.value,
+                    lastname: inputLastName.value,
                     email: inputEmail.value,
-                    //password: inputPassword.value,
-                    birthDate: dateBirthDateObj
+                    password: inputPassword.value
+                    //birthDate: dateBirthDateObj
                     //organizationID: "temp org id"
             })
         });
@@ -829,7 +829,7 @@ document.getElementById("submitBooking").addEventListener("click", async functio
     }
 
     //send order to database
-    await sendOrderToDB();
+    sendOrderToDB();
 
     //redirect to dashboard
     //location.href = "/dashboard"

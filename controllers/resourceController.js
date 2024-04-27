@@ -34,13 +34,13 @@ router.post('/', checkAuthenticated, async (req, res) => {
 })
 
 //return resource by ID
-router.get('/:id', checkAuthenticated, async (req, res) => {
+router.get('/:id', getVhost, getOrgByDomain, async (req, res) => {
     const {id} = req.params
     try {
         const resource = await Resource.findById(id)
         if(!resource){
             return res.status(404).json({message: `cannot find any resource with ID ${id}`})
-        } else if (resource.organizationID && resource.organizationID != req.user.organizationID) {
+        } else if (resource.organizationID && resource.organizationID != req.body.organizationID) {
             return res.status(401).json({message: `Not authorized to access ${id}`})
         } else if (!resource.organizationID) {
             return res.status(401).json({message: `Not authorized to access global resources ${id}`})
