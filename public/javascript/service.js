@@ -684,9 +684,9 @@ async function sendOrderToDB(){
             },
                 body: JSON.stringify({ 
                     firstname: inputFirstName.value,
-                    Lastname: inputLastName.value,
+                    lastname: inputLastName.value,
                     email: inputEmail.value,
-                    password: inputPassword.value,
+                    password: inputPassword.value
                     //birthDate: dateBirthDateObj
                     //organizationID: "temp org id"
             })

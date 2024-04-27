@@ -111,23 +111,22 @@ export const getCustomerRegister = (req, res) => {
 
 export const registerCustomer = async (req, res) => {
     try {  
-      Customer.register(
-        new Customer({
-          username: req.body.email,
-          email: req.body.email,
-          firstName: req.body.firstname,
-          lastName: req.body.lastname,
-          organizationID: req.body.organizationID
-      }), req.body.password, function (err, msg) {
-        if (err) {
-          //res.send(err)
-          res.status(500).json({message: err.message})
-        } else {
-          //res.redirect('/customers/login')
-          console.log(msg)
-          return res.status(200).json(msg)
-        }
-      })
+        Customer.register(
+            new Customer({
+            email: req.body.email,
+            firstName: req.body.firstname,
+            lastName: req.body.lastname,
+            organizationID: req.body.organizationID
+        }), req.body.password, function (err, msg) {
+            if (err) {
+            //res.send(err)
+            res.status(500).json({message: err.message})
+            } else {
+            //res.redirect('/customers/login')
+            console.log(msg)
+            return res.status(200).json(msg)
+            }
+        })
     } catch (err) {
       res.status(500).json({message: err.message});
     }  
