@@ -7,6 +7,11 @@
     <title>Service App</title>
     <link rel="stylesheet" href="/css/service.css">
     <link rel="stylesheet" href="/css/styles.css">
+    
+    <script src="https://js.stripe.com/v3/"></script>
+    <script>
+      var stripePublicKey = '<%= stripeKey %>'
+    </script>
 </head>
 
 <body>
@@ -297,8 +302,12 @@
                 </div>
                 
     
-                <label for="comments">Additional Comments:</label>
-                <textarea id="comments" name="comments"></textarea>
+                <div id="card">
+                    <div id="card-element">
+                
+                    </div>
+                
+                  </div>
     
                 <button type="button" id="submitBooking">Submit Booking</button>
             </form>

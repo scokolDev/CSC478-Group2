@@ -291,6 +291,14 @@ let priceType = "flat rate"
 let selectedProductRate = 0
 let isSelectStart = true
 let isNewCustomer = true
+let submitted = false;
+let customerFirstName, customerLastName
+
+const stripe = Stripe(stripePublicKey)
+var elements = stripe.elements()
+var card = elements.create('card');
+console.log(card)
+card.mount('#card-element');
 
 
 //returns a month name in string form given the month number
@@ -707,13 +715,32 @@ async function CreateCustomer(){
     if(!isNewCustomer){
         existingPassword = document.getElementById("existingPassword")
         existingEmail = document.getElementById("existingEmail")
-        //
 
+        // try{
+        //     const response = await fetch('/customer/')
+        //     const customers = await response.json()
 
-        //code to fetch customer with given email and password
+        //     console.log(customers)
 
+        //     customers.forEach((customer) => {
+        //         if(customer.email == inputEmail.value){
+        //             return customer
+        //         }
+        //     })   
+        //     if (!response.ok) {
+        //         throw new Error('Failed to add customer');
+        //     }
 
-        //
+        //     // If customer added successfully
+        //     console.log("Successfully added customer");
+
+        //     return await response.json()
+        // } catch (error) {
+        //     console.error(error.message);
+        //     alert('Failed to add customer');
+        // }
+        //customerFirstName = customer.firstName
+        //customerLastName = customer.lastName
     }else{
         //create customer object
         try{
@@ -736,6 +763,9 @@ async function CreateCustomer(){
             // If customer added successfully
             console.log("Successfully added customer");
 
+            customerFirstName = inputFirstName.value
+            customerLastName = inputLastName.value
+
             return await response.json()
         } catch (error) {
             console.error(error.message);
@@ -748,6 +778,62 @@ async function sendOrderToDB(){
 
     customer = await CreateCustomer()
     console.log(customer)
+
+    // Make a call to the server to create a new
+    // payment intent and store its client_secret.
+    const {error: backendError, clientSecret, nextAction} = await fetch(
+        '/api/orders/create-payment-intent',
+    {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                currency: 'usd',
+                paymentMethodType: 'card',
+            }),
+    }
+    ).then((r) => r.json());
+  
+    if (backendError) {
+        //addMessage(backendError.message);
+  
+        // reenable the form.
+        submitted = false;
+        document.getElementById("submitBooking").disabled = false;
+        return;
+    }
+  
+    //addMessage(`Client secret returned.`);
+  
+    // Confirm the card payment given the clientSecret
+    // from the payment intent that was just created on
+    // the server.
+    const {error: stripeError, paymentIntent} = await stripe.confirmCardPayment(
+        clientSecret,
+        {
+            payment_method: {
+                card: card,
+                billing_details: {
+                    name: customerFirstName + " " + customerLastName,
+                }, 
+            },
+        }
+    );
+  
+    if (stripeError) {
+        //addMessage(stripeError.message);
+  
+        // reenable the form.
+        submitted = false;
+        document.getElementById("submitBooking").disabled = false;
+        return;
+    }
+  
+    //addMessage(`Payment ${paymentIntent.status}: ${paymentIntent.id}`);
+    
+
+
 
     //getting id of selected product and selected resource from booking form
     tempProducts = []
@@ -850,15 +936,20 @@ async function sendOrderToDB(){
     //     console.error(error.message);
     //     alert('Failed to add order');
     // }
+    if (paymentIntent.status == "succeeded") {
+        window.location.href = '/success.html';
+    }
 }
 
 //submit Booking functionality
 document.getElementById("submitBooking").addEventListener("click", async function(){
+    if(submitted) { return; }
     //verify inputs
     if(await verifyInput() == false){
         return
     }
-
+    document.getElementById("submitBooking").disabled = true
+    submitted = true;
     //send order to database
     sendOrderToDB();
 

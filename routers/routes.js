@@ -46,7 +46,7 @@ router.get('/', (req, res, next) => {
   
     // Serve the index.html file
     
-    res.render('test.ejs', {orgname: req.body.organizationName})
+    res.render('test.ejs', {orgname: req.body.organizationName, stripeKey: process.env.STRIPE_PUBLIC_KEY})
   });
 
   router.get('/schedule', checkAuthenticated, (req, res) => {

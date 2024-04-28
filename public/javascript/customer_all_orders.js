@@ -52,7 +52,7 @@ function formatTime(dateStr){
 //creates an html element to represent order, fills element with all relevent order info
 //
 //order: order object to be displayed
-async function addAppointment(order){
+async function addAppointment(order, userType){
 
     //fetch product associated with order from database
     const productResponse = await fetch('/api/products/' + order.products[0]);
@@ -102,7 +102,7 @@ async function addAppointment(order){
     //add event listener to html object to redirect user to order details of clicked order
     appointment.setAttribute("orderID", order._id)
     appointment.addEventListener("click", function() {
-        location.href = '/customer/order_details?ID=' + appointment.getAttribute("orderID")
+        location.href = '/' + userType + '/order_details?ID=' + appointment.getAttribute("orderID")
     })
 
     //append order html element to appointments list
@@ -111,7 +111,7 @@ async function addAppointment(order){
 }
 
 //fills upcoming appointments box on the far left of site. Takes all appointments from appointmentArr and displays them in upcoming appointments
-async function displayAppointments(){
+async function displayAppointments(userType){
 
     //clear AppointmentsList on page
     document.getElementById("AppointmentsList").innerHTML = '';
@@ -128,7 +128,7 @@ async function displayAppointments(){
         orders.forEach((order) => {
 
             //call addAppointment to display order in appointment list
-            addAppointment(order)
+            addAppointment(order, userType)
             
         });
       } catch (error) {
@@ -138,4 +138,4 @@ async function displayAppointments(){
 }
 
 
-displayAppointments()
+//displayAppointments()

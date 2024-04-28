@@ -13,6 +13,7 @@ import {
     getAdminResource,
     getAdminModifyListing,
     getAdminOrderDetails,
+    getAdminOrders,
 } from '../controllers/adminController.js'
 
 import Organization from '../models/organizations.js'
@@ -43,6 +44,8 @@ router.get('/login', checkNotAuthenticated, getAdminLogin);
   router.get('/modify_listing', checkAuthenticated, getAdminModifyListing);
 
   router.get('/order_details', checkAuthenticated, getAdminOrderDetails);
+
+  router.get('/orders', checkAuthenticated, getAdminOrders);
 
   router.get('/register', checkNotAuthenticated,  getAdminRegister);
   
