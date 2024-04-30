@@ -828,31 +828,6 @@ async function sendOrderToDB(){
 
     customer = await CreateCustomer()
     console.log(customer)
-
-    // Make a call to the server to create a new
-    // payment intent and store its client_secret.
-    const {error: backendError, clientSecret, nextAction} = await fetch(
-        '/api/orders/create-payment-intent',
-    {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                currency: 'usd',
-                paymentMethodType: 'card',
-            }),
-    }
-    ).then((r) => r.json());
-  
-    if (backendError) {
-        //addMessage(backendError.message);
-  
-        // reenable the form.
-        submitted = false;
-        document.getElementById("submitBooking").disabled = false;
-        return;
-    }
   
     //addMessage(`Client secret returned.`);
 
@@ -875,6 +850,34 @@ async function sendOrderToDB(){
         endDateTime = new Date(parseInt(edate[0]), parseInt(edate[1])-1, parseInt(edate[2]), (parseInt(etimes[0])-5), parseInt(etimes[1]))    
     }
 
+        // Make a call to the server to create a new
+    // payment intent and store its client_secret.
+    const {error: backendError, clientSecret, nextAction} = await fetch(
+        '/api/orders/create-payment-intent',
+    {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                currency: 'usd',
+                paymentMethodType: 'card',
+                productID: tempProducts,
+                start: startDateTime,
+                end: endDateTime,
+            }),
+    }
+    ).then((r) => r.json());
+  
+    if (backendError) {
+        //addMessage(backendError.message);
+  
+        // reenable the form.
+        submitted = false;
+        document.getElementById("submitBooking").disabled = false;
+        return;
+    }
+
     // Confirm the card payment given the clientSecret
     // from the payment intent that was just created on
     // the server.
@@ -885,9 +888,6 @@ async function sendOrderToDB(){
                 card: card,
                 billing_details: {
                     name: customerFirstName + " " + customerLastName,
-                    productID: tempProducts,
-                    start: startDateTime,
-                    end: endDateTime,
                 }, 
             },
         }

@@ -2,8 +2,8 @@
 import express from 'express'
 import vhost from 'vhost'
 import scheduleController from '../controllers/scheduleController.js'
-import productController from '../controllers/productController.js'
-import orderController from '../controllers/orderController.js'
+import productRouter from './productRouter.js'
+import orderRouter from './orderRouter.js'
 import customerRouter from '../routers/customerRouter.js'
 import resourceController from '../controllers/resourceController.js'
 import organizationRouter from './organizationRouter.js'
@@ -123,8 +123,8 @@ router.delete('/logout', function(req, res, next) {
 router.use('/api/events', scheduleController);
 
 //Use middleware for '/api/{controller}'
-router.use('/api/products', productController);
-router.use('/api/orders', orderController);
+router.use('/api/products', productRouter);
+router.use('/api/orders', orderRouter);
 router.use('/api/customers', customerRouter);
 router.use('/api/resources', resourceController);
 router.use('/api/organizations', organizationRouter);
