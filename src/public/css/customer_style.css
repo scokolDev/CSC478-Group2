@@ -1,0 +1,128 @@
+
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+header {
+    background-color: #333;
+    color: #fff;
+    padding: 10px 0;
+}
+.headerWrapper{
+    display: flex;
+    justify-content: space-between;
+    width: 50vw;
+    height: 100px;
+    margin: 0 auto;
+}
+.logoIcon{
+    background-image: url(/img/logo.png);
+    background-size: contain;
+    width: 220px;
+    height: 100px;
+}
+.accountIcon{
+    background-image: url(/img/accountIcon.png);
+    background-size: contain;
+    width: 100px;
+    height: 100px;
+}
+.logoutIcon{
+    background-image: url(/img/logoutIcon.png);
+    background-size: contain;
+    width: 100px;
+    height: 100px;
+}
+@media(max-width: 768px){
+    .customerDashMainWrapper{
+    }
+}
+.customerDashMainWrapper{
+    /* background-color: #4d4d4d; */
+    width: 75vw;
+    height: 100vh;
+    margin: 0 auto;
+
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    grid-template-rows: 10% 90%;
+}
+.customerDashboardButtons{
+    grid-area: 1/2/2/5;
+
+    display: flex;
+    justify-content: space-evenly;
+}
+.dashboardButton{
+    height: 100%;
+    aspect-ratio: 2;
+    border-radius: 5%;
+    padding: 0;
+    border: none;
+    background-color: rgb(177, 177, 177);
+}
+.dashboardButton:hover{
+    background-color: lightblue;
+    
+}
+.customerUpcomingPanel{
+    text-align: center;
+    padding-top: 5%;
+
+    grid-area: 2/4/3/6;
+}
+.customerCalendarPanel{
+    text-align: center;
+    padding-top: 5%;
+    grid-area: 2/1/3/3;
+}
+
+.CalendarWrapper{
+    margin-top: 5%;
+    text-align: center;
+    border: 1px solid black;
+}
+.Calendar{
+    width: 80%;
+    aspect-ratio: 7/6;
+    margin: auto;
+
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    grid-template-rows: repeat(6, 1fr);
+}
+.CalendarHeader{
+    display: flex;
+    justify-content: space-around;
+    width: 80%;
+    margin: auto;
+}
+.CalDayActive{
+    padding: 0;
+    border: none;
+    background: none;
+
+    background-color: white;
+    border-radius: 5%;
+}
+.CalDayActive:hover{
+    border: 1px solid black;
+}
+
+
+
+
+:root {
+    --largeText: 50px;
+    --midText: 30px;
+    --smallText: 20px;
+}
+
+.orderDetailsWrapper{
+    width: 50vw;
+    height: 100vh;
+    margin: 0 auto;
+
+    display: block;
+}

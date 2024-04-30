@@ -1,0 +1,298 @@
+:root {
+    --viewport-width: 50vw;
+}
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+header {
+    background-color: #333;
+    color: #fff;
+    padding: 10px 0;
+}
+.headerWrapper{
+    display: flex;
+    justify-content: space-between;
+    width: 50vw;
+    height: 100px;
+    margin: 0 auto;
+}
+.logoIcon{
+    background-image: url(/img/logo.png);
+    background-size: contain;
+    width: 220px;
+    height: 100px;
+}
+.accountIcon{
+    background-image: url(/img/accountIcon.png);
+    background-size: contain;
+    width: 100px;
+    height: 100px;
+}
+.logoutIcon{
+    background-image: url(/img/logoutIcon.png);
+    background-size: contain;
+    width: 100px;
+    height: 100px;
+}
+.adminDashMainWrapper{
+    background-color: #4d4d4d;
+    width: var(--viewport-width);
+    height: 100vh;
+    margin: 0 auto;
+
+    display: grid;
+    grid-template-columns: 50% 50%;
+    grid-template-rows: 50% 30% 20%;
+}
+.AppointmentsListWrapper{
+    text-align: center;
+    border: 5px solid black;
+    grid-area: 1/1/6/1;
+    overflow: hidden;
+}
+.AppointmentsList{
+    width: 100%;
+    height: 100%;
+    overflow: scroll;
+}
+.CalendarWrapper{
+    border: 5px solid black;
+    grid-area: 1/2/1/2;
+    text-align: center;
+}
+.Calendar{
+    background-color: rgb(43, 43, 43);
+    width: 80%;
+    aspect-ratio: 7/6;
+    margin: auto;
+
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    grid-template-rows: repeat(6, 1fr);
+}
+.CalendarHeader{
+    display: flex;
+    justify-content: space-around;
+    width: 80%;
+    margin: auto;
+}
+.CalDayActive{
+    background-color: white;
+    border: 1px solid black;
+}
+.SelectedAppointment{
+    border: 5px solid black;
+    overflow: hidden;
+}
+.AppointmentObject{
+    background-color: rgb(114, 114, 114);
+    border: 5px solid black;
+    width: 100%;
+    margin-bottom: 5px;
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    grid-template-rows: repeat(4, 1fr);
+    
+}
+.AppointmentObjectLarge{
+    background-color: rgb(114, 114, 114);
+    border: 5px solid black;
+    width: 100%;
+    margin-bottom: 5px;
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    
+}
+.SelectedAppointmentList{
+    width: 100%;
+    height: 95%;
+    overflow: scroll;
+}
+.ButtonHolder{
+    border: 5px solid black;
+}
+
+
+
+
+.mainWrapper{
+    background-color: #4d4d4d;
+    max-width: 1000px;
+    min-height: 1000px;
+    margin: 0 auto;
+}
+.loginBox{
+    background-color: rgb(173, 173, 173);
+    width: 500px;
+    height: 500px;
+    margin: 0 auto;
+    border-radius: 15px;
+}
+.loginForm{
+    height: 100%;
+
+    display: grid;
+    grid-template-columns: 20% 20% 20% 20% 20%;
+    grid-template-rows: repeat(10, 1fr);
+}
+
+.createAccountForm{
+    height: 100vw;
+    padding: 5%;
+
+    display: grid;
+    grid-template-rows: 100%;
+    grid-template-rows: repeat(20, 1fr);
+}
+
+
+.listingsWrapper{
+    width: 100%;
+
+    display: grid;
+    grid-template-columns: 25% 25% 25% 25%;
+}
+.gridBox{
+    aspect-ratio: 2/3;
+}
+.listing{
+    background-color: white;
+    width: 90%;
+    height: 90%;
+    margin-top: 7.5%;
+    margin-left: 5%;
+    border-radius: 5%;
+    overflow: hidden;
+
+    display: grid;
+
+    grid-template-rows: 50% 10% 30% 10%;
+
+}
+
+
+
+
+.modifyListingWrapper{
+    background-color: #4d4d4d;
+    max-width: 1000px;
+    min-height: 100vh;
+    margin: 0 auto;
+    padding-top: 1%;
+
+    display: grid;
+    grid-template-columns: 35% 62% 3%;
+    grid-template-rows: 50% 50%
+
+
+}
+.modifyListingForm{
+    display: grid;
+    height: 100vh;
+
+    grid-template-rows:repeat(15, 1fr);
+    grid-template-columns:repeat(3, 1fr);
+    row-gap: 2%;
+
+    background-color: rgb(110, 110, 110);
+    padding: 5%;
+    border-radius: 1%;
+}
+.modifyListingFormResourceHolder{
+    background-color: rgb(179, 179, 179);  
+    height: 100%;
+    overflow: auto;
+}
+.resourceFormResourceHolder{ 
+    height: 100vh;
+}
+.resourceElement{
+    width: 100%;
+    height: 10%;
+    background-color: rgb(104, 104, 104);
+
+    display: flex;
+    overflow: hidden;
+}
+.resourceAmountInput{
+    width: 100%;
+}
+.daysWrapper{
+    height: 50%; 
+    width: 40%; 
+    display: flex; 
+    justify-content: space-evenly; 
+    margin-top: 2%;
+}
+.dayLetter{
+    text-align: center; 
+    width: 100%;
+}
+.dayCheckbox{
+    background-color: rgb(38, 0, 255); 
+    width: 100%; 
+    aspect-ratio: 1; 
+    margin: 0;
+}
+.timeWrapper{
+    width:25%; 
+    height: 100%;
+}
+.deleteWrapper{
+    width:5%; 
+    height: 100%;
+}
+.deleteButton{
+    width: 100%; 
+    aspect-ratio: 1;
+}
+
+.resourceDisplay{
+    height: 10%; 
+    width: 100%; 
+    background-color: #444; 
+    display: flex;
+    margin-bottom: 1%;
+}
+
+
+
+
+
+
+
+main{
+    background-image: url(/img/bg.jpg);
+    background-size: cover;
+}
+nav {
+    background-color: #444;
+    color: #fff;
+    text-align: center;
+    padding: 10px 0;
+}
+nav a {
+    color: #fff;
+    text-decoration: none;
+    margin: 0 10px;
+}
+footer {
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    padding: 10px 0;
+    position: fixed;
+    width: 100%;
+    bottom: 0;
+}
+/* Hide the contact form */
+#contactForm {
+    display: none;
+}
+#contactContainer {
+width: 50%; /* Adjust the width */
+margin: 0 auto; /* Center the container horizontally */
+}
