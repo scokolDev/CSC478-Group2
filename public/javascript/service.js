@@ -773,6 +773,56 @@ async function CreateCustomer(){
         }
     }
 }
+
+async function calculateTotalCost(productId, start, end){
+    const productResponse = await fetch('/api/products/' + productId)
+    const product = await productResponse.json()  
+    
+    prodPriceType = product.priceType[0]
+    prodPrice = product.price
+
+    console.log(prodPriceType)
+    console.log(prodPrice)
+    
+
+    //if date objects are passed in as strings
+    if(typeof start == "string" || typeof end == "string"){
+        //convert bookedDate start and end times to date objects
+        startDateObj = new Date(parseInt(start.substring(0,4)), parseInt(start.substring(5,7))-1, parseInt(start.substring(8,10))) 
+        endDateObj = new Date(parseInt(end.substring(0,4)), parseInt(end.substring(5,7))-1, parseInt(end.substring(8,10))) 
+
+        timeReserved = endDateObj - startDateObj
+        
+    }else{
+        timeReserved = end - start
+    }
+    switch(prodPriceType){
+        case("Flat Rate"):
+            return prodPrice;
+        case("Per Hour"):
+            timeReserved /= (1000 * 60 * 60)
+            break
+        case("Per Day"):
+            timeReserved /= (1000 * 60 * 60 * 24)
+            break
+    }
+
+    return timeReserved * prodPrice
+}
+//create date object for selected start date
+testingSdate = new Date(2024, 5, 24, 12, 31)
+testingEdate = new Date(2024, 5, 24, 13, 30)
+totalC = calculateTotalCost("662c796c5f942d48baf3bdd0", testingSdate, testingEdate)
+console.log(totalC)
+
+
+
+
+
+
+
+
+
 //function to create customer object and order object with booking form informaion, and send objects to database
 async function sendOrderToDB(){
 
@@ -805,35 +855,6 @@ async function sendOrderToDB(){
     }
   
     //addMessage(`Client secret returned.`);
-  
-    // Confirm the card payment given the clientSecret
-    // from the payment intent that was just created on
-    // the server.
-    const {error: stripeError, paymentIntent} = await stripe.confirmCardPayment(
-        clientSecret,
-        {
-            payment_method: {
-                card: card,
-                billing_details: {
-                    name: customerFirstName + " " + customerLastName,
-                }, 
-            },
-        }
-    );
-  
-    if (stripeError) {
-        //addMessage(stripeError.message);
-  
-        // reenable the form.
-        submitted = false;
-        document.getElementById("submitBooking").disabled = false;
-        return;
-    }
-  
-    //addMessage(`Payment ${paymentIntent.status}: ${paymentIntent.id}`);
-    
-
-
 
     //getting id of selected product and selected resource from booking form
     tempProducts = []
@@ -853,6 +874,42 @@ async function sendOrderToDB(){
         etimes = inputEndTime.value.split(":")
         endDateTime = new Date(parseInt(edate[0]), parseInt(edate[1])-1, parseInt(edate[2]), (parseInt(etimes[0])-5), parseInt(etimes[1]))    
     }
+
+    // Confirm the card payment given the clientSecret
+    // from the payment intent that was just created on
+    // the server.
+    const {error: stripeError, paymentIntent} = await stripe.confirmCardPayment(
+        clientSecret,
+        {
+            payment_method: {
+                card: card,
+                billing_details: {
+                    name: customerFirstName + " " + customerLastName,
+                    productID: tempProducts,
+                    start: startDateTime,
+                    end: endDateTime,
+                }, 
+            },
+        }
+    );
+  
+    if (stripeError) {
+        //addMessage(stripeError.message);
+  
+        // reenable the form.
+        submitted = false;
+        document.getElementById("submitBooking").disabled = false;
+        return;
+    }
+  
+    //addMessage(`Payment ${paymentIntent.status}: ${paymentIntent.id}`);
+    
+
+
+
+    
+
+    
 
     console.log(startDateTime)
     console.log(endDateTime)

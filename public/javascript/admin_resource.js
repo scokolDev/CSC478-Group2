@@ -100,6 +100,8 @@ document.getElementById("saveResources").addEventListener("click", async functio
   for(i = 0; i < allResources.length; i++){
       await saveById(allResources[i].id)
   }
+
+  location.href = "/admin/dashboard"
 });
 
 

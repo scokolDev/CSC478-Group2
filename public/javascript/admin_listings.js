@@ -83,7 +83,7 @@ async function displayProducts() {
       products.forEach((product) => {
         
         //add product to active or inactive listing container based on product display field
-        addService((product.display == true ? activeListingContainer : inactiveListingContainer), `${product.name}`, "/img/cleaningthumbnail.jpg", `${product.description}`, `${product.price}`, `${product.priceType}`, `${product._id}`);
+        addService((product.display == true ? activeListingContainer : inactiveListingContainer), `${product.name}`, product.image, `${product.description}`, `${product.price}`, `${product.priceType}`, `${product._id}`);
       });
 
     } catch (error) {

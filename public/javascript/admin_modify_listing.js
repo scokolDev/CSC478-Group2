@@ -108,6 +108,8 @@ document.getElementById("saveButton").addEventListener('click', async function()
     const productName = document.getElementById("name").value;
     const productDesc = document.getElementById("description").value;
     const productPrice = document.getElementById("price").value;
+    const uploadedImage = document.getElementById("image").files[0]
+    let productImage
     let productPriceType;
     if(document.getElementById("flatRate").checked){
         productPriceType = "Flat Rate"
@@ -116,7 +118,7 @@ document.getElementById("saveButton").addEventListener('click', async function()
     }else{
         productPriceType = "Per Day"
     }
-    const productImage = "/img/cleaningThumbnail.jpg";
+    
     const productAvailable = document.getElementById("active").checked ? true : false;
     const productCategory = "cleaning";
 
@@ -128,6 +130,43 @@ document.getElementById("saveButton").addEventListener('click', async function()
         assignedResources.push(Allresources[i].id)
       }
     }
+
+
+    console.log(uploadedImage.path)
+    const formdata = new FormData();
+    formdata.append("file", uploadedImage);
+
+    
+    const requestOptions = {
+      method: "POST",
+      body: formdata,
+      redirect: "follow"
+    };
+    
+    try {
+      const response = await fetch("/upload", requestOptions)
+      const result = await response.json()
+      console.log(result.data.Location)
+      productImage = result.data.Location;
+    } catch (error) {
+      console.error(error);
+    };
+    
+
+    // imgResponse = await fetch("localhost:3000/upload", requestOptions)
+    //   .then((response) => response.text())
+    //   .then((result) => console.log(result))
+    //   .catch((error) => console.error(error));
+
+    //console.log(imgResponse)
+      
+    // try {
+    //     const imageResponse = await fetch('/upload', uploadedImage);
+    // } catch (error) {
+    //   console.error(error.message);
+    //   alert('Failed to add product');
+    // }
+
 
 
     try {
@@ -150,6 +189,7 @@ document.getElementById("saveButton").addEventListener('click', async function()
             display: productAvailable
           })
         });
+        console.log(await productResponse.json())
         if (!productResponse.ok) {
           throw new Error('Failed to Edit product');
         }
@@ -173,6 +213,7 @@ document.getElementById("saveButton").addEventListener('click', async function()
             display: productAvailable
           })
         });
+        console.log(await response.json())
         if (!response.ok) {
           throw new Error('Failed to add product');
         }
@@ -182,6 +223,8 @@ document.getElementById("saveButton").addEventListener('click', async function()
       console.error(error.message);
       alert('Failed to add product');
     }
+
+    //location.href = "/admin/listings"
 });
 
 //creates an html element to represent a resource and adds the element to a specified resourceContainer
@@ -267,7 +310,7 @@ async function findExistingService() {
         const product = await response.json();
         
         //call updatePreview method update preview object with product's information
-        updatePreview(`${product.name}`, "/img/cleaningThumbnail.jpg", `${product.description}`, `${product.price}`)
+        updatePreview(`${product.name}`, product.image, `${product.description}`, `${product.price}`)
 
         //set all form input fields to product's information
         document.getElementById("name").setAttribute("value", `${product.name}`)
