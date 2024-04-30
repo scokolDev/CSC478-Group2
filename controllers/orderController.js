@@ -288,7 +288,7 @@ async function calculateTotalCost(productId, start, end){
   }
   switch(prodPriceType){
       case("Flat Rate"):
-          return prodPrice;
+          return prodPrice * 100;
       case("Per Hour"):
           timeReserved /= (1000 * 60 * 60)
           break
