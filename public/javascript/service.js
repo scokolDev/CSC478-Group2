@@ -828,8 +828,29 @@ async function sendOrderToDB(){
 
     customer = await CreateCustomer()
     console.log(customer)
+  
+    //addMessage(`Client secret returned.`);
 
-    // Make a call to the server to create a new
+    //getting id of selected product and selected resource from booking form
+    tempProducts = []
+    tempProducts[0] = productsList.options[productsList.selectedIndex].id
+    resourceId = resourceList.options[resourceList.selectedIndex].id
+
+    //create date object for selected start date
+    sdate = inputStartDate.value.split("-")
+    stimes = inputStartTime.value.split(":")
+    startDateTime = new Date(parseInt(sdate[0]), parseInt(sdate[1])-1, parseInt(sdate[2]), (parseInt(stimes[0])-5), parseInt(stimes[1]))
+    //create date object for selected end date based on selected product price type
+    if(priceType == "Per Hour"){
+        etimes = inputEndTime.value.split(":")
+        endDateTime = new Date(parseInt(sdate[0]), parseInt(sdate[1])-1, parseInt(sdate[2]), (parseInt(etimes[0])-5), parseInt(etimes[1]))
+    }else{
+        edate = inputEndDate.value.split("-")
+        etimes = inputEndTime.value.split(":")
+        endDateTime = new Date(parseInt(edate[0]), parseInt(edate[1])-1, parseInt(edate[2]), (parseInt(etimes[0])-5), parseInt(etimes[1]))    
+    }
+
+        // Make a call to the server to create a new
     // payment intent and store its client_secret.
     const {error: backendError, clientSecret, nextAction} = await fetch(
         '/api/orders/create-payment-intent',
@@ -841,6 +862,9 @@ async function sendOrderToDB(){
             body: JSON.stringify({
                 currency: 'usd',
                 paymentMethodType: 'card',
+                productID: tempProducts,
+                start: startDateTime,
+                end: endDateTime,
             }),
     }
     ).then((r) => r.json());
