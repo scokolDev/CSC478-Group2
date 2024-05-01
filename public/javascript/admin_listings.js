@@ -1,30 +1,21 @@
+activeListingContainer = document.getElementById("activelistingsWrapper");
+inactiveListingContainer = document.getElementById("inactivelistingsWrapper")
 
-//This is a randomized service array to simulate the database
-//all services are represented as json data {"service", "image extension", "description", "price", "active", "serviceID"}
-RandAppointmentArray = [];
-serviceArr = ["house cleaning", "personal trainer", "painting", "grocery shopping", "moving", "delivery"]
-descriptionArr = ["short description", "slightly longer description", "long description that takes up a lot of room", "super long description that will be too long for the element to contain, the service listed here has to give too much information in the description field to properly fit in the container"]
-imageArr = ["/img/cleaningThumbnail.jpg", "/img/movingThumbnail.jpg", "/img/paintingThumbnail.jpg"]
-for(i = 0; i < 50; i++){
-    month = Math.floor(Math.random() * 11)
-    day = Math.floor(Math.random() * (28-1) + 1)
-    startHour = Math.floor(Math.random() * 22)
-    endHour = Math.floor(Math.random() * (23-startHour) + startHour)
-    app1Start = new Date(2024, month, day, startHour, 30)
-    app1End = new Date(2024, month, day, endHour, 45)
-    RandAppointmentArray.push({"service": serviceArr[Math.floor(Math.random() * serviceArr.length)], "image": imageArr[Math.floor(Math.random() * imageArr.length)], "description": descriptionArr[Math.floor(Math.random() * descriptionArr.length)], "price": Math.floor(Math.random() * 12000), "active": Math.floor(Math.random() * 2) == 1 ? true : false,  "serviceID": Math.floor(Math.random() * 121314)})
-}
-
-
-//This is a preset array of service listing also used to simulate the database
-//The purpose of this array is to show the modify listing capabilities of the admin_modify_listing page 
-//when a listing is clicked on, the serviceID is used to load proper values into the admin_modify_listing page
-PresetAppointmentArray = [];
-PresetAppointmentArray.push({"service": "house cleaning", "image": "/img/cleaningThumbnail.jpg", "description": "full house cleaning", "price" : 50, "active" : true, "serviceID": "12345"})
-
-
-//function used to create all html elements to display a service listing on the page
-function addService(container, service, image, description, price, serviceId){
+//function used to create html element with product listing information and add it to a specified container
+//
+//(Requirement 2.0.0) - creats html element to display product
+//(Requirement 2.1.0) - adds product elements to active and incative product containers
+//(Requirement 2.3.0) - adds event listener to product element to redirect user to modify product page
+//
+//container: html container to append the product listing to
+//service: product name
+//image: product image path
+//description: product discription
+//price: product price
+//serviceID: product id
+function addService(container, service, image, description, price, priceType, productID){
+    
+    //create product listing html element with given product information
     let listing = document.createElement("div")
     listing.setAttribute("class", "listing")
 
@@ -45,56 +36,56 @@ function addService(container, service, image, description, price, serviceId){
 
     let priceBox = document.createElement("div")
     priceBox.innerHTML = '$' + price;
+    switch(priceType){
+      case("Per Hour"):
+        priceBox.innerHTML += "/Hour"
+        break
+      case("Per Day"):
+        priceBox.innerHTML += "/Day"
+        break
+    }
     priceBox.setAttribute("style", "text-align: center;")
     listing.appendChild(priceBox)
 
     let wrapper = document.createElement("div")
     wrapper.setAttribute("class", "gridBox")
-    wrapper.setAttribute("serviceID", serviceId)
+    wrapper.setAttribute("productID", productID)
     wrapper.appendChild(listing)
+
+    //event listener to redirect to modify listing page when user clicks on product
     wrapper.addEventListener("click", function() {
-        location.href = '/admin/modify_listing?serviceID=' + serviceId;
+        location.href = '/admin/modify_listing?serviceID=' + productID;
     })
 
+    //append product listing to container
     container.appendChild(wrapper)
 }
 
-
-//function used to iterate through an array of appointments(appArr) and call the addService function to display each service in the array
-function initAppointments(activeContainer, inactiveContainer, appArr){
-    for(i = 0; i < appArr.length; i++){
-        if(appArr[i].active == true){
-            addService(activeContainer, appArr[i].service, appArr[i].image, appArr[i].description, appArr[i].price, appArr[i].serviceID);
-        }else{
-            addService(inactiveContainer, appArr[i].service, appArr[i].image, appArr[i].description, appArr[i].price, appArr[i].serviceID);
-        }
-    }
-}
-
-//active and inactive html listing containers
-
-
-//PresetAppointmentArray
-//initAppointments(activeListingContainer, inactiveListingContainer, RandAppointmentArray)
-
-
-
-activeListingContainer = document.getElementById("activelistingsWrapper");
-inactiveListingContainer = document.getElementById("inactivelistingsWrapper")
+//displays all products from the database on the page
+//
+//(Requirement 2.0.0) - gets all products from database to display
+//(Requirement 2.1.0) - splits active and inactive products for display
+//
 async function displayProducts() {
+    //clear active and inactive containers
     activeListingContainer.innerHTML = '';
     inactiveListingContainer.innerHTML = '';
+
+    // fetch all products from the database
     try {
-      // fetch all products from the database
       const response = await fetch('/api/products');
       if(!response.ok) {
         throw new Error('Failed to get products form Database');
       }
-
       const products = await response.json();
+
+      //for all products in database
       products.forEach((product) => {
-        addService((product.display == true ? activeListingContainer : inactiveListingContainer), `${product.name}`, "/img/cleaningthumbnail.jpg", `${product.description}`, `${product.price}`, `${product._id}`);
+        
+        //add product to active or inactive listing container based on product display field
+        addService((product.display == true ? activeListingContainer : inactiveListingContainer), `${product.name}`, product.image, `${product.description}`, `${product.price}`, `${product.priceType}`, `${product._id}`);
       });
+
     } catch (error) {
       console.error(error.message);
       alert("Failed to Fetch products")

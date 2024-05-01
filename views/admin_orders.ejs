@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/customer_style.css" >
+    <title>Customer Dashboard</title>
+</head>
+<body onload = "displayAppointments('admin')">
+
+    <header>
+        <div class="headerWrapper">
+            <a href="/"><div class="logoIcon"></div></a>
+            <div style="display: flex;">
+                <form action="/logout?_method=DELETE"  method="POST"><button class="logoutIcon"></button></form>
+                <a href="/admin/dashboard"><div class="accountIcon"></div></a>
+            </div>
+            
+        </div>
+    </header>
+
+    <main>
+        <div style="width: 75vw; height: 100vh; margin: 0 auto;">
+            <div class="customerDashboardButtons">
+                <button class="dashboardButton" onclick="location.href = '/admin/dashboard'">return to dashboard</button>
+            </div >
+            
+            
+
+            <div id="AppointmentsList">
+                <div style="background-color: lightblue; display: flex; justify-content: space-between; border-radius: 1%;">
+                    <div>
+                        <div>
+                            order number:
+                        </div>
+                        <br>
+                        <div>
+                            product name:
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <div>
+                            status: processing
+                        </div>
+                        <br>
+                        <div>
+                            resource name:
+                        </div>
+                    </div>
+                    <div>
+                        <div>
+                            2024, april, 25, 10:45am
+                        </div>
+                        <div style="text-align: center;">
+                            to
+                        </div>
+                        <div>
+                            2024, april, 25, 11:45am
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+
+
+        </div>
+    </main>
+
+    
+
+</body>
+
+<script src="/javascript/customer_all_orders.js" ></script>
+
+</html>

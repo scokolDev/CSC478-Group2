@@ -34,13 +34,13 @@ router.post('/', checkAuthenticated, async (req, res) => {
 })
 
 //return resource by ID
-router.get('/:id', checkAuthenticated, async (req, res) => {
+router.get('/:id', getVhost, getOrgByDomain, async (req, res) => {
     const {id} = req.params
     try {
         const resource = await Resource.findById(id)
         if(!resource){
             return res.status(404).json({message: `cannot find any resource with ID ${id}`})
-        } else if (resource.organizationID && resource.organizationID != req.user.organizationID) {
+        } else if (resource.organizationID && resource.organizationID != req.body.organizationID) {
             return res.status(401).json({message: `Not authorized to access ${id}`})
         } else if (!resource.organizationID) {
             return res.status(401).json({message: `Not authorized to access global resources ${id}`})
@@ -53,14 +53,14 @@ router.get('/:id', checkAuthenticated, async (req, res) => {
 })
 
 //Update Resource
-router.put('/:id', checkAuthenticated, async (req, res) => {
-    req.body.organizationID = req.user.organizationID
+router.put('/:id', getVhost, getOrgByDomain, async (req, res) => {
+    const orgID = req.user != undefined ? req.user.organizationID : req.body.organizationID
     const {id} = req.params
     try {
         const resource = await Resource.findById(id)
         if(!resource){
             return res.status(404).json({message: `cannot find any resource with ID ${id}`})
-        } else if (resource.organizationID && resource.organizationID != req.user.organizationID) {
+        } else if (resource.organizationID && resource.organizationID != orgID) {
             return res.status(401).json({message: `Not authorized to modify resource ${id}`})
         } else if (resource.organizationID === undefined) {
             return res.status(401).json({message: `Not authorized to modify global resources ${id}`})

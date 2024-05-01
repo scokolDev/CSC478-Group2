@@ -12,7 +12,7 @@
         <div class="headerWrapper">
             <a href="/"><div class="logoIcon"></div></a>
             <div style="display: flex;">
-                <form action="/logout?_method=DELETE"  method="POST"><button class="logoutIcon"></button></form>
+                <form action="/logout?_method=DELETE"  method="POST"><button type="submit" class="logoutIcon"></button></form>
                 <a href="/admin/dashboard"><div class="accountIcon"></div></a>
             </div>
             
@@ -52,11 +52,12 @@
                 </div>
             </div>
             <div style="display: flex; justify-content: space-around; align-items: center;" class="ButtonHolder">
-                <!-- <button style="height: 50%; aspect-ratio: 1; background-color: white;">Listings</button> -->
+                <!-- (Requirement 1.2.0) -->
                 <a style="height: 50%; aspect-ratio: 1; background-color: white;" href="/admin/listings"><div style="text-align: center;">Listings</div></a>
+                <!-- (Requirement 1.3.0) -->
                 <a style="height: 50%; aspect-ratio: 1; background-color: white;" href="/admin/resources"><div style="text-align: center;">resources</div></a>
-                <!-- <button onclick="location.href='admin_login.html'";  style="height: 50%; aspect-ratio: 1; background-color: white;">Change Profile</button> -->
-                <a style="height: 50%; aspect-ratio: 1; background-color: white;" href="/admin/login"><div style="text-align: center;">Change Profile</div></a>
+                <!-- (Requirement 1.1.0) -->
+                <a style="height: 50%; aspect-ratio: 1; background-color: white;" href="/admin/orders"><div style="text-align: center;">view all orders</div></a>
             </div>
         </div>
     

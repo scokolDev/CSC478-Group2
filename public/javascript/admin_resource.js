@@ -1,10 +1,24 @@
 resourceCounter = 0;
+resourceHolder = document.getElementById("modifyListingFormResourceHolder")
+
+
+//saves a resource to the database given a resource id, if the resource already exists in the database,
+//a put request is sent to edit the resource, otherwise a post request is sent to create the resource
+//
+//(Requirement 3.1.0) - creates a new company resource in database with new resource information
+//(Requirement 3.2.0) - updates an existing resource with updated information
+//
+//rID: resource id to be saved
 async function saveById(rID){
-  resourceId = rID
+
+  //get resource html element and get all resource inputs
   resourceElement = document.getElementById(rID)
   resourceName = resourceElement.getElementsByClassName("resourceNameInput")[0].value;
   resourceAmount = resourceElement.getElementsByClassName("resourceAmountInput")[0].value;
+  resourceStart = resourceElement.getElementsByClassName("resourceStartAvailability")[0].value;
+  resourceEnd = resourceElement.getElementsByClassName("resourceEndAvailability")[0].value;
 
+  //create day availability array to hold all days resource is available on
   resourceDayAvailability = []
   resourceElement.getElementsByClassName("dayCheckbox")[0].checked ? resourceDayAvailability[0] = true : resourceDayAvailability[0] = false
   resourceElement.getElementsByClassName("dayCheckbox")[1].checked ? resourceDayAvailability[1] = true : resourceDayAvailability[1] = false
@@ -13,39 +27,14 @@ async function saveById(rID){
   resourceElement.getElementsByClassName("dayCheckbox")[4].checked ? resourceDayAvailability[4] = true : resourceDayAvailability[4] = false
   resourceElement.getElementsByClassName("dayCheckbox")[5].checked ? resourceDayAvailability[5] = true : resourceDayAvailability[5] = false
   resourceElement.getElementsByClassName("dayCheckbox")[6].checked ? resourceDayAvailability[6] = true : resourceDayAvailability[6] = false
-  resourceStart = resourceElement.getElementsByClassName("resourceStartAvailability")[0].value;
-  resourceEnd = resourceElement.getElementsByClassName("resourceEndAvailability")[0].value;
 
-  /*
-  // testing
-  */
-  reqbody =  JSON.stringify({ 
-    name: resourceName,
-    totalQuantity: resourceAmount,
-    availableQuantity: resourceAmount,
-    availability: [true, false, true, false, true, false, true],//resourceDayAvailability,
-    products: [1, 2, 3, 4, 5, 6, 7],
-    start: resourceStart,
-    end: resourceEnd,
-    
-    availability: Date.now(),
-    recurrence: "test"
-  })
+  //retrieve resource by id to see if resource already exists in database
+  const ResourceIDresponse = await fetch('/api/resources/' + rID)
   
-  console.log(reqbody)
-  /*
-  //testing
-  */
-
-  console.log(resourceName)
-  console.log(resourceAmount)
-  console.log(resourceDayAvailability)
-  console.log(resourceStart)
-  console.log(resourceEnd)
   try {
-      // Send a PUT request to edit the resource
-      if(rID.substring(0, 4) != "temp"){
-        const productResponse = await fetch('/api/resources/' + rID, {
+      //Send a PUT request to edit the resource if resource already exists in database
+      if(ResourceIDresponse.ok){
+        const response = await fetch('/api/resources/' + rID, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json'
@@ -61,16 +50,14 @@ async function saveById(rID){
             recurrence: "test"
           })
         });
-        if (!productResponse.ok) {
+        if (!response.ok) {
           throw new Error('Failed to Edit resource');
         }
-        // If product edited successfully, fetch and render the updated schedule
+
         console.log("Successfully Edited resource");
 
-
-      // Send a POST request to add the resource
+      // Send a POST request to add the resource if resource is not found in database
       }else{
-        console.log("--------------")
         const response = await fetch('/api/resources', {
           method: 'POST',
           headers: {
@@ -90,11 +77,9 @@ async function saveById(rID){
         if (!response.ok) {
           throw new Error('Failed to add resource');
         }
-  
-        // If product added successfully, fetch and render the updated schedule
+
         console.log("Successfully added resource");
       }
-      
     } catch (error) {
       console.error(error.message);
       alert('Failed to add resource');
@@ -102,17 +87,36 @@ async function saveById(rID){
 }
 
 
-
+//functionality for the save button to save all resources on page to database
+//
+//(Requirement 3.4.0) - calls saveById() function to save all resources
+//
 document.getElementById("saveResources").addEventListener("click", async function(){
+  
+  //get all resources on page and store them in array
   allResources = document.getElementsByClassName("resourceElement")
+
+  //save all resource from page by calling saveById function
   for(i = 0; i < allResources.length; i++){
-      saveById(allResources[i].id)
-      console.log(allResources[i].id)
+      await saveById(allResources[i].id)
   }
+
+  location.href = "/admin/dashboard"
 });
 
 
-
+//creates an html element to hold all relevent resource information and displays it on the page
+//
+//(Requirement 3.0.0) - creates html element to represent resource and displays it for user
+//(Requirement 3.3.0) - adds delete button to resource element to delete resource from database
+//
+//wrapper: container to store resource html element in
+//id: resource id
+//name: resource name
+//amount: resource amount
+//dayAvailability: resource availablilty on each day, boolean array for sunday-saturday
+//startTime: resource availablilty start time
+//endTime: resource availablilty end time
 function addResource(wrapper, id, name, amount, dayAvailability, startTime, endTime){
 
     //creating resource element
@@ -135,7 +139,7 @@ function addResource(wrapper, id, name, amount, dayAvailability, startTime, endT
     resourceElement.appendChild(resourceNameBox)
 
 
-    //wrapper for resource amount label and input box
+    //resource amount label and input box
     amountHolder = document.createElement("div")
     amountHolder.setAttribute("style", "width: 10%;")
     //resource amount label
@@ -155,7 +159,7 @@ function addResource(wrapper, id, name, amount, dayAvailability, startTime, endT
     amountHolder.appendChild(amountInput)
     resourceElement.appendChild(amountHolder);
 
-    //wrapper for day availablitiy of resource
+    //day availablitiy of resource
     daysWrapper = document.createElement("div")
     daysWrapper.setAttribute("class", "daysWrapper")
     //sunday wrapper for sunday label and checkbox
@@ -258,7 +262,7 @@ function addResource(wrapper, id, name, amount, dayAvailability, startTime, endT
     daysWrapper.appendChild(saturdayWrapper)
     resourceElement.appendChild(daysWrapper);
 
-    //wrapper for start and end time input
+    //start and end time input
     TimeWrapper = document.createElement("div")
     TimeWrapper.setAttribute("class", "timeWrapper")
     //start time label
@@ -288,7 +292,7 @@ function addResource(wrapper, id, name, amount, dayAvailability, startTime, endT
     TimeWrapper.appendChild(endInput)
     resourceElement.appendChild(TimeWrapper)
 
-    //wrapper for delete button
+    //delete button
     deleteWrapper = document.createElement("div")
     deleteWrapper.setAttribute("class", "deleteWrapper")
     //delete button
@@ -296,50 +300,67 @@ function addResource(wrapper, id, name, amount, dayAvailability, startTime, endT
     deleteButton.setAttribute("class", "deleteButton")
     deleteButton.setAttribute("type", "button")
     deleteButton.setAttribute("parentId", id)
+
+    //delete button functionality deletes resource from page and resource when clicked
     deleteButton.addEventListener("click", async function(){
-        console.log(this.getAttribute("parentId"))
+        
+        //call delete function on resource in database
         try {
             const response = await fetch('/api/resources/' + this.getAttribute("parentId"), {
                 method: 'DELETE'
             });
-            if(!response.ok) {
-                throw new Error('Failed to find resource in Database');
-            }
-        
+
         } catch (error) {
             console.error(error.message);
         }    
         document.getElementById(this.getAttribute("parentId")).remove()
     });
+
+    //remove resource html element on page
     deleteWrapper.appendChild(deleteButton)
     resourceElement.appendChild(deleteWrapper)
 }
 
 
-resourceHolder = document.getElementById("modifyListingFormResourceHolder")
-document.getElementById("addResource").addEventListener('click', async (event) => {
-    //addResource(resourceHolder, "test", "computer Room", 23, [true, false, false, false, true, false, true], "13:00", "17:00")
+//functionality for add resource button, calls addResource function to create a new blank resource html object on page
+//
+//(Requirement 3.1.0) - creates a new company resource
+//
+document.getElementById("addResource").addEventListener('click', async function(){
+
+    //increment amount of temporary resources on page
     resourceCounter++;
+
+    //call addResource function to add new resource to resourceHolder with a unique temporary id
     addResource(resourceHolder, "temp" + resourceCounter)
 });
 
 
+//gets all resources from the database and calls addResource function to create a new resource html element for each resource in database
+//
+//(Requirement 3.0.0) - calls addResources to display all company resources
+//
 async function displayResources() {
+
+    // fetch all resources from the database
     try {
-      // fetch all resources from the database
       const response = await fetch('/api/resources');
       if(!response.ok) {
         throw new Error('Failed to get resources form Database');
       }
       const resources = await response.json();
-      console.log(resources)
+
+      //iterate through all resources in database
       resources.forEach((resource) => {
+
+        //call addResource method to create resource html object
         addResource(resourceHolder, `${resource._id}`, `${resource.name}`, `${resource.totalQuantity}`, resource.availability, `${resource.start}`, `${resource.end}`)
       });
+
     } catch (error) {
       console.error(error.message);
       alert("Failed to Fetch resources")
     }
-  }
+}
 
-  displayResources();
+displayResources();

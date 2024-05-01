@@ -252,6 +252,7 @@ Calendar = document.getElementById("Calendar")
 selectDateMessage = document.getElementById("enter-date-message")
 
 selectedResourceDayAvailability = []
+selectedResourceBookedDates = []
 
 inputFirstName = document.getElementById("first-name")
 inputLastName = document.getElementById("last-name")
@@ -279,10 +280,25 @@ resourceDaysBox = document.getElementById("resourceDays")
 resourceTimesBox = document.getElementById("resourceTimes")
 scheduleWrapper = document.getElementById("scheduleWrapper")
 
+existingCustomerRadio = document.getElementById("existingCustomerRadio")
+newCustomerRadio = document.getElementById("newCustomerRadio")
+existingCustomerInputs = document.getElementById("existingCustomerInputs")
+newCustomerInputs = document.getElementById("newCustomerInputs")
+
+
 let hours = 0
 let priceType = "flat rate"
 let selectedProductRate = 0
-let isSelectStart = true;
+let isSelectStart = true
+let isNewCustomer = true
+let submitted = false;
+let customerFirstName, customerLastName
+
+const stripe = Stripe(stripePublicKey)
+var elements = stripe.elements()
+var card = elements.create('card');
+console.log(card)
+card.mount('#card-element');
 
 
 //returns a month name in string form given the month number
@@ -316,31 +332,49 @@ function monthNumToString(monthNumber){
 
 }
 
-// function getDayIndex(day){
-//     switch(day){
-//         case("sunday"):
-//         return 0;
 
-//         case("monday"):
-//         return 1;
+function updateCustomerInputs(){
+    console.log(existingCustomerRadio.checked)
+    if(existingCustomerRadio.checked){
+        newCustomerInputs.style.display = "none"
+        existingCustomerInputs.style.display = "block"
+        isNewCustomer = false
+    }else{
+        existingCustomerInputs.style.display = "none"
+        newCustomerInputs.style.display = "block"
+        isNewCustomer = true
+    }
+}   
+//checks to see is onDate date value is compatible with a resource dayAvailability and bookedDates
+//
+//onDate: date to check if availible
+//dayAvailability: dayAvailability of resource
+//bookedDates:bookedDates of resource
+//
+//returns true: resource is availible onDate
+//returns true: resource is not availible onDate
+function checkAvailible(onDate, dayAvailability, bookedDates){
 
-//         case("tuesday"):
-//         return 2;
+    //check if resource is avilable on day of week date falls on
+    if(dayAvailability[onDate.getDay()]){
 
-//         case("wednsday"):
-//         return 3;
+        //iterate through all bookedDates in bookedDates array
+        for(i = 0; i < bookedDates.length; i++){
 
-//         case("thursday"):
-//         return 4;
-
-//         case("friday"):
-//         return 5;
-
-//         case("saturday"):
-//         return 6;
-//     }
-// }
-
+            //convert bookedDate start and end times to date objects
+            bookedSDate = new Date(parseInt(bookedDates[i].start.substring(0,4)), parseInt(bookedDates[i].start.substring(5,7))-1, parseInt(bookedDates[i].start.substring(8,10))) 
+            bookedEDate = new Date(parseInt(bookedDates[i].end.substring(0,4)), parseInt(bookedDates[i].end.substring(5,7))-1, parseInt(bookedDates[i].end.substring(8,10))) 
+            
+            //if date falls between start and end date of booked date, resource is unavailable
+            if(bookedSDate <= onDate && bookedEDate >= onDate){
+                return false
+            }
+        }
+        return true
+    }
+    return false
+    
+}
 
 
 //initialize the Calendar to select booking dates on booking form
@@ -348,7 +382,7 @@ function monthNumToString(monthNumber){
 //monthIndex: month to be displayed on the calendar
 //year: year to be displayed on the calendar
 //dayAvailability: a boolean array of days that the selected resources is available on
-function initCalendar(monthIndex, year, dayAvailability){
+function initCalendar(monthIndex, year, dayAvailability, bookedDates){
     Calendar.innerHTML = '';
     document.getElementById("monthMarker").innerHTML = monthNumToString(monthIndex+1) + ", " + year;
     curDay = 1;
@@ -372,7 +406,8 @@ function initCalendar(monthIndex, year, dayAvailability){
         console.log(dayAvailability)
 
         //checking if resource is available on current day
-        if(dayAvailability[curDate.getDay()]){
+        
+        if(checkAvailible(curDate, dayAvailability, bookedDates)){
             day.style.backgroundColor = "lightblue"
 
             //functionality when user clicks on an available 
@@ -444,7 +479,7 @@ document.getElementById("CalPrev").addEventListener("click", function() {
     }else{
         DisplayedMonth--;
     }
-    initCalendar(DisplayedMonth, DisplayedYear, selectedResourceDayAvailability);
+    initCalendar(DisplayedMonth, DisplayedYear, selectedResourceDayAvailability, selectedResourceBookedDates);
 })
 
 //functionality for next button above calander; goes forward one month and updates calander object
@@ -455,7 +490,7 @@ document.getElementById("CalNext").addEventListener("click", function() {
     }else{
         DisplayedMonth++;
     }
-    initCalendar(DisplayedMonth, DisplayedYear, selectedResourceDayAvailability);
+    initCalendar(DisplayedMonth, DisplayedYear, selectedResourceDayAvailability, selectedResourceBookedDates);
 })
 
 //clear all input boxes within the schedule selector wrapper
@@ -475,6 +510,7 @@ function clearOrderInputs(){
 //container: drop down menu to hold products
 //selectedID: optional - will select the product with this id
 async function loadProducts(container, selectedID){
+    //add a placeholder option to dropdown menu
     container.innerHTML = "<option disabled selected value> select a product </option>"
     try {
         // fetch all products from the database
@@ -508,11 +544,9 @@ async function loadProducts(container, selectedID){
 
 //function to update the schedule selector wrapper with proper values after user enters schedule inputs
 function updateHours(){
-    //console.log("--------" + priceType + "---------")
-
     //making sure that all inputs are filled prior to updating calculations
     if(inputEndTime.value != "" && inputStartTime.value != "" && inputStartDate.value != ""){
-
+        console.log("-------------------------")
         switch(priceType){ 
             case("Flat Rate"):
                 if(inputEndDate.value != ""){
@@ -546,9 +580,9 @@ function updateHours(){
                 startDateObj = new Date(parseInt(sDate[0]), parseInt(sDate[1]), parseInt(sDate[2]), parseInt(stimes[0]), parseInt(stimes[1]))
                 endDateObj = new Date(parseInt(sDate[0]), parseInt(sDate[1]), parseInt(sDate[2]), parseInt(etimes[0]), parseInt(etimes[1]))
             
-
                 //calculate total number of hours across selected start time and end time
-                hours = (endDateObj - startDateObj)/60
+                hours = (endDateObj - startDateObj)/(1000 * 60 * 60)
+
 
                 //setting the total time box and total price box
                 inputHours.value = hours.toFixed(2)
@@ -609,11 +643,26 @@ async function verifyInput(){
     selectedResourceID = resourceList.options[resourceList.selectedIndex].id
     try {
         // fetch resource from the database
-        const response = await fetch('/api/resources/' + selectedResourceID);
-        if(!response.ok) {
-          throw new Error('Failed to verify resource from database');
+        // const response = await fetch('/api/resources/' + selectedResourceID);
+        // if(!response.ok) {
+        //   throw new Error('Failed to verify resource from database');
+        // }
+        // const resource = await response.json();
+        //TODO: Fix resource retrieval
+        // fetch resource from the database
+        const resourceResponse = await fetch('/api/resources');
+        
+        if(!resourceResponse.ok) {
+            throw new Error('Failed to get resources from Database');
         }
-        const resource = await response.json();
+        const resources = await resourceResponse.json();
+        console.log(resources)
+        for(j = 0; j < resources.length; j++){
+            if(resources[j]._id == selectedResourceID){
+                resource = resources[j]
+            }
+        }
+        //end of temporary code section
 
         //resource name
         resourceName = resource.name
@@ -662,39 +711,125 @@ async function verifyInput(){
     return true
 }
 
+async function CreateCustomer(){
+    if(!isNewCustomer){
+        existingPassword = document.getElementById("existingPassword")
+        existingEmail = document.getElementById("existingEmail")
+
+        // try{
+        //     const response = await fetch('/customer/')
+        //     const customers = await response.json()
+
+        //     console.log(customers)
+
+        //     customers.forEach((customer) => {
+        //         if(customer.email == inputEmail.value){
+        //             return customer
+        //         }
+        //     })   
+        //     if (!response.ok) {
+        //         throw new Error('Failed to add customer');
+        //     }
+
+        //     // If customer added successfully
+        //     console.log("Successfully added customer");
+
+        //     return await response.json()
+        // } catch (error) {
+        //     console.error(error.message);
+        //     alert('Failed to add customer');
+        // }
+        //customerFirstName = customer.firstName
+        //customerLastName = customer.lastName
+    }else{
+        //create customer object
+        try{
+            const response = await fetch('/customer/register', {
+                method: 'POST',
+                headers: {
+                'Content-Type': 'application/json'
+                },
+                    body: JSON.stringify({ 
+                        firstname: inputFirstName.value,
+                        lastname: inputLastName.value,
+                        email: inputEmail.value,
+                        password: inputPassword.value
+                })
+            });
+            if (!response.ok) {
+                throw new Error('Failed to add customer');
+            }
+
+            // If customer added successfully
+            console.log("Successfully added customer");
+
+            customerFirstName = inputFirstName.value
+            customerLastName = inputLastName.value
+
+            return await response.json()
+        } catch (error) {
+            console.error(error.message);
+            alert('Failed to add customer');
+        }
+    }
+}
+
+async function calculateTotalCost(productId, start, end){
+    const productResponse = await fetch('/api/products/' + productId)
+    const product = await productResponse.json()  
+    
+    prodPriceType = product.priceType[0]
+    prodPrice = product.price
+
+    console.log(prodPriceType)
+    console.log(prodPrice)
+    
+
+    //if date objects are passed in as strings
+    if(typeof start == "string" || typeof end == "string"){
+        //convert bookedDate start and end times to date objects
+        startDateObj = new Date(parseInt(start.substring(0,4)), parseInt(start.substring(5,7))-1, parseInt(start.substring(8,10))) 
+        endDateObj = new Date(parseInt(end.substring(0,4)), parseInt(end.substring(5,7))-1, parseInt(end.substring(8,10))) 
+
+        timeReserved = endDateObj - startDateObj
+        
+    }else{
+        timeReserved = end - start
+    }
+    switch(prodPriceType){
+        case("Flat Rate"):
+            return prodPrice;
+        case("Per Hour"):
+            timeReserved /= (1000 * 60 * 60)
+            break
+        case("Per Day"):
+            timeReserved /= (1000 * 60 * 60 * 24)
+            break
+    }
+
+    return timeReserved * prodPrice
+}
+//create date object for selected start date
+testingSdate = new Date(2024, 5, 24, 12, 31)
+testingEdate = new Date(2024, 5, 24, 13, 30)
+totalC = calculateTotalCost("662c796c5f942d48baf3bdd0", testingSdate, testingEdate)
+console.log(totalC)
+
+
+
+
+
+
+
+
 
 //function to create customer object and order object with booking form informaion, and send objects to database
 async function sendOrderToDB(){
-    //create date object out of inputted birth date
-    birthDateValues = inputBirthDate.value.split("-")
-    dateBirthDateObj = new Date(parseInt(birthDateValues[0]), parseInt(birthDateValues[1]), parseInt(birthDateValues[2]))
 
-    //create customer object
-    try{
-        const response = await fetch('/api/customer/register', {
-            method: 'POST',
-            headers: {
-            'Content-Type': 'application/json'
-            },
-                body: JSON.stringify({ 
-                    firstName: inputFirstName.value,
-                    LastName: inputLastName.value,
-                    email: inputEmail.value,
-                    password: inputPassword.value,
-                    birthDate: dateBirthDateObj,
-                    organizationID: "temp org id"
-            })
-        });
-        if (!response.ok) {
-            throw new Error('Failed to add customer');
-        }
-
-        // If customer added successfully
-        console.log("Successfully added customer");
-    } catch (error) {
-        console.error(error.message);
-        alert('Failed to add customer');
-    }
+    customer = await CreateCustomer()
+    console.log(customer)
+  
+    //addMessage(`Client secret returned.`);
 
     //getting id of selected product and selected resource from booking form
     tempProducts = []
@@ -704,58 +839,179 @@ async function sendOrderToDB(){
     //create date object for selected start date
     sdate = inputStartDate.value.split("-")
     stimes = inputStartTime.value.split(":")
-    startDateTime = new Date(parseInt(sdate[0]), parseInt(sdate[1])-1, parseInt(sdate[2]), parseInt(stimes[0]), parseInt(stimes[1]))
+    startDateTime = new Date(parseInt(sdate[0]), parseInt(sdate[1])-1, parseInt(sdate[2]), (parseInt(stimes[0])-5), parseInt(stimes[1]))
     //create date object for selected end date based on selected product price type
     if(priceType == "Per Hour"){
         etimes = inputEndTime.value.split(":")
-        endDateTime = new Date(parseInt(sdate[0]), parseInt(sdate[1])-1, parseInt(sdate[2]), parseInt(etimes[0]), parseInt(etimes[1]))
+        endDateTime = new Date(parseInt(sdate[0]), parseInt(sdate[1])-1, parseInt(sdate[2]), (parseInt(etimes[0])-5), parseInt(etimes[1]))
     }else{
         edate = inputEndDate.value.split("-")
         etimes = inputEndTime.value.split(":")
-        endDateTime = new Date(parseInt(edate[0]), parseInt(edate[1])-1, parseInt(edate[2]), parseInt(etimes[0]), parseInt(etimes[1]))    
+        endDateTime = new Date(parseInt(edate[0]), parseInt(edate[1])-1, parseInt(edate[2]), (parseInt(etimes[0])-5), parseInt(etimes[1]))    
     }
 
+        // Make a call to the server to create a new
+    // payment intent and store its client_secret.
+    const {error: backendError, clientSecret, nextAction} = await fetch(
+        '/api/orders/create-payment-intent',
+    {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                currency: 'usd',
+                paymentMethodType: 'card',
+                productID: tempProducts,
+                start: startDateTime,
+                end: endDateTime,
+            }),
+    }
+    ).then((r) => r.json());
+  
+    if (backendError) {
+        //addMessage(backendError.message);
+  
+        // reenable the form.
+        submitted = false;
+        document.getElementById("submitBooking").disabled = false;
+        return;
+    }
+
+    // Confirm the card payment given the clientSecret
+    // from the payment intent that was just created on
+    // the server.
+    const {error: stripeError, paymentIntent} = await stripe.confirmCardPayment(
+        clientSecret,
+        {
+            payment_method: {
+                card: card,
+                billing_details: {
+                    name: customerFirstName + " " + customerLastName,
+                }, 
+            },
+        }
+    );
+  
+    if (stripeError) {
+        //addMessage(stripeError.message);
+  
+        // reenable the form.
+        submitted = false;
+        document.getElementById("submitBooking").disabled = false;
+        return;
+    }
+  
+    //addMessage(`Payment ${paymentIntent.status}: ${paymentIntent.id}`);
+    
+
+
+
+    
+
+    
+
+    console.log(startDateTime)
+    console.log(endDateTime)
+
     //create order object
-    try{
-        const response = await fetch('/api/orders', {
+    //try{
+        const OrderResponse = await fetch('/api/orders', {
             method: 'POST',
             headers: {
             'Content-Type': 'application/json'
             },
                 body: JSON.stringify({ 
-                    customerID: "customer number",
+                    customerID: customer._id,
                     products: tempProducts,
                     startTime: startDateTime,
                     endTime: endDateTime,
                     status: "processing",
-                    organizationID: "org id",
                     resourceID: resourceId
             })
         });
-        if (!response.ok) {
+        sentOrder = await OrderResponse.json()
+        if (!OrderResponse.ok) {
             throw new Error('Failed to add order');
         }
 
         // If product added successfully,  and render the updated schedule
         console.log("Successfully added order");
-    } catch (error) {
-        console.error(error.message);
-        alert('Failed to add order');
+    // } catch (error) {
+    //     console.error(error.message);
+    //     alert('Failed to add order');
+    // }
+
+
+
+
+    let prevBookingDates = []
+    // const existingResponse = await fetch('/api/resources/' + resourceId)
+    // const existingResourceJSON = await existingResponse.json()
+
+    //TODO: Fix resource retrieval
+    // fetch resource from the database
+    const resourceResponse = await fetch('/api/resources');
+        
+    if(!resourceResponse.ok) {
+        throw new Error('Failed to get resources from Database');
+    }
+    const resources = await resourceResponse.json();
+    console.log(resources)
+    for(j = 0; j < resources.length; j++){
+        if(resources[j]._id == resourceId){
+            existingResourceJSON = resources[j]
+        }
+    }
+    //end of temporary code section
+
+        
+    prevBookingDates = existingResourceJSON.bookedDates
+        
+    prevBookingDates.push({"orderId":sentOrder._id, "start":startDateTime, "end":endDateTime})
+    console.log(prevBookingDates)
+    const response = await fetch('/api/resources/' + resourceId, {
+        method: 'PUT',
+        headers: {
+        'Content-Type': 'application/json'
+        },
+            body: JSON.stringify({ 
+            bookedDates: prevBookingDates
+        })
+    });
+    console.log(response.json())
+
+    // try{
+        
+    //     if (!response.ok) {
+    //         throw new Error('Failed to add order');
+    //     }
+
+    //     // If product added successfully,  and render the updated schedule
+    //     console.log("Successfully added order");
+    // } catch (error) {
+    //     console.error(error.message);
+    //     alert('Failed to add order');
+    // }
+    if (paymentIntent.status == "succeeded") {
+        window.location.href = '/success.html';
     }
 }
 
 //submit Booking functionality
 document.getElementById("submitBooking").addEventListener("click", async function(){
+    if(submitted) { return; }
     //verify inputs
     if(await verifyInput() == false){
         return
     }
-
+    document.getElementById("submitBooking").disabled = true
+    submitted = true;
     //send order to database
-    await sendOrderToDB();
+    sendOrderToDB();
 
     //redirect to dashboard
-    location.href = "/dashboard"
+    //location.href = "/dashboard"
 })
 
 //creates the schedule selector section with proper fields based off of the selected product and selected resource
@@ -766,18 +1022,35 @@ async function updateScheduleSelector(resourceID){
 
     //boolean array to hold days of the week the resource can be scheduled on
     let dayAvailability = []
+    let bookedDates = []
     let resourceName, resourceStart, resourceEnd
 
     //get the selected resource from database
     try {
-        const resourceResponse = await fetch('/api/resources/' + resourceID);
+        // const resourceResponse = await fetch('/api/resources/' + resourceID);
+        // if(!resourceResponse.ok) {
+        //     throw new Error('Failed to get resources form Database');
+        // }
+        // const resource = await resourceResponse.json();
+        //TODO: Fix resource retrieval
+        // fetch resource from the database
+        const resourceResponse = await fetch('/api/resources');
+        
         if(!resourceResponse.ok) {
-            throw new Error('Failed to get resources form Database');
+            throw new Error('Failed to get resources from Database');
         }
-        const resource = await resourceResponse.json();
+        const resources = await resourceResponse.json();
+        console.log(resources)
+        for(j = 0; j < resources.length; j++){
+            if(resources[j]._id == resourceID){
+                resource = resources[j]
+            }
+        }
+        //end of temporary code section
 
         //retrieving selected resource data
         dayAvailability = resource.availability
+        bookedDates = resource.bookedDates
         resourceName = resource.name
         resourceStart = resource.start
         resourceEnd = resource.end
@@ -787,8 +1060,9 @@ async function updateScheduleSelector(resourceID){
     }
 
     //initialize the calendar for selecting booking date
-    initCalendar(DisplayedMonth, DisplayedYear, dayAvailability)
+    initCalendar(DisplayedMonth, DisplayedYear, dayAvailability, bookedDates)
     selectedResourceDayAvailability = dayAvailability
+    selectedResourceBookedDates = bookedDates
 
     //displaying the resource name
     resourceNameBox.innerHTML = resourceName
@@ -844,13 +1118,29 @@ async function updateProductInformation(prodId){
 
     //get the selected product from database to find all coupled resources
     try {
+
+        //TODO: Fix product retrieval
         // fetch product from the database
-        const response = await fetch('/api/products/' + prodId);
+        const response = await fetch('/api/products');
+        
         if(!response.ok) {
           throw new Error('Failed to get product from Database');
         }
-        const product = await response.json();
+        const products = await response.json();
+        console.log(products)
+        for(i = 0; i < products.length; i++){
+            if(products[i]._id == prodId){
+                product = products[i]
+            }
+        }
+        //end of temporary code section
 
+
+
+
+
+
+        
         //set global selected product rate variable and set input rate field
         selectedProductRate = parseFloat(product.price).toFixed(2)
         inputRate.value = "$" + selectedProductRate
@@ -880,11 +1170,28 @@ async function updateProductInformation(prodId){
         for(i = 0; i < product.resources.length; i++){
 
             //retrieve the resource from the database
-            const resourceResponse = await fetch('/api/resources/' + product.resources[i]);
+            // const resourceResponse = await fetch('/api/resources/' + product.resources[i]);
+            // if(!resourceResponse.ok) {
+            //     throw new Error('Failed to get resources from Database');
+            // }
+            // const resource = await resourceResponse.json();
+
+            //TODO: Fix resource retrieval
+            // fetch resource from the database
+            const resourceResponse = await fetch('/api/resources');
+        
             if(!resourceResponse.ok) {
                 throw new Error('Failed to get resources from Database');
             }
-            const resource = await resourceResponse.json();
+            const resources = await resourceResponse.json();
+            console.log(resources)
+            for(j = 0; j < resources.length; j++){
+                if(resources[j]._id == product.resources[i]){
+                    resource = resources[j]
+                }
+            }
+            //end of temporary code section
+
 
             //create option for resource drop down menu with resource name and resource id
             resourceListing = document.createElement("option")

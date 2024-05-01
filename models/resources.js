@@ -9,7 +9,7 @@ const resourceSchema = new db.Schema({
     },
     image: String,
     availability: [],
-    products: [],
+    bookedDates: [],
     recurrence: {
         type: String,
         required: true,

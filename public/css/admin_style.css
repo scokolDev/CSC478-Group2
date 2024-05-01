@@ -244,10 +244,14 @@ header {
 .deleteWrapper{
     width:5%; 
     height: 100%;
+
+    align-content: center;
 }
 .deleteButton{
     width: 100%; 
     aspect-ratio: 1;
+    background: url('/img/trash.png');
+    background-size: cover;
 }
 
 .resourceDisplay{
