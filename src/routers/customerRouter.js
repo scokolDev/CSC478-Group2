@@ -1,8 +1,7 @@
 import express from 'express'
 import passport from 'passport'
-import Customer from '../models/customers.js'
 import { checkNotAuthenticated, checkAuthenticated} from './routes.js'
-import { getOrgByDomain } from '../controllers/organizationController.js'
+
 import {
     // authenticateCustomer,
     getCustomerLogin,
