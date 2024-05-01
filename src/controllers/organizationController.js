@@ -7,7 +7,7 @@ var route53 = new AWS.Route53();
 export const createOrg = async (req, res) => {
     try {
         const org = await Organization.create(req.body)
-        updateRoute53(req.body.organizationDomain)
+        //updateRoute53(req.body.organizationDomain)
         res.status(200).json(org)
     } catch  (error) {
         res.status(500).json({message: error.message})
