@@ -50,6 +50,47 @@ function monthNumToString(monthNumber){
 
 }
 
+async function calculateTotalCost(productId, start, end){
+    const productResponse = await fetch('/api/products/' + productId)
+    const product = await productResponse.json()  
+    
+    prodPriceType = product.priceType[0]
+    prodPrice = product.price
+
+    console.log(prodPriceType)
+    console.log(start)
+    
+
+    //if date objects are passed in as strings
+    if(typeof start == "string" || typeof end == "string"){
+        //convert bookedDate start and end times to date objects
+        startDateObj = new Date(parseInt(start.substring(0,4)), parseInt(start.substring(5,7))-1, parseInt(start.substring(8,10)), parseInt(start.substring(11,13)), parseInt(start.substring(14,16))) 
+        endDateObj = new Date(parseInt(end.substring(0,4)), parseInt(end.substring(5,7))-1, parseInt(end.substring(8,10)), parseInt(end.substring(11,13)), parseInt(end.substring(14,16))) 
+
+        timeReserved = endDateObj - startDateObj
+        
+    }else{
+        timeReserved = end - start
+    }
+
+    console.log(timeReserved)
+
+    switch(prodPriceType){
+        case("Flat Rate"):
+            return prodPrice;
+        case("Per Hour"):
+            timeReserved /= (1000 * 60 * 60)
+            break
+        case("Per Day"):
+            timeReserved /= (1000 * 60 * 60 * 24)
+            break
+    }
+
+    console.log(timeReserved)
+
+    return timeReserved * prodPrice
+}
+
 //fill the page elements with data from the order with id in url param
 async function displayOrderDetails(){
     try {
@@ -84,7 +125,12 @@ async function displayOrderDetails(){
         endTime.innerHTML += `${order.endTime}`
         endTime.innerHTML = monthNumToString(parseInt(order.endTime.substring(5, 7))) + ", " + parseInt(order.endTime.substring(8, 10)) + " " + parseInt(order.endTime.substring(0, 4))
         endTime.innerHTML += "   " + parseInt(order.endTime.substring(11, 13))%12 + ":" + order.endTime.substring(14, 16) + (parseInt(order.endTime.substring(11, 13)) > 12 ? "pm" : "am")
-        cost.innerHTML += "PLACEHOLDER"
+        
+
+
+        const totalCost = await calculateTotalCost(order.products[0], order.startTime, order.endTime)
+        console.log(totalCost)
+        cost.innerHTML += totalCost.toFixed(2)
 
         //setting all product information fields to selected order's product details
         productName.innerHTML += `${product.name}`

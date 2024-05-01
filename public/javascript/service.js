@@ -844,7 +844,9 @@ async function sendOrderToDB(){
             }),
     }
     ).then((r) => r.json());
-  
+
+    console.log("before backend error checking")
+
     if (backendError) {
         //addMessage(backendError.message);
   
@@ -853,7 +855,9 @@ async function sendOrderToDB(){
         document.getElementById("submitBooking").disabled = false;
         return;
     }
-  
+    
+    console.log("after backend error checking")
+    
     //addMessage(`Client secret returned.`);
 
     //getting id of selected product and selected resource from booking form
@@ -885,23 +889,24 @@ async function sendOrderToDB(){
                 card: card,
                 billing_details: {
                     name: customerFirstName + " " + customerLastName,
-                    productID: tempProducts,
-                    start: startDateTime,
-                    end: endDateTime,
+                    //productID: tempProducts,
+                    //start: startDateTime,
+                    //end: endDateTime,
                 }, 
             },
         }
     );
-  
+    
+    console.log("before stripe error checking")
     if (stripeError) {
-        //addMessage(stripeError.message);
+        alert(stripeError.message);
   
         // reenable the form.
         submitted = false;
         document.getElementById("submitBooking").disabled = false;
         return;
     }
-  
+    console.log("after stripe error checking")
     //addMessage(`Payment ${paymentIntent.status}: ${paymentIntent.id}`);
     
 
