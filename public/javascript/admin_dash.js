@@ -175,9 +175,17 @@ async function displayAppointments(){
         
         //for each order in database
         orders.forEach((order) => {
+            
+            //check to make sure order is not already completed
+            if(parseInt(order.endTime.substring(0, 4)) >= now.getFullYear()){
+                if(parseInt(order.endTime.substring(5, 7)) >= now.getMonth() + 1){
+                    if(parseInt(order.endTime.substring(8, 10)) >= now.getDate()){
 
-            //call addAppointment to display order in appointment list
-            addAppointment(appointmentsList, order, false)
+                       //call addAppointment function to add order information to page
+                       addAppointment(appointmentsList, order, false)
+                    }
+                }
+           }
         });
       } catch (error) {
         console.error(error.message);

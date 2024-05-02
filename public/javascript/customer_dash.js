@@ -1,6 +1,7 @@
 now = new Date(Date.now());
 console.log(now);
 
+customerID = document.getElementById("customerID").getAttribute("customerID")
 appointmentsList = document.getElementById("AppointmentsList")
 appointmentListOnDay = document.getElementById("SelectedAppointmentList")
 Calendar = document.getElementById("Calendar");
@@ -62,18 +63,20 @@ async function displayAppointmentsOnDay(year, month, day){
 
         //for each order in database
         orders.forEach((order) => {
-            //get order's scheduled year, month, and day number
-            scheduledTime = order.startTime
-            orderYear = parseInt(scheduledTime.substring(0, 4))
-            orderMonth = parseInt(scheduledTime.substring(5, 7))
-            orderDay = parseInt(scheduledTime.substring(8, 10))
+            if(order.customerID == customerID){
+                //get order's scheduled year, month, and day number
+                scheduledTime = order.startTime
+                orderYear = parseInt(scheduledTime.substring(0, 4))
+                orderMonth = parseInt(scheduledTime.substring(5, 7))
+                orderDay = parseInt(scheduledTime.substring(8, 10))
 
-            //checking to see if this order is on the given year, month, and day
-            if(orderYear == year && orderMonth == parseInt(month) + 1 && orderDay == day){
-                
-                //call addAppointment function to display order information
-                addAppointment(appointmentListOnDay, order, false)
-            }   
+                //checking to see if this order is on the given year, month, and day
+                if(orderYear == year && orderMonth == parseInt(month) + 1 && orderDay == day){
+                    
+                    //call addAppointment function to display order information
+                    addAppointment(appointmentListOnDay, order, false)
+                }  
+            } 
         });
       } catch (error) {
         console.error(error.message);
@@ -187,16 +190,17 @@ async function displayAppointments(){
         
         //for each order in database
         orders.forEach((order) => {
+            if(order.customerID == customerID){
+                //check to make sure order is not already completed
+                if(parseInt(order.endTime.substring(0, 4)) >= now.getFullYear()){
+                    if(parseInt(order.endTime.substring(5, 7)) >= now.getMonth() + 1){
+                        if(parseInt(order.endTime.substring(8, 10)) >= now.getDate()){
 
-            //check to make sure order is not already completed
-            if(parseInt(order.endTime.substring(0, 4)) >= now.getFullYear()){
-                 if(parseInt(order.endTime.substring(5, 7)) >= now.getMonth()){
-                     if(parseInt(order.endTime.substring(8, 10)) >= now.getDate()){
-
-                        //call addAppointment function to add order information to page
-                         addAppointment(appointmentsList, order, true)
-                     }
-                 }
+                            //call addAppointment function to add order information to page
+                            addAppointment(appointmentsList, order, true)
+                        }
+                    }
+                }
             }
         });
 
@@ -222,18 +226,20 @@ async function OrderOnDay(dayDate, dayElement){
 
         //for all orders in database
         orders.forEach((order) => {
-            scheduledTime = order.startTime 
+            if(order.customerID == customerID){
+                scheduledTime = order.startTime 
 
-            //get order scheduled year, month, and day
-            orderYear = parseInt(scheduledTime.substring(0, 4))
-            orderMonth = parseInt(scheduledTime.substring(5, 7))
-            orderDay = parseInt(scheduledTime.substring(8, 10))
+                //get order scheduled year, month, and day
+                orderYear = parseInt(scheduledTime.substring(0, 4))
+                orderMonth = parseInt(scheduledTime.substring(5, 7))
+                orderDay = parseInt(scheduledTime.substring(8, 10))
 
-            //if order schedualed year, month, and day falls on given day
-            if(orderYear == dayDate.getFullYear() && orderMonth == dayDate.getMonth() + 1 && orderDay == dayDate.getDate()){
-                
-                //set dayElement text color to green
-                dayElement.style.color  = "green"
+                //if order schedualed year, month, and day falls on given day
+                if(orderYear == dayDate.getFullYear() && orderMonth == dayDate.getMonth() + 1 && orderDay == dayDate.getDate()){
+                    
+                    //set dayElement text color to green
+                    dayElement.style.color  = "green"
+                }
             }
         });
 

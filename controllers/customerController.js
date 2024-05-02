@@ -87,7 +87,7 @@ export const deleteCustomer = async(req, res) =>{
 
 export const getCustomerDash = (req, res) => {
     // Serve the Customer Dash file
-    res.render('customer_dash.ejs', {firstName: req.user.firstName});
+    res.render('customer_dash.ejs', {firstName: req.user.firstName, customerID:req.user._id});
   }
 
 export const getCustomerLogin = (req, res) => {
