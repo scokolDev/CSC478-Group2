@@ -1,8 +1,5 @@
 // Import necessary modules
-import express from 'express'
 import Customer from '../models/customers.js'
-import { checkAuthenticated } from '../routers/routes.js';
-import passport from 'passport'
 
 
 // export const authenticateCustomer = passport.authenticate('customer', {
@@ -10,9 +7,6 @@ import passport from 'passport'
 //     failureRedirect: '/customer/login',
 //     failureFlash: true
 //   })
-
-// Create a router instance
-const router = express.Router();
 
 //return all customers
 export const getCustomers = async (req, res) => {
@@ -136,6 +130,3 @@ export const getDomain = async (req, res) => {
         return req.body.orgdomain = req.vhost[0]
       }
 }
-
-
-export default router

@@ -5,7 +5,7 @@ import scheduleController from '../controllers/scheduleController.js'
 import productRouter from './productRouter.js'
 import orderRouter from './orderRouter.js'
 import customerRouter from '../routers/customerRouter.js'
-import resourceController from '../controllers/resourceController.js'
+import resourceRouter from '../routers/resourceRouter.js'
 import organizationRouter from './organizationRouter.js'
 import adminRouter from './adminRouter.js'
 import locationRouter from './locationRouter.js'
@@ -126,7 +126,7 @@ router.use('/api/events', scheduleController);
 router.use('/api/products', productRouter);
 router.use('/api/orders', orderRouter);
 router.use('/api/customers', customerRouter);
-router.use('/api/resources', resourceController);
+router.use('/api/resources', resourceRouter);
 router.use('/api/organizations', organizationRouter);
 router.use('/api/locations', locationRouter);
 
