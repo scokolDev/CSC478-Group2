@@ -94,6 +94,10 @@ export const getCustomerLogin = (req, res) => {
     res.render('customer_login.ejs', {message: req.failureFlash})
 }
 
+export const getCustomerOrderLogin = (req, res) => {
+    res.render('customer_order_login.ejs', {message: req.failureFlash})
+}
+
 export const getCustomerOrders = (req, res) => {
     // Serve the Customer Orders file
     res.render('customer_orders.ejs');

@@ -1,3 +1,12 @@
+try{
+    cID = document.getElementById("customerID").getAttribute("customerID")
+}catch(error){
+    cID = null
+    console.log("not authenticated")
+}
+
+console.log(cID)
+
 document.addEventListener('DOMContentLoaded', function() {
     // Function to toggle visibility of serviceContainer
     function toggleServiceContainer() {
@@ -26,7 +35,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Function to toggle visibility of bookingForm
     function toggleBookingForm(selectedProductId) {
-
          // Hide all other forms and sections
         document.getElementById('aboutInfo').style.display = 'none';
         document.getElementById('contactForm').style.display = 'none';
@@ -620,10 +628,13 @@ function updateHours(){
 async function verifyInput(){
 
     //making sure password and confirm password fields match
-    if(inputPassword.value != inputConfirmPassword.value){
-        alert("passwords do not match");
-        return false
+    if(cID == null){
+        if(inputPassword.value != inputConfirmPassword.value){
+            alert("passwords do not match");
+            return false
+        }
     }
+    
 
     //creating start and end date objects for the inputted start and end date/time
     SelectedStimes = inputStartTime.value.split(":")
@@ -712,36 +723,6 @@ async function verifyInput(){
 }
 
 async function CreateCustomer(){
-    if(!isNewCustomer){
-        existingPassword = document.getElementById("existingPassword")
-        existingEmail = document.getElementById("existingEmail")
-
-        // try{
-        //     const response = await fetch('/customer/')
-        //     const customers = await response.json()
-
-        //     console.log(customers)
-
-        //     customers.forEach((customer) => {
-        //         if(customer.email == inputEmail.value){
-        //             return customer
-        //         }
-        //     })   
-        //     if (!response.ok) {
-        //         throw new Error('Failed to add customer');
-        //     }
-
-        //     // If customer added successfully
-        //     console.log("Successfully added customer");
-
-        //     return await response.json()
-        // } catch (error) {
-        //     console.error(error.message);
-        //     alert('Failed to add customer');
-        // }
-        //customerFirstName = customer.firstName
-        //customerLastName = customer.lastName
-    }else{
         //create customer object
         try{
             const response = await fetch('/customer/register', {
@@ -771,7 +752,6 @@ async function CreateCustomer(){
             console.error(error.message);
             alert('Failed to add customer');
         }
-    }
 }
 
 async function calculateTotalCost(productId, start, end){
@@ -826,8 +806,10 @@ console.log(totalC)
 //function to create customer object and order object with booking form informaion, and send objects to database
 async function sendOrderToDB(){
 
-    customer = await CreateCustomer()
-    console.log(customer)
+    if(cID == null){
+        customer = await CreateCustomer()
+        cID = customer._id
+    }
   
     //addMessage(`Client secret returned.`);
 
@@ -871,14 +853,14 @@ async function sendOrderToDB(){
 
     console.log("before backend error checking")
 
-    if (backendError) {
-        //addMessage(backendError.message);
+    // if (backendError) {
+    //     //addMessage(backendError.message);
   
-        // reenable the form.
-        submitted = false;
-        document.getElementById("submitBooking").disabled = false;
-        return;
-    }
+    //     // reenable the form.
+    //     submitted = false;
+    //     document.getElementById("submitBooking").disabled = false;
+    //     return;
+    // }
     
     console.log("after backend error checking")
     
@@ -951,7 +933,7 @@ async function sendOrderToDB(){
             'Content-Type': 'application/json'
             },
                 body: JSON.stringify({ 
-                    customerID: customer._id,
+                    customerID: cID,
                     products: tempProducts,
                     startTime: startDateTime,
                     endTime: endDateTime,

@@ -42,11 +42,11 @@ router.get('/', (req, res, next) => {
     
   });
 
-  router.get('/', getOrgByDomain, (req, res) => {
+  router.get('/', getOrgByDomain, checkOrderAuthenticated, (req, res) => {
   
     // Serve the index.html file
     
-    res.render('test.ejs', {orgname: req.body.organizationName, stripeKey: process.env.STRIPE_PUBLIC_KEY})
+    res.render('test_copy.ejs', {orgname: req.body.organizationName, stripeKey: process.env.STRIPE_PUBLIC_KEY, customerID: req.user._id})
   });
 
   router.get('/schedule', checkAuthenticated, (req, res) => {
@@ -159,6 +159,14 @@ export function checkAuthenticated(req, res, next) {
   }
 
   res.redirect('/login')
+}
+
+export function checkOrderAuthenticated(req, res, next) {
+  if (req.isAuthenticated()) {
+    return next()
+  }
+
+  res.render('test.ejs', {orgname: req.body.organizationName, stripeKey: process.env.STRIPE_PUBLIC_KEY})
 }
 
 export function checkNotAuthenticated(req, res, next) {

@@ -2,6 +2,7 @@
 <html lang="en">
 
 <head>
+    <meta customerID=<%= customerID %> id="customerID">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Service App</title>
@@ -164,27 +165,19 @@
         <div class="booking-form">
             <h2>Booking Form</h2>
             <form action="#" method="post" id="bookingForm">
-                <div id="newCustomerInputs" style="display: block;">
-                    <a href="/customer/order/login"><div style="color: black;">already a customer, click here to sign in!</div></a>
-                    <p style="font-size: x-large;color: #104a63;">Customer Information:</p>
-                    <label for="first-name">First Name:</label>
-                    <input type="text" id="first-name" name="first-name" required>
-    
-                    <label for="last-name">Last Name:</label>
-                    <input type="text" id="last-name" name="last-name" required>
-            
-                    <label for="email">Email:</label>
-                    <input type="email" id="email" name="email" required>
-    
-                    <label for="birthdate">Birth Date:</label>
-                    <input type="date" id="birthdate" name="birthdate" required>
-    
-                    <label for="password">Password:</label>
-                    <input type="password" id="password" name="password" required>
-    
-                    <label for="confirm-password">Confirm Password:</label>
-                    <input type="password" id="confirm-password" name="confirm-password" required>
+                <div id="customerAuthBox">
+                    <div style="color: black;">signed in as <%= customerID %></div>
                 </div>
+                
+                <!-- <div id="existingCustomerInputs" style="display: none;">
+                    <p style="font-size: x-large;color: #104a63;">Customer Information:</p>
+                    <label for="email">Email:</label>
+                    <input type="email" id="existingemail" name="email" required>
+
+                    <label for="password">Password:</label>
+                    <input type="password" id="existingPassword" name="password" required>
+                </div> -->
+                
                 
                 <br><br><br>
                 <p style="font-size: x-large;color: #104a63;">Order Information:</p>

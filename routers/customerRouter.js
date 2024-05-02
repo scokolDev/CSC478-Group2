@@ -6,6 +6,7 @@ import { getOrgByDomain } from '../controllers/organizationController.js'
 import {
     // authenticateCustomer,
     getCustomerLogin,
+    getCustomerOrderLogin,
     getCustomerDash,
     getCustomerOrders,
     getCustomerModifyOrder,
@@ -28,6 +29,8 @@ router.use(passport.session())
 // router.post('/login', checkNotAuthenticated, authenticateCustomer)
 
 router.get('/login', checkNotAuthenticated, getCustomerLogin);
+
+router.get('/order/login', checkNotAuthenticated, getCustomerOrderLogin);
   
 router.get('/dashboard', checkAuthenticated, getCustomerDash);
 
