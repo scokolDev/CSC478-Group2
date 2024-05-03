@@ -1,4 +1,5 @@
-
+//return all resources
+// (Requirement 3.0.0)
 export const getResources = async (req, res) => {
     const orgID = req.user != undefined ? req.user.organizationID : req.body.organizationID
     req.query.organizationID = orgID;
@@ -11,6 +12,8 @@ export const getResources = async (req, res) => {
     }
 }
 
+//Create Resource
+// (Requirement 3.1.0)
 export const createResource = async (req, res) => {
     req.body.organizationID = req.user.organizationID
     try {
@@ -22,6 +25,8 @@ export const createResource = async (req, res) => {
 
 }
 
+//return resource by ID
+// (Requirement 3.2.0)
 export const getResourceByID = async (req, res) => {
     const {id} = req.params
     try {
@@ -40,6 +45,8 @@ export const getResourceByID = async (req, res) => {
 
 }
 
+//Update Resource
+// (Requirement 3.2.0, 3.4.0)
 export const updateResource = async (req, res) => {
     req.body.organizationID = req.user.organizationID
     const {id} = req.params
@@ -61,6 +68,8 @@ export const updateResource = async (req, res) => {
 
 }
 
+//Delete a Resource
+// (Requirement 3.3.0)
 export const deleteResource = async(req, res) =>{
     try {
         const {id} = req.params;

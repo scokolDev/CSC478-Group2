@@ -23,9 +23,9 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">62.02% </span>
+                <span class="strong">65.9% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>49/79</span>
+                <span class='fraction'>58/88</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">62.02% </span>
+                <span class="strong">65.9% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>49/79</span>
+                <span class='fraction'>58/88</span>
             </div>
         
             
@@ -142,13 +142,16 @@
 <a name='L77'></a><a href='#L77'>77</a>
 <a name='L78'></a><a href='#L78'>78</a>
 <a name='L79'></a><a href='#L79'>79</a>
-<a name='L80'></a><a href='#L80'>80</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
+<a name='L80'></a><a href='#L80'>80</a>
+<a name='L81'></a><a href='#L81'>81</a>
+<a name='L82'></a><a href='#L82'>82</a>
+<a name='L83'></a><a href='#L83'>83</a>
+<a name='L84'></a><a href='#L84'>84</a>
+<a name='L85'></a><a href='#L85'>85</a>
+<a name='L86'></a><a href='#L86'>86</a>
+<a name='L87'></a><a href='#L87'>87</a>
+<a name='L88'></a><a href='#L88'>88</a>
+<a name='L89'></a><a href='#L89'>89</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -158,6 +161,8 @@
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">4x</span>
@@ -189,9 +194,22 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -222,56 +240,65 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import Organization from '../models/organizations.js'
-import passport from 'passport'
 import User from '../models/users.js'
 import { updateRoute53 } from './organizationController.js'
 &nbsp;
-// export const authenticateAdmin = passport.authenticate('user', {
-//     successRedirect: '/admin/dashboard',
-//     failureRedirect: '/admin/login',
-//     failureFlash: true
-//   })
-&nbsp;
-&nbsp;
+// Method for returning Admin Dashboard
+// (Requirement 1.0.0)
 export const getAdminDash = (req, res) =&gt; {
     // Serve the Login.ejs file
     res.render('admin_dash.ejs', {orgName: req.body.organizationName});
   }
 &nbsp;
+// Return the Admin Login Page
+// (Requirement 1.4.0)
 export const getAdminLogin = (req, res) =&gt; {
     res.render('login.ejs', {error: req.failureFlash})
 }
 &nbsp;
+// Method for returning Admin Listings
+// (Requirement 1.1.0)
 export const getAdminListings = (req, res) =&gt; {
     // Serve the Login.ejs file
     res.render('admin_listings.ejs');
   }
-&nbsp;
+// Method for displaing the Admin Registration Page
+// (Requirement 1.4.1)
 export const getAdminRegister = (req, res) =&gt; {
     // Serve the Register.ejs file
     res.render('admin_register.ejs');
   }
 &nbsp;
+// Method for rendering Admin Resources
+// (Requirement 3.2.0)
 export const getAdminResource = (req, res) =&gt; {
     // Serve the resource.ejs file
     res.render('admin_resources.ejs')
 }
 &nbsp;
+// Route handler for Modify Listings
+// (Requirement 3.2.0)
 export const getAdminModifyListing = (req, res) =&gt; {
   // Serve the admin_modify_listing.ejs file
   res.render('admin_modify_listing.ejs')
 }
 &nbsp;
+// Method for rendering Order Details 
+// (Requirement 1.0.4)
 export const getAdminOrderDetails = (req, res) =&gt; {
   // Serve the admin_order_details.ejs file
   res.render('admin_order_details.ejs')
 }
 &nbsp;
+// Method for rendering Admin Orders
+// (Requirement 1.0.1)
 export const getAdminOrders = <span class="fstat-no" title="function not covered" >(req, res) =&gt; {</span>
 <span class="cstat-no" title="statement not covered" >  // Serve the admin_orders.ejs file</span>
 <span class="cstat-no" title="statement not covered" >  res.render('admin_orders.ejs')</span>
 <span class="cstat-no" title="statement not covered" >}</span>
 &nbsp;
+// Method for processing Admin Registration information
+// (Requirement 1.4.1)
 export const registerAdmin = <span class="fstat-no" title="function not covered" >async (req, res) =&gt; {</span>
 <span class="cstat-no" title="statement not covered" >    try {</span>
 <span class="cstat-no" title="statement not covered" >      const organization = await Organization.create({</span>
@@ -307,7 +334,7 @@ export const registerAdmin = <span class="fstat-no" title="function not covered"
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2024-05-02T04:20:11.140Z
+                at 2024-05-03T04:03:56.863Z
             </div>
         <script src="../prettify.js"></script>
         <script>

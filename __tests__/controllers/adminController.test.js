@@ -1,11 +1,16 @@
 import {jest} from '@jest/globals'
 
-jest.mock('../../controllers/organizationController', () => {
+jest.mock('aws-sdk', () => {
+    const route53Mock = {
+      changeResourceRecordSets: jest.fn().mockImplementation((params, callback) => {
+        callback(null, 'Success');
+      }),
+    };
     return {
-    ...jest.requireActual('../../controllers/organizationController'), // Import actual other exports
-    updateRoute53: jest.fn(),
+      Route53: jest.fn(() => route53Mock),
     };
   });
+import AWS from 'aws-sdk';
   
 import {
     getAdminLogin,
@@ -19,9 +24,9 @@ import {
 } from '../../controllers/adminController.js'
 import User from '../../models/users.js';
 import Organization from '../../models/organizations.js';
-import { updateRoute53 } from '../../controllers/organizationController.js';
+//import { updateRoute53 } from '../../controllers/organizationController.js';
 
-console.log("Test Output:" + updateRoute53.mock);
+
 
 jest.mock('../../models/organizations.js', () => jest.fn());
 jest.mock('../../models/users.js', () => jest.fn());
@@ -146,7 +151,7 @@ const mockResponse = () => {
 
   describe('Test Admin Registeration', () => {
     beforeEach(() => {
-        updateRoute53.mockClear();
+        AWS.Route53.mockClear();
     })
     
     afterEach(() => {
