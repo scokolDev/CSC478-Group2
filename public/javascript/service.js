@@ -747,7 +747,8 @@ async function CreateCustomer(){
                         firstname: inputFirstName.value,
                         lastname: inputLastName.value,
                         email: inputEmail.value,
-                        password: inputPassword.value
+                        password: inputPassword.value,
+                        order: true
                 })
             });
             if (!response.ok) {
