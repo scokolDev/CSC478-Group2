@@ -243,6 +243,7 @@ function addResource(resourceContainer, name, resourceID, ischecked){
     resourceCheckbox = document.createElement("input")
     resourceCheckbox.setAttribute("type", "checkbox")
     resourceCheckbox.setAttribute("class", "resourceCheckbox")
+    
     if(ischecked){resourceCheckbox.setAttribute("checked", true)}
     resourceElement.appendChild(resourceCheckbox)
 
@@ -281,10 +282,10 @@ async function loadResources(resourceContainer, activeResources) {
           //iterate through all active resources
           for(i = 0; i < activeResources.length; i++){
 
-            //if resource id from database is equal to a resource in active resources, set ischecked to true
-            if(!isChecked){
-              activeResources[i] == `${resource._id}` ? isChecked = true : isChecked = false
-            }
+              //if resource id from database is equal to a resource in active resources, set ischecked to true
+              if(activeResources[i] == resource._id){
+                  isChecked = true;
+              }
           }
         }
 
@@ -328,6 +329,8 @@ async function findExistingService() {
         document.getElementById("description").innerHTML = `${product.description}`
         document.getElementById("price").setAttribute("value", `${product.price}`)
         product.display == true ? document.getElementById("active").checked = true : document.getElementById("inactive").checked = true
+
+        loadResources(resourceContainer, product.resources)
     } catch (error) {
           console.error(error.message);
           alert("Failed to Fetch products")
@@ -341,11 +344,12 @@ async function findExistingService() {
 if(id == undefined){
     console.log("no service ID")
     document.getElementById("deleteButton").setAttribute("style", "visibility: hidden")
+    loadResources(resourceContainer)
 }else{
     displayTemplate = false
     findExistingService();
 }
-loadResources(resourceContainer)
+
 if(displayTemplate == true){
     updatePreview("Service Name", "/img/cleaningThumbnail.jpg", "Description of the service", "1234")
 }
