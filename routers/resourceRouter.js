@@ -1,6 +1,6 @@
 // Import necessary modules
 import express from 'express'
-import Resource from '../models/resources.js'
+
 import { checkAuthenticated, getVhost } from './routes.js';
 import { getOrgByDomain } from '../controllers/organizationController.js';
 import { createResource, deleteResource, getResourceByID, getResources, updateResource } from '../controllers/resourceController.js';

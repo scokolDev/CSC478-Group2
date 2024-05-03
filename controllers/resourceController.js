@@ -1,3 +1,5 @@
+import Resource from '../models/resources.js'
+
 //return all resources
 // (Requirement 3.0.0)
 export const getResources = async (req, res) => {
