@@ -275,50 +275,6 @@ form input[type="submit"]:hover {
 }
 
 
-
-
-
-
-
-
-.customerCalendarPanel{
-    text-align: center;
-    padding-top: 5%;
-    grid-area: 2/2/6/3;
-}
-
-.CalendarWrapper{
-    margin-top: 5%;
-    text-align: center;
-    border: 1px solid black;
-}
-.Calendar{
-    width: 80%;
-    aspect-ratio: 7/6;
-    margin: auto;
-
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    grid-template-rows: repeat(6, 1fr);
-}
-.CalendarHeader{
-    display: flex;
-    justify-content: space-around;
-    width: 80%;
-    margin: auto;
-}
-.CalDayActive{
-    padding: 0;
-    border: none;
-    background: none;
-
-    background-color: white;
-    border-radius: 5%;
-}
-.CalDayActive:hover{
-    border: 1px solid black;
-}
-
 /* Visual Elements */
 footer {
     position: fixed;
