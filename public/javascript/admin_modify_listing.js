@@ -68,7 +68,7 @@ function updatePreview(name, image, description, price){
 //
 document.getElementById("previewButton").addEventListener("click", function(){
     const uploadedImage = document.getElementById("image").files[0]
-    let imgPath = "/img/cleaningThumbnail.jpg";
+    let imgPath = productImage;
     //get product name, description, and price from input fields, or pass in default values if user did not enter anything
     serviceName = document.getElementById("name").value != "" ? document.getElementById("name").value : "Service Name";
     serviceDescription = document.getElementById("description").value != "" ? document.getElementById("description").value : "Description of the service";
@@ -100,6 +100,7 @@ document.getElementById("deleteButton").addEventListener("click", async function
     } catch (error) {
       console.error(error.message);
     }
+    location.href = "/admin/listings"
 })
 
 //functionality for the save button, this button saves the product with all user updated values to the database

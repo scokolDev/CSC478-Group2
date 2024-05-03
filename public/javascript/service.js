@@ -550,6 +550,7 @@ async function loadProducts(container, selectedID){
     console.log("---------------------called load Products")
     container.innerHTML = "";
     container.innerHTML = "<option disabled selected value> select a product </option>"
+    let selectedProduct = null
     try {
         // fetch all products from the database
         const response = await fetch('/api/products');
@@ -570,8 +571,8 @@ async function loadProducts(container, selectedID){
 
                 //if the current product has the given selectedID, set the product to selected in the menu
                 if(product._id == selectedID){
-                    productListing.setAttribute("selected", true)
-                    updateProductInformation(product._id)
+                    selectedProduct = productListing;
+                    
                 }
                 container.appendChild(productListing)
             }
@@ -579,6 +580,11 @@ async function loadProducts(container, selectedID){
       } catch (error) {
         console.error(error.message);
         alert("Failed to Fetch products")
+      }
+
+      if(selectedProduct != null){
+        selectedProduct.setAttribute("selected", true)
+        updateProductInformation(product._id)
       }
 }
 
@@ -1176,7 +1182,7 @@ async function updateProductInformation(prodId){
     clearOrderInputs()
 
     //get the selected product from database to find all coupled resources
-    try {
+     try {
 
         //TODO: Fix product retrieval
         // fetch product from the database
@@ -1224,44 +1230,43 @@ async function updateProductInformation(prodId){
                 inputRate.value += "/Day"
                 break
         }
-        
+
+        const resourceResponse = await fetch('/api/resources');
+            
+
+        if(!resourceResponse.ok) {
+            throw new Error('Failed to get resources from Database');
+        }
+
+        const orgResources = await resourceResponse.json();
+
         //iterate through all resources coupled to the selected product
         for(i = 0; i < product.resources.length; i++){
+            let resource = undefined
 
-            //retrieve the resource from the database
-            // const resourceResponse = await fetch('/api/resources/' + product.resources[i]);
-            // if(!resourceResponse.ok) {
-            //     throw new Error('Failed to get resources from Database');
-            // }
-            // const resource = await resourceResponse.json();
+            desiredResource = product.resources[i]
 
-            //TODO: Fix resource retrieval
-            // fetch resource from the database
-            const resourceResponse = await fetch('/api/resources');
-        
-            if(!resourceResponse.ok) {
-                throw new Error('Failed to get resources from Database');
-            }
-            const resources = await resourceResponse.json();
-            //console.log(resources)
-            for(j = 0; j < resources.length; j++){
-                if(resources[j]._id == product.resources[i]){
-                    resource = resources[j]
+            for(j = 0; j < orgResources.length; j++){
+                
+                if(orgResources[j]._id == desiredResource){
+                    resource = orgResources[j]
                 }
             }
             //end of temporary code section
 
 
             //create option for resource drop down menu with resource name and resource id
-            resourceListing = document.createElement("option")
-            resourceListing.innerHTML =  `${resource.name}`
-            resourceListing.setAttribute("id", `${resource._id}`)
-
-            //add resource option to drop down menu
-            resourceList.appendChild(resourceListing)
+            if(resource != undefined){
+                resourceListing = document.createElement("option")
+                resourceListing.innerHTML =  `${resource.name}`
+                resourceListing.setAttribute("id", `${resource._id}`)
+    
+                //add resource option to drop down menu
+                resourceList.appendChild(resourceListing)
+            }
         }
-      } catch (error) {
-        console.error(error.message);
-        alert("Failed to Fetch products")
-    }
+    } catch (error) {
+         console.error(error.message);
+         alert("Failed to Fetch products")
+     }
 }
