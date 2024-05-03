@@ -1,3 +1,11 @@
+
+try{
+    cID = document.getElementById("customerID").getAttribute("customerID")
+}catch(error){
+    cID = null
+    console.log("not authenticated")
+}
+
 //returns a month name in string form given the month number
 //
 //monthNumber: int representing month index 1-12 inclusive
@@ -102,7 +110,7 @@ async function addAppointment(order, userType){
     //add event listener to html object to redirect user to order details of clicked order
     appointment.setAttribute("orderID", order._id)
     appointment.addEventListener("click", function() {
-        location.href = '/' + userType + '/order_details?ID=' + appointment.getAttribute("orderID")
+        location.href = '/' + userType + '/modify_order?ID=' + appointment.getAttribute("orderID")
     })
 
     //append order html element to appointments list
@@ -131,7 +139,17 @@ async function displayAppointments(userType){
         orders.forEach((order) => {
 
             //call addAppointment to display order in appointment list
-            addAppointment(order, userType)
+            if(cID == undefined){
+                addAppointment(order, userType)
+
+            }else{
+                console.log(order.customerID + "   ==    " + cID)
+                if(order.customerID == cID){
+                    addAppointment(order, userType)
+                }
+            }
+            
+            
             
         });
       } catch (error) {

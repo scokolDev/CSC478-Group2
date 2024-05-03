@@ -9,7 +9,7 @@ resourceCounter = 0;
 displayTemplate = true
 resourceHolder = document.getElementById("modifyListingFormResourceHolder")
 resourceIdArray = [];
-
+let productImage = "/img/cleaningThumbnail.jpg"
 
 //getting the serviceID that is shared through the URL
 const urlParams = new URLSearchParams(window.location.search);
@@ -67,14 +67,18 @@ function updatePreview(name, image, description, price){
 //(Requirement 2.3.1) - calls updatePreview() function to update product preview
 //
 document.getElementById("previewButton").addEventListener("click", function(){
-
+    const uploadedImage = document.getElementById("image").files[0]
+    let imgPath = "/img/cleaningThumbnail.jpg";
     //get product name, description, and price from input fields, or pass in default values if user did not enter anything
     serviceName = document.getElementById("name").value != "" ? document.getElementById("name").value : "Service Name";
     serviceDescription = document.getElementById("description").value != "" ? document.getElementById("description").value : "Description of the service";
     servicePrice = document.getElementById("price").value != "" ? document.getElementById("price").value : "1234";
 
+    if(uploadedImage != undefined){
+      imgPath = URL.createObjectURL(uploadedImage)
+    }
     //display updated preview using updatePreview function
-    updatePreview(serviceName, "/img/cleaningThumbnail.jpg", serviceDescription, servicePrice)
+    updatePreview(serviceName, imgPath, serviceDescription, servicePrice)
 })
 
 //functionality of the delete button, this button deletes the product from the database
@@ -109,7 +113,6 @@ document.getElementById("saveButton").addEventListener('click', async function()
     const productDesc = document.getElementById("description").value;
     const productPrice = document.getElementById("price").value;
     const uploadedImage = document.getElementById("image").files[0]
-    let productImage
     let productPriceType;
     if(document.getElementById("flatRate").checked){
         productPriceType = "Flat Rate"
@@ -131,26 +134,28 @@ document.getElementById("saveButton").addEventListener('click', async function()
       }
     }
 
-
-    console.log(uploadedImage.path)
-    const formdata = new FormData();
-    formdata.append("file", uploadedImage);
-
+    if(uploadedImage != undefined){
+      console.log(uploadedImage.path)
+      const formdata = new FormData();
+      formdata.append("file", uploadedImage);
+  
+      
+      const requestOptions = {
+        method: "POST",
+        body: formdata,
+        redirect: "follow"
+      };
+      
+      try {
+        const response = await fetch("/upload", requestOptions)
+        const result = await response.json()
+        console.log(result.data.Location)
+        productImage = result.data.Location;
+      } catch (error) {
+        console.error(error);
+      };
+    }
     
-    const requestOptions = {
-      method: "POST",
-      body: formdata,
-      redirect: "follow"
-    };
-    
-    try {
-      const response = await fetch("/upload", requestOptions)
-      const result = await response.json()
-      console.log(result.data.Location)
-      productImage = result.data.Location;
-    } catch (error) {
-      console.error(error);
-    };
     
 
     // imgResponse = await fetch("localhost:3000/upload", requestOptions)
@@ -243,6 +248,7 @@ function addResource(resourceContainer, name, resourceID, ischecked){
     resourceCheckbox = document.createElement("input")
     resourceCheckbox.setAttribute("type", "checkbox")
     resourceCheckbox.setAttribute("class", "resourceCheckbox")
+    
     if(ischecked){resourceCheckbox.setAttribute("checked", true)}
     resourceElement.appendChild(resourceCheckbox)
 
@@ -281,10 +287,10 @@ async function loadResources(resourceContainer, activeResources) {
           //iterate through all active resources
           for(i = 0; i < activeResources.length; i++){
 
-            //if resource id from database is equal to a resource in active resources, set ischecked to true
-            if(!isChecked){
-              activeResources[i] == `${resource._id}` ? isChecked = true : isChecked = false
-            }
+              //if resource id from database is equal to a resource in active resources, set ischecked to true
+              if(activeResources[i] == resource._id){
+                  isChecked = true;
+              }
           }
         }
 
@@ -328,6 +334,8 @@ async function findExistingService() {
         document.getElementById("description").innerHTML = `${product.description}`
         document.getElementById("price").setAttribute("value", `${product.price}`)
         product.display == true ? document.getElementById("active").checked = true : document.getElementById("inactive").checked = true
+        productImage = product.image
+        loadResources(resourceContainer, product.resources)
     } catch (error) {
           console.error(error.message);
           alert("Failed to Fetch products")
@@ -341,11 +349,12 @@ async function findExistingService() {
 if(id == undefined){
     console.log("no service ID")
     document.getElementById("deleteButton").setAttribute("style", "visibility: hidden")
+    loadResources(resourceContainer)
 }else{
     displayTemplate = false
     findExistingService();
 }
-loadResources(resourceContainer)
+
 if(displayTemplate == true){
     updatePreview("Service Name", "/img/cleaningThumbnail.jpg", "Description of the service", "1234")
 }

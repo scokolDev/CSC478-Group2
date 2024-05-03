@@ -97,14 +97,14 @@ export const getCustomerOrderLogin = (req, res) => {
 // (Requirement 6.0.1)
 export const getCustomerOrders = (req, res) => {
     // Serve the Customer Orders file
-    res.render('customer_orders.ejs');
+    res.render('customer_orders.ejs', {customerID: req.user._id});
   }
 
 // Method for Modify Customer Order page
 // (Requirement 6.0.4)
 export const getCustomerModifyOrder = (req, res) => {
     // Serve the Customer Modify Order page
-    res.render('customer_modify_order.ejs');
+    res.render('customer_order_details.ejs');
   }
 
 // Method for Customer Registration Page
@@ -129,8 +129,12 @@ export const registerCustomer = async (req, res) => {
             //res.send(err)
             res.status(500).json({message: err.message})
             } else {
-            //res.redirect('/customers/login')
-            return res.status(200).json(msg)
+                if(!req.body.order){
+                    res.redirect('/customer/login')
+                }else{
+                    res.status(200).json(msg)
+                }
+                
             }
         })
     } catch (err) {
