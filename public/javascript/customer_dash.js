@@ -45,6 +45,9 @@ function monthNumToString(monthNumber){
 
 //displays all appointments on a given day, fills in box under calendar when user clicks on a calendar day
 //
+//(Requirement 6.0.0) - display orders to the user
+//(Requirement 6.0.3) - displays all orders on selected day from calendar
+//
 //year: year of day to display all orders on
 //month: month of day to display all orders on
 //day: day number of day to display all orders on
@@ -84,7 +87,10 @@ async function displayAppointmentsOnDay(year, month, day){
       }
 }
 
-
+//function to create or find existing date header which goes over all orders listed in the appointmentsList
+//
+//container: the html container to place the order header in
+//date: date to create the header out of
 function createOrderDateHeader(container, date){
 
     //try to get appointmentHeader by id if appointment header for given date already exists
@@ -107,6 +113,8 @@ function createOrderDateHeader(container, date){
 }
 
 //creates an html element to respresent an order and appends it to a specified container
+//
+//(Requirement 6.0.4) - adds event listener to order objects to redirect user to modify order page for selected order
 //
 //container: container to append order html object to
 //order: order to be displayed
@@ -175,6 +183,10 @@ async function addAppointment(container, order, isWithDateHeader){
 }
 
 //fills upcoming appointments box on the far left of site. Takes all appointments from appointmentArr and displays them in upcoming appointments
+//
+//(Requirement 6.0.0) - display orders to the user
+//(Requirement 6.0.1) - displays all upcoming orders to the user
+//
 async function displayAppointments(){
     
     //clear appointments list
@@ -251,6 +263,8 @@ async function OrderOnDay(dayDate, dayElement){
 
 //initializes calendar with all days for a given month in a given year
 //handles coloring 
+//
+//(Requirement 6.0.2) - displays interactable calendar to find orders by day
 //
 //monthIndex: index of month to be displayed
 //year: year to be displayed

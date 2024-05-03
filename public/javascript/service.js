@@ -1,6 +1,10 @@
+
+let customerFirstName, customerLastName
 //get customer id from ejs meta data
 try{
     cID = document.getElementById("customerID").getAttribute("customerID")
+    customerFirstName = document.getElementById("customerID").getAttribute("firstName")
+    customerLastName = document.getElementById("customerID").getAttribute("lastName")
 }catch(error){
     cID = null
     console.log("not authenticated")
@@ -200,16 +204,16 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // Event listener for displaying the pro application form
-    document.getElementById('proApplicationLink').addEventListener('click', function(event) {
-        event.preventDefault();
-        document.getElementById('aboutInfo').style.display = 'none';
-        document.getElementById('contactForm').style.display = 'none';
-        document.getElementById('proApplicationForm').style.display = 'block';
-        document.getElementById('serviceContainer').style.display = 'none';
-        document.getElementById('home').style.display = 'none'; // Hide the home section
-        document.getElementById('reviews').style.display = 'none'; // Hide the testimonials section
-        bookingForm.style.display = 'none'; // Hide the testimonials section
-    });
+    // document.getElementById('proApplicationLink').addEventListener('click', function(event) {
+    //     event.preventDefault();
+    //     document.getElementById('aboutInfo').style.display = 'none';
+    //     document.getElementById('contactForm').style.display = 'none';
+    //     document.getElementById('proApplicationForm').style.display = 'block';
+    //     document.getElementById('serviceContainer').style.display = 'none';
+    //     document.getElementById('home').style.display = 'none'; // Hide the home section
+    //     document.getElementById('reviews').style.display = 'none'; // Hide the testimonials section
+    //     bookingForm.style.display = 'none'; // Hide the testimonials section
+    // });
 
 
 
@@ -313,8 +317,10 @@ let selectedProductRate = 0
 let isSelectStart = true
 let isNewCustomer = true
 let submitted = false;
-let customerFirstName, customerLastName
 
+//
+//(Requirement 5.3.0) - creates card input fields and loads them on page from stripe
+//
 const stripe = Stripe(stripePublicKey)
 var elements = stripe.elements()
 var card = elements.create('card');
@@ -353,21 +359,6 @@ function monthNumToString(monthNumber){
 
 }
 
-
-// function updateCustomerInputs(){
-//     console.log(existingCustomerRadio.checked)
-//     if(existingCustomerRadio.checked){
-//         newCustomerInputs.style.display = "none"
-//         existingCustomerInputs.style.display = "block"
-//         isNewCustomer = false
-//     }else{
-//         existingCustomerInputs.style.display = "none"
-//         newCustomerInputs.style.display = "block"
-//         isNewCustomer = true
-//     }
-// }   
-
-
 //checks to see is onDate date value is compatible with a resource dayAvailability and bookedDates
 //
 //onDate: date to check if availible
@@ -399,8 +390,10 @@ function checkAvailible(onDate, dayAvailability, bookedDates){
     
 }
 
-
 //initialize the Calendar to select booking dates on booking form
+//
+//(Requirement 5.2.3) - creates interactable calendar object
+//(Requirement 5.2.4) - adds event listeners to days on calendar so user can select them to enter booking dates
 //
 //monthIndex: month to be displayed on the calendar
 //year: year to be displayed on the calendar
@@ -530,6 +523,8 @@ function clearOrderInputs(){
 
 //fills the product dropdown menu with all available products
 //
+//(Requirement 5.1.0) - fills product drop down menu with available products
+//
 //container: drop down menu to hold products
 //selectedID: optional - will select the product with this id
 async function loadProducts(container, selectedID){
@@ -635,8 +630,9 @@ function updateHours(){
     }
 }
 
-
 //function to make sure that all input fields on booking form are appropriate
+//
+//(Requirement 5.4.0) - validates all user entered inputs
 //
 //returns true: all inputs are appropriate
 //returns false: an input is not appropriate
@@ -737,6 +733,8 @@ async function verifyInput(){
     return true
 }
 
+//creates a customer with booking form customer inputs
+//
 async function CreateCustomer(){
         //create customer object
         try{
@@ -804,21 +802,11 @@ async function calculateTotalCost(productId, start, end){
 
     return timeReserved * prodPrice
 }
-//create date object for selected start date
-testingSdate = new Date(2024, 5, 24, 12, 31)
-testingEdate = new Date(2024, 5, 24, 13, 30)
-totalC = calculateTotalCost("662c796c5f942d48baf3bdd0", testingSdate, testingEdate)
-console.log(totalC)
-
-
-
-
-
-
-
-
 
 //function to create customer object and order object with booking form informaion, and send objects to database
+//
+//(Requirement 5.5.0) - creates order object out of user inputs
+//
 async function sendOrderToDB(){
 
     if(cID == null){
@@ -1025,6 +1013,9 @@ async function sendOrderToDB(){
 }
 
 //submit Booking functionality
+//
+//(Requirement 5.5.0) - button that allows user to submit booking form
+//
 document.getElementById("submitBooking").addEventListener("click", async function(){
     if(submitted) { return; }
     //verify inputs
@@ -1041,6 +1032,8 @@ document.getElementById("submitBooking").addEventListener("click", async functio
 })
 
 //creates the schedule selector section with proper fields based off of the selected product and selected resource
+//
+//(Requirement 5.2.1) - shows resource name and availability under the resource drop down menu
 //
 //resourceID: id of the selected resource
 async function updateScheduleSelector(resourceID){
@@ -1133,6 +1126,9 @@ async function updateScheduleSelector(resourceID){
 //Updates the booking form with information pertaining to the given product id,
 //fills resource drop down menu with all resources coupled with the selected product
 //updates the time type and rate in schedule selector
+//
+//(Requirement 5.2.0) - fills resource drop down menu with all resources coupled with selected products
+//(Requirement 5.2.2) - proper date and time inputs are displayed for user
 //
 //prodId: id of the selected product
 async function updateProductInformation(prodId){
