@@ -810,7 +810,13 @@ async function calculateTotalCost(productId, start, end){
 async function sendOrderToDB(){
 
     if(cID == null){
-        customer = await CreateCustomer()
+        let customer = await CreateCustomer()
+        if(customer == undefined){
+            alert("Customer with entered information already exists")
+            document.getElementById("submitBooking").disabled = false
+            submitted = false;
+            return
+        }
         cID = customer._id
     }
   
