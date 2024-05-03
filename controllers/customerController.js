@@ -78,7 +78,7 @@ export const deleteCustomer = async(req, res) =>{
 // (Requirement 6.0.0)
 export const getCustomerDash = (req, res) => {
     // Serve the Customer Dash file
-    res.render('customer_dash.ejs', {firstName: req.user.firstName});
+    res.render('customer_dash.ejs', {firstName: req.user.firstName, customerID:req.user._id});
   }
 
 // Method for serving the Customer login page
@@ -86,6 +86,12 @@ export const getCustomerDash = (req, res) => {
 export const getCustomerLogin = (req, res) => {
     res.render('customer_login.ejs', {message: req.failureFlash})
 }
+
+
+export const getCustomerOrderLogin = (req, res) => {
+    res.render('customer_order_login.ejs', {message: req.failureFlash})
+}
+
 
 // Method for Customer Orders
 // (Requirement 6.0.1)

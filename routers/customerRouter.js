@@ -4,6 +4,7 @@ import { checkNotAuthenticated, checkAuthenticated, getVhost } from './routes.js
 import { getOrgByDomain } from '../controllers/organizationController.js'
 import {
     getCustomerLogin,
+    getCustomerOrderLogin,
     getCustomerDash,
     getCustomerOrders,
     getCustomerModifyOrder,
@@ -26,6 +27,9 @@ router.use(passport.session())
 // (Requirement 6.2.0)
 router.get('/login', checkNotAuthenticated, getCustomerLogin);
 
+
+router.get('/order/login', checkNotAuthenticated, getCustomerOrderLogin);
+  
 // Route handler for Customer Dashboard
 // (Requirement 6.0.0)
 router.get('/dashboard', checkAuthenticated, getCustomerDash);

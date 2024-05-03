@@ -111,6 +111,9 @@ async function addAppointment(order, userType){
 }
 
 //fills upcoming appointments box on the far left of site. Takes all appointments from appointmentArr and displays them in upcoming appointments
+//
+//(Requirement 6.1.1) - all past and upcoming scheduled orders will display for user
+//
 async function displayAppointments(userType){
 
     //clear AppointmentsList on page

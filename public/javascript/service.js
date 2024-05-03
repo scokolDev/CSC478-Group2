@@ -1,24 +1,27 @@
+
+let customerFirstName, customerLastName
+//get customer id from ejs meta data
+try{
+    cID = document.getElementById("customerID").getAttribute("customerID")
+    customerFirstName = document.getElementById("customerID").getAttribute("firstName")
+    customerLastName = document.getElementById("customerID").getAttribute("lastName")
+}catch(error){
+    cID = null
+    console.log("not authenticated")
+}
+
+console.log(cID)
+
 document.addEventListener('DOMContentLoaded', function() {
-    // Function to toggle visibility of serviceContainer
-    function toggleServiceContainer() {
-        var serviceContainer = document.getElementById('serviceContainer');
-        if (serviceContainer.style.display === 'none' || serviceContainer.style.display === '') {
-            serviceContainer.style.display = 'block';
-        } else {
-            serviceContainer.style.display = 'none';
-        }
-    }
-    service1Name = document.getElementById("service1Name")
-    service1Price = document.getElementById("service1Price")
-    service1Desc = document.getElementById("service1Desc")
-
-    service2Name = document.getElementById("service2Name")
-    service2Price = document.getElementById("service2Price")
-    service2Desc = document.getElementById("service2Desc")
-
-    service3Name = document.getElementById("service3Name")
-    service3Price = document.getElementById("service3Price")
-    service3Desc = document.getElementById("service3Desc")
+    // // Function to toggle visibility of serviceContainer
+    // function toggleServiceContainer() {
+    //     var serviceContainer = document.getElementById('serviceContainer');
+    //     if (serviceContainer.style.display === 'none' || serviceContainer.style.display === '') {
+    //         serviceContainer.style.display = 'block';
+    //     } else {
+    //         serviceContainer.style.display = 'none';
+    //     }
+    // }
 
     resourceList = document.getElementById("resourceList")
     productsList = document.getElementById("productsList")
@@ -26,7 +29,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Function to toggle visibility of bookingForm
     function toggleBookingForm(selectedProductId) {
-
          // Hide all other forms and sections
         document.getElementById('aboutInfo').style.display = 'none';
         document.getElementById('contactForm').style.display = 'none';
@@ -41,6 +43,18 @@ document.addEventListener('DOMContentLoaded', function() {
     
     }
 
+
+    //updates the information on a specified product display on the products tab
+    //
+    //(Requirement 4.1.1) - sets display of a featured product
+    //(Requirement 4.1.2) - adds event listener to product display to get to booking form
+    //
+    //container: product display to be updated
+    //name: name of product
+    //description: product description
+    //price: price rate of product
+    //priceType: type of pricing product uses
+    //id: product id
     function setServiceDisplay(container, name, description, price, priceType, id){
         container.getElementsByClassName("serviceName")[0].innerHTML = name
         priceStr = "$" + price
@@ -62,7 +76,11 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
 
-    // Event listener for the "Services" button
+    // loads the product page when user clicks on products tab
+    //
+    //(Requirement 4.1.0) - displays products tab
+    //(Requirement 4.1.1) - displays three featured products
+    //
     document.getElementById('servicesLink').addEventListener('click', async function(event) {
         event.preventDefault();
         document.getElementById('aboutInfo').style.display = 'none';
@@ -85,7 +103,7 @@ document.addEventListener('DOMContentLoaded', function() {
             serviceContainer1 = document.getElementById("service1Display")
             serviceContainer2 = document.getElementById("service2Display")
             serviceContainer3 = document.getElementById("service3Display")
-            if(products.length > 3){
+            if(products.length > 2){
                 while(selectedIndecies.length < 3){
                     rand = Math.floor(Math.random() * products.length)
                     if(!selectedIndecies.includes(rand)){
@@ -109,6 +127,15 @@ document.addEventListener('DOMContentLoaded', function() {
                     container = document.getElementById("service" + productsDisplayed + "Display")
                     setServiceDisplay(container, product.name, product.description, product.price, product.priceType, product._id)
                 })
+                switch(productsDisplayed){
+                    case(0):
+                        document.getElementById("service1Display").style.visibility = "hidden"
+                    case(1):
+                        document.getElementById("service2Display").style.visibility = "hidden"
+                    case(2):
+                        document.getElementById("service3Display").style.visibility = "hidden"
+                        break
+                }
             }
           } catch (error) {
     
@@ -124,13 +151,6 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('reviews').style.display = 'none'; // Hide the testimonials section
     });
 
-    // Handle click events for service boxes
-    document.querySelectorAll('.service-box').forEach(function(box) {
-        box.addEventListener('click', function() {
-            // Add your functionality here
-            alert('You selected ' + box.textContent);
-        });
-    });
 
     // Event listener for other navigation links
     document.querySelectorAll('nav a:not(#servicesLink)').forEach(function(link) {
@@ -144,12 +164,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Event listener for signing in
     document.getElementById('signInLink').addEventListener('click', function(event) {
-        event.preventDefault();
-        var email = prompt("Enter your email:");
-        var password = prompt("Enter your password:");
-        if (email && password) {
-            alert('You entered email: ' + email + ' and password: ' + password);
-        }
+        location.href = "/customer/login"
     });
 
     // Event listener for reloading the page on clicking "Home" link
@@ -158,6 +173,9 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // Event listener for displaying the about section
+    //
+    //(Requirement 4.2.0) - loads about page
+    //
     document.getElementById('aboutLink').addEventListener('click', function(event) {
         event.preventDefault();
         document.getElementById('aboutInfo').style.display = 'block';
@@ -170,6 +188,10 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // Event listener for displaying the contact form
+    //
+    //(Requirement 4.3.0) - loads contact form
+    //(Requirement 4.3.1) - loads inputs to complete contact form
+    //
     document.getElementById('contactLink').addEventListener('click', function(event) {
         event.preventDefault();
         document.getElementById('aboutInfo').style.display = 'none';
@@ -182,21 +204,24 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // Event listener for displaying the pro application form
-    document.getElementById('proApplicationLink').addEventListener('click', function(event) {
-        event.preventDefault();
-        document.getElementById('aboutInfo').style.display = 'none';
-        document.getElementById('contactForm').style.display = 'none';
-        document.getElementById('proApplicationForm').style.display = 'block';
-        document.getElementById('serviceContainer').style.display = 'none';
-        document.getElementById('home').style.display = 'none'; // Hide the home section
-        document.getElementById('reviews').style.display = 'none'; // Hide the testimonials section
-        bookingForm.style.display = 'none'; // Hide the testimonials section
-    });
+    // document.getElementById('proApplicationLink').addEventListener('click', function(event) {
+    //     event.preventDefault();
+    //     document.getElementById('aboutInfo').style.display = 'none';
+    //     document.getElementById('contactForm').style.display = 'none';
+    //     document.getElementById('proApplicationForm').style.display = 'block';
+    //     document.getElementById('serviceContainer').style.display = 'none';
+    //     document.getElementById('home').style.display = 'none'; // Hide the home section
+    //     document.getElementById('reviews').style.display = 'none'; // Hide the testimonials section
+    //     bookingForm.style.display = 'none'; // Hide the testimonials section
+    // });
 
 
 
 
     // Event listener for clicking the "Book Now" button
+    //
+    //(Requirement 4.4.0) - loads about page
+    //
     document.querySelector('.book-now-button').addEventListener('click', function (event) {
         event.preventDefault(); // Prevent the default action of the button
         toggleBookingForm(); // Toggle the visibility of the booking form
@@ -205,22 +230,22 @@ document.addEventListener('DOMContentLoaded', function() {
     var bookingForm = document.getElementById('bookingForm');
     var paymentFormContainer = document.getElementById('paymentFormContainer');
 
-    bookingForm.addEventListener('submit', function(event) {
-        event.preventDefault(); // Prevent form submission
+    // bookingForm.addEventListener('submit', function(event) {
+    //     event.preventDefault(); // Prevent form submission
         
-        // Hide booking form and show payment form
-        bookingForm.style.display = 'none';
-        paymentFormContainer.style.display = 'block';
-    });
+    //     // Hide booking form and show payment form
+    //     bookingForm.style.display = 'none';
+    //     paymentFormContainer.style.display = 'block';
+    // });
 
-    var paymentForm = document.getElementById('paymentForm');
-    paymentForm.addEventListener('submit', function(event) {
-        event.preventDefault(); // Prevent form submission
+    // var paymentForm = document.getElementById('paymentForm');
+    // paymentForm.addEventListener('submit', function(event) {
+    //     event.preventDefault(); // Prevent form submission
         
-        // Process payment (you can add your payment processing logic here)
-        // Once payment is processed successfully, you may redirect the user to a confirmation page or perform other actions.
-        alert('Payment processed successfully!');
-        location.reload();    });
+    //     // Process payment (you can add your payment processing logic here)
+    //     // Once payment is processed successfully, you may redirect the user to a confirmation page or perform other actions.
+    //     alert('Payment processed successfully!');
+    //     location.reload();    });
 });
 
 
@@ -292,8 +317,10 @@ let selectedProductRate = 0
 let isSelectStart = true
 let isNewCustomer = true
 let submitted = false;
-let customerFirstName, customerLastName
 
+//
+//(Requirement 5.3.0) - creates card input fields and loads them on page from stripe
+//
 const stripe = Stripe(stripePublicKey)
 var elements = stripe.elements()
 var card = elements.create('card');
@@ -332,19 +359,6 @@ function monthNumToString(monthNumber){
 
 }
 
-
-function updateCustomerInputs(){
-    console.log(existingCustomerRadio.checked)
-    if(existingCustomerRadio.checked){
-        newCustomerInputs.style.display = "none"
-        existingCustomerInputs.style.display = "block"
-        isNewCustomer = false
-    }else{
-        existingCustomerInputs.style.display = "none"
-        newCustomerInputs.style.display = "block"
-        isNewCustomer = true
-    }
-}   
 //checks to see is onDate date value is compatible with a resource dayAvailability and bookedDates
 //
 //onDate: date to check if availible
@@ -376,8 +390,10 @@ function checkAvailible(onDate, dayAvailability, bookedDates){
     
 }
 
-
 //initialize the Calendar to select booking dates on booking form
+//
+//(Requirement 5.2.3) - creates interactable calendar object
+//(Requirement 5.2.4) - adds event listeners to days on calendar so user can select them to enter booking dates
 //
 //monthIndex: month to be displayed on the calendar
 //year: year to be displayed on the calendar
@@ -507,6 +523,8 @@ function clearOrderInputs(){
 
 //fills the product dropdown menu with all available products
 //
+//(Requirement 5.1.0) - fills product drop down menu with available products
+//
 //container: drop down menu to hold products
 //selectedID: optional - will select the product with this id
 async function loadProducts(container, selectedID){
@@ -612,18 +630,22 @@ function updateHours(){
     }
 }
 
-
 //function to make sure that all input fields on booking form are appropriate
+//
+//(Requirement 5.4.0) - validates all user entered inputs
 //
 //returns true: all inputs are appropriate
 //returns false: an input is not appropriate
 async function verifyInput(){
 
     //making sure password and confirm password fields match
-    if(inputPassword.value != inputConfirmPassword.value){
-        alert("passwords do not match");
-        return false
+    if(cID == null){
+        if(inputPassword.value != inputConfirmPassword.value){
+            alert("passwords do not match");
+            return false
+        }
     }
+    
 
     //creating start and end date objects for the inputted start and end date/time
     SelectedStimes = inputStartTime.value.split(":")
@@ -711,37 +733,9 @@ async function verifyInput(){
     return true
 }
 
+//creates a customer with booking form customer inputs
+//
 async function CreateCustomer(){
-    if(!isNewCustomer){
-        existingPassword = document.getElementById("existingPassword")
-        existingEmail = document.getElementById("existingEmail")
-
-        // try{
-        //     const response = await fetch('/customer/')
-        //     const customers = await response.json()
-
-        //     console.log(customers)
-
-        //     customers.forEach((customer) => {
-        //         if(customer.email == inputEmail.value){
-        //             return customer
-        //         }
-        //     })   
-        //     if (!response.ok) {
-        //         throw new Error('Failed to add customer');
-        //     }
-
-        //     // If customer added successfully
-        //     console.log("Successfully added customer");
-
-        //     return await response.json()
-        // } catch (error) {
-        //     console.error(error.message);
-        //     alert('Failed to add customer');
-        // }
-        //customerFirstName = customer.firstName
-        //customerLastName = customer.lastName
-    }else{
         //create customer object
         try{
             const response = await fetch('/customer/register', {
@@ -771,7 +765,6 @@ async function CreateCustomer(){
             console.error(error.message);
             alert('Failed to add customer');
         }
-    }
 }
 
 async function calculateTotalCost(productId, start, end){
@@ -788,8 +781,8 @@ async function calculateTotalCost(productId, start, end){
     //if date objects are passed in as strings
     if(typeof start == "string" || typeof end == "string"){
         //convert bookedDate start and end times to date objects
-        startDateObj = new Date(parseInt(start.substring(0,4)), parseInt(start.substring(5,7))-1, parseInt(start.substring(8,10))) 
-        endDateObj = new Date(parseInt(end.substring(0,4)), parseInt(end.substring(5,7))-1, parseInt(end.substring(8,10))) 
+        const startDateObj = new Date(parseInt(start.substring(0,4)), parseInt(start.substring(5,7))-1, parseInt(start.substring(8,10)), parseInt(start.substring(11,13)), parseInt(start.substring(14,16))) 
+        const endDateObj = new Date(parseInt(end.substring(0,4)), parseInt(end.substring(5,7))-1, parseInt(end.substring(8,10)), parseInt(end.substring(11,13)), parseInt(end.substring(14,16))) 
 
         timeReserved = endDateObj - startDateObj
         
@@ -809,25 +802,17 @@ async function calculateTotalCost(productId, start, end){
 
     return timeReserved * prodPrice
 }
-//create date object for selected start date
-testingSdate = new Date(2024, 5, 24, 12, 31)
-testingEdate = new Date(2024, 5, 24, 13, 30)
-totalC = calculateTotalCost("662c796c5f942d48baf3bdd0", testingSdate, testingEdate)
-console.log(totalC)
-
-
-
-
-
-
-
-
 
 //function to create customer object and order object with booking form informaion, and send objects to database
+//
+//(Requirement 5.5.0) - creates order object out of user inputs
+//
 async function sendOrderToDB(){
 
-    customer = await CreateCustomer()
-    console.log(customer)
+    if(cID == null){
+        customer = await CreateCustomer()
+        cID = customer._id
+    }
   
     //addMessage(`Client secret returned.`);
 
@@ -868,14 +853,39 @@ async function sendOrderToDB(){
             }),
     }
     ).then((r) => r.json());
-  
+
+    console.log("before backend error checking")
+
     if (backendError) {
-        //addMessage(backendError.message);
+        alert(backendError.message)
   
         // reenable the form.
         submitted = false;
         document.getElementById("submitBooking").disabled = false;
         return;
+    }
+    
+    console.log("after backend error checking")
+    
+    //addMessage(`Client secret returned.`);
+
+    //getting id of selected product and selected resource from booking form
+    tempProducts = []
+    tempProducts[0] = productsList.options[productsList.selectedIndex].id
+    resourceId = resourceList.options[resourceList.selectedIndex].id
+
+    //create date object for selected start date
+    sdate = inputStartDate.value.split("-")
+    stimes = inputStartTime.value.split(":")
+    startDateTime = new Date(parseInt(sdate[0]), parseInt(sdate[1])-1, parseInt(sdate[2]), (parseInt(stimes[0])-5), parseInt(stimes[1]))
+    //create date object for selected end date based on selected product price type
+    if(priceType == "Per Hour"){
+        etimes = inputEndTime.value.split(":")
+        endDateTime = new Date(parseInt(sdate[0]), parseInt(sdate[1])-1, parseInt(sdate[2]), (parseInt(etimes[0])-5), parseInt(etimes[1]))
+    }else{
+        edate = inputEndDate.value.split("-")
+        etimes = inputEndTime.value.split(":")
+        endDateTime = new Date(parseInt(edate[0]), parseInt(edate[1])-1, parseInt(edate[2]), (parseInt(etimes[0])-5), parseInt(etimes[1]))    
     }
 
     // Confirm the card payment given the clientSecret
@@ -888,21 +898,25 @@ async function sendOrderToDB(){
                 card: card,
                 billing_details: {
                     name: customerFirstName + " " + customerLastName,
+                    // productID: tempProducts,
+                    // start: startDateTime,
+                    // end: endDateTime,
                 }, 
             },
         }
     );
-  
+    
+    console.log("before stripe error checking")
     if (stripeError) {
-        //addMessage(stripeError.message);
+        alert(stripeError.message);
   
         // reenable the form.
         submitted = false;
         document.getElementById("submitBooking").disabled = false;
         return;
     }
-  
-    //addMessage(`Payment ${paymentIntent.status}: ${paymentIntent.id}`);
+    console.log("after stripe error checking")
+    console.log(`Payment ${paymentIntent.status}: ${paymentIntent.id}`)
     
 
 
@@ -922,7 +936,7 @@ async function sendOrderToDB(){
             'Content-Type': 'application/json'
             },
                 body: JSON.stringify({ 
-                    customerID: customer._id,
+                    customerID: cID,
                     products: tempProducts,
                     startTime: startDateTime,
                     endTime: endDateTime,
@@ -999,6 +1013,9 @@ async function sendOrderToDB(){
 }
 
 //submit Booking functionality
+//
+//(Requirement 5.5.0) - button that allows user to submit booking form
+//
 document.getElementById("submitBooking").addEventListener("click", async function(){
     if(submitted) { return; }
     //verify inputs
@@ -1015,6 +1032,8 @@ document.getElementById("submitBooking").addEventListener("click", async functio
 })
 
 //creates the schedule selector section with proper fields based off of the selected product and selected resource
+//
+//(Requirement 5.2.1) - shows resource name and availability under the resource drop down menu
 //
 //resourceID: id of the selected resource
 async function updateScheduleSelector(resourceID){
@@ -1107,6 +1126,9 @@ async function updateScheduleSelector(resourceID){
 //Updates the booking form with information pertaining to the given product id,
 //fills resource drop down menu with all resources coupled with the selected product
 //updates the time type and rate in schedule selector
+//
+//(Requirement 5.2.0) - fills resource drop down menu with all resources coupled with selected products
+//(Requirement 5.2.2) - proper date and time inputs are displayed for user
 //
 //prodId: id of the selected product
 async function updateProductInformation(prodId){

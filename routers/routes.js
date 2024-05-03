@@ -42,11 +42,10 @@ router.get('/', (req, res, next) => {
     
   });
 
-  router.get('/', getOrgByDomain, (req, res) => {
+  router.get('/', getOrgByDomain, checkOrderAuthenticated, (req, res) => {
   
     // Serve the index.html file
-    
-    res.render('test.ejs', {orgname: req.body.organizationName, stripeKey: process.env.STRIPE_PUBLIC_KEY})
+    res.render('test_copy.ejs', {orgname: req.body.organizationName, stripeKey: process.env.STRIPE_PUBLIC_KEY, customerID: req.user._id, firstName: req.user.firstName, lastName: req.user.lastName})
   });
 
   //! Deprecated Used for Initial testing
@@ -172,6 +171,16 @@ export function checkAuthenticated(req, res, next) {
 
   res.redirect('/login')
 }
+
+
+export function checkOrderAuthenticated(req, res, next) {
+  if (req.isAuthenticated()) {
+    return next()
+  }
+
+  res.render('test.ejs', {orgname: req.body.organizationName, stripeKey: process.env.STRIPE_PUBLIC_KEY})
+}
+
 
 //TODO: Update the name to reflect Admin vs Customer need to a second function for cusotmer
 export function checkNotAuthenticated(req, res, next) {

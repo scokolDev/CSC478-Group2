@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <meta customerID=<%= customerID %> id="customerID">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/css/customer_style.css" >
@@ -28,9 +29,8 @@
                 </div>
             </div> -->
             <div class="customerDashboardButtons">
+                <!-- (Requirement 6.1.0) - directs user to orders page which lists all past and upcoming scheduled orders -->
                 <button class="dashboardButton" onclick="location.href = '/customer/orders'">view all orders</button>
-                <button class="dashboardButton">change account information</button>
-                <button class="dashboardButton">Update Payment information</button>
             </div>
             <div class="customerCalendarPanel">
                 <div>Appointments on Day</div>
@@ -56,7 +56,7 @@
                 </div>
             </div>
             <div class="customerUpcomingPanel" >
-                <div>All Upcoming Appointments</div>
+                <div><%= firstName %>'s Upcoming Appointments</div>
                 <div id="AppointmentsList">
                 </div>
                 

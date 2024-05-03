@@ -1,6 +1,6 @@
 import express from 'express'
 import passport from 'passport'
-import { authenticateAdmin, authenticateCustomer } from '../controllers/authController.js';
+import { authenticateAdmin, authenticateCustomer, authenticateCustomerOrder } from '../controllers/authController.js';
 import { checkNotAuthenticated } from './routes.js';
 
 const router = express.Router();
@@ -14,6 +14,8 @@ router.post('/admin/login', checkNotAuthenticated, authenticateAdmin)
 // Route Handler for Customer authentication
 // (Requirement 6.2.0)
 router.post('/customer/login', checkNotAuthenticated, authenticateCustomer)
+
+router.post('/customer/order/login', checkNotAuthenticated, authenticateCustomerOrder)
 
 
 export default router

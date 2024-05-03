@@ -13,6 +13,13 @@ export const authenticateCustomer = passport.authenticate('customer', {
     failureFlash: true
   })
 
+export const authenticateCustomerOrder = passport.authenticate('customer', {
+    successRedirect: '/',
+    failureRedirect: '/customer/login',
+    failureFlash: true
+  })
+
+
 // Method for Admin authentication
 // (Requirement 1.4.0)
  export const authenticateAdmin = passport.authenticate('user', {
