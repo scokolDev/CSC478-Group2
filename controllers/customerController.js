@@ -104,7 +104,7 @@ export const getCustomerOrders = (req, res) => {
 // (Requirement 6.0.4)
 export const getCustomerModifyOrder = (req, res) => {
     // Serve the Customer Modify Order page
-    res.render('customer_modify_order.ejs');
+    res.render('customer_order_details.ejs');
   }
 
 // Method for Customer Registration Page
