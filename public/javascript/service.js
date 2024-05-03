@@ -36,10 +36,11 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('serviceContainer').style.display = 'none';
         document.getElementById('home').style.display = 'none';
         document.getElementById('reviews').style.display = 'none';
-
+        productsList.innerHTML = "";
         // Display only the booking form
         document.getElementById('bookingFormContainer').style.display = 'block';
         selectedProductId != undefined ? loadProducts(productsList, selectedProductId) : loadProducts(productsList)
+        console.log("called loadProducts")
     
     }
 
@@ -58,7 +59,7 @@ document.addEventListener('DOMContentLoaded', function() {
     function setServiceDisplay(container, name, description, price, priceType, id){
         container.getElementsByClassName("serviceName")[0].innerHTML = name
         priceStr = "$" + price
-        console.log(priceType)
+        //console.log(priceType)
         switch(priceType){
             case("Per Hour"):
                 priceStr += "/Hour"
@@ -70,6 +71,7 @@ document.addEventListener('DOMContentLoaded', function() {
         container.getElementsByClassName("servicePrice")[0].innerHTML = priceStr
         container.getElementsByClassName("serviceDesc")[0].innerHTML = description
         container.getElementsByClassName("serviceBookNowButton")[0].addEventListener("click", function(){
+            console.log("called toggleBookingForm")
             toggleBookingForm(id)
         })
 
@@ -98,35 +100,51 @@ document.addEventListener('DOMContentLoaded', function() {
       
             const products = await response.json();
             
+            activeProducts = []
+            products.forEach((product) => {
+                if(product.display){
+                    activeProducts.push(product);
+                }
+            })
             let selectedIndecies = []
             
-            serviceContainer1 = document.getElementById("service1Display")
-            serviceContainer2 = document.getElementById("service2Display")
-            serviceContainer3 = document.getElementById("service3Display")
-            if(products.length > 2){
+            //remove event listeners from previous service Display buttons
+            oldServicecon1 = document.getElementById("service1Display")
+            serviceContainer1 = oldServicecon1.cloneNode(true)
+            oldServicecon1.parentNode.replaceChild(serviceContainer1, oldServicecon1) 
+
+            oldServicecon2 = document.getElementById("service2Display")
+            serviceContainer2 = oldServicecon2.cloneNode(true)
+            oldServicecon2.parentNode.replaceChild(serviceContainer2, oldServicecon2)
+
+            oldServicecon3 = document.getElementById("service3Display")
+            serviceContainer3 = oldServicecon3.cloneNode(true)
+            oldServicecon3.parentNode.replaceChild(serviceContainer3, oldServicecon3) 
+
+            if(activeProducts.length > 2){
                 while(selectedIndecies.length < 3){
-                    rand = Math.floor(Math.random() * products.length)
+                    rand = Math.floor(Math.random() * activeProducts.length)
                     if(!selectedIndecies.includes(rand)){
                         selectedIndecies.push(rand)
                     }
                 }
-                currentProduct = products[selectedIndecies[0]]
+                currentProduct = activeProducts[selectedIndecies[0]]
                 setServiceDisplay(serviceContainer1, currentProduct.name, currentProduct.description, currentProduct.price, currentProduct.priceType[0], currentProduct._id)
                 
-                currentProduct = products[selectedIndecies[1]]
+                currentProduct = activeProducts[selectedIndecies[1]]
                 setServiceDisplay(serviceContainer2, currentProduct.name, currentProduct.description, currentProduct.price, currentProduct.priceType[0], currentProduct._id)
                 
-                currentProduct = products[selectedIndecies[2]]
+                currentProduct = activeProducts[selectedIndecies[2]]
                 setServiceDisplay(serviceContainer3, currentProduct.name, currentProduct.description, currentProduct.price, currentProduct.priceType[0], currentProduct._id)
             
             
             }else{
                 let productsDisplayed = 0
-                products.forEach((product) => {
+                for(i = 0; i < activeProducts.length; i++){
                     productsDisplayed++
                     container = document.getElementById("service" + productsDisplayed + "Display")
-                    setServiceDisplay(container, product.name, product.description, product.price, product.priceType, product._id)
-                })
+                    setServiceDisplay(container, activeProducts[i].name, activeProducts[i].description, activeProducts[i].price, activeProducts[i].priceType, activeProducts[i]._id)
+                }
                 switch(productsDisplayed){
                     case(0):
                         document.getElementById("service1Display").style.visibility = "hidden"
@@ -529,6 +547,8 @@ function clearOrderInputs(){
 //selectedID: optional - will select the product with this id
 async function loadProducts(container, selectedID){
     //add a placeholder option to dropdown menu
+    console.log("---------------------called load Products")
+    container.innerHTML = "";
     container.innerHTML = "<option disabled selected value> select a product </option>"
     try {
         // fetch all products from the database
@@ -538,6 +558,8 @@ async function loadProducts(container, selectedID){
         }
   
         const products = await response.json();
+        console.log(products.length)
+        console.log(products)
         products.forEach((product) => {
 
             //if the product display is set to active show the product
@@ -564,7 +586,7 @@ async function loadProducts(container, selectedID){
 function updateHours(){
     //making sure that all inputs are filled prior to updating calculations
     if(inputEndTime.value != "" && inputStartTime.value != "" && inputStartDate.value != ""){
-        console.log("-------------------------")
+        //console.log("-------------------------")
         switch(priceType){ 
             case("Flat Rate"):
                 if(inputEndDate.value != ""){
@@ -678,7 +700,7 @@ async function verifyInput(){
             throw new Error('Failed to get resources from Database');
         }
         const resources = await resourceResponse.json();
-        console.log(resources)
+        //console.log(resources)
         for(j = 0; j < resources.length; j++){
             if(resources[j]._id == selectedResourceID){
                 resource = resources[j]
@@ -783,8 +805,8 @@ async function calculateTotalCost(productId, start, end){
     prodPriceType = product.priceType[0]
     prodPrice = product.price
 
-    console.log(prodPriceType)
-    console.log(prodPrice)
+    //console.log(prodPriceType)
+    //console.log(prodPrice)
     
 
     //if date objects are passed in as strings
@@ -986,7 +1008,7 @@ async function sendOrderToDB(){
         throw new Error('Failed to get resources from Database');
     }
     const resources = await resourceResponse.json();
-    console.log(resources)
+    //console.log(resources)
     for(j = 0; j < resources.length; j++){
         if(resources[j]._id == resourceId){
             existingResourceJSON = resources[j]
@@ -998,7 +1020,7 @@ async function sendOrderToDB(){
     prevBookingDates = existingResourceJSON.bookedDates
         
     prevBookingDates.push({"orderId":sentOrder._id, "start":startDateTime, "end":endDateTime})
-    console.log(prevBookingDates)
+    //console.log(prevBookingDates)
     const response = await fetch('/api/resources/' + resourceId, {
         method: 'PUT',
         headers: {
@@ -1008,7 +1030,7 @@ async function sendOrderToDB(){
             bookedDates: prevBookingDates
         })
     });
-    console.log(response.json())
+    //console.log(response.json())
 
     // try{
         
@@ -1052,7 +1074,7 @@ document.getElementById("submitBooking").addEventListener("click", async functio
 //
 //resourceID: id of the selected resource
 async function updateScheduleSelector(resourceID){
-    console.log(priceType)
+    //console.log(priceType)
 
     //boolean array to hold days of the week the resource can be scheduled on
     let dayAvailability = []
@@ -1074,7 +1096,7 @@ async function updateScheduleSelector(resourceID){
             throw new Error('Failed to get resources from Database');
         }
         const resources = await resourceResponse.json();
-        console.log(resources)
+        //console.log(resources)
         for(j = 0; j < resources.length; j++){
             if(resources[j]._id == resourceID){
                 resource = resources[j]
@@ -1164,7 +1186,7 @@ async function updateProductInformation(prodId){
           throw new Error('Failed to get product from Database');
         }
         const products = await response.json();
-        console.log(products)
+        //console.log(products)
         for(i = 0; i < products.length; i++){
             if(products[i]._id == prodId){
                 product = products[i]
@@ -1221,7 +1243,7 @@ async function updateProductInformation(prodId){
                 throw new Error('Failed to get resources from Database');
             }
             const resources = await resourceResponse.json();
-            console.log(resources)
+            //console.log(resources)
             for(j = 0; j < resources.length; j++){
                 if(resources[j]._id == product.resources[i]){
                     resource = resources[j]
