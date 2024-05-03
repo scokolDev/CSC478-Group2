@@ -97,7 +97,7 @@ export const getCustomerOrderLogin = (req, res) => {
 // (Requirement 6.0.1)
 export const getCustomerOrders = (req, res) => {
     // Serve the Customer Orders file
-    res.render('customer_orders.ejs');
+    res.render('customer_orders.ejs', {customerID: req.user._id});
   }
 
 // Method for Modify Customer Order page
