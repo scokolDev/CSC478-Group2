@@ -36,7 +36,7 @@ export const getResourceByID = async (req, res) => {
         if(!resource){
             return res.status(404).json({message: `cannot find any resource with ID ${id}`})
         } else if (resource.organizationID && resource.organizationID != req.user.organizationID) {
-            return res.status(401).json({message: `Not authorized to access ${id}`})
+            return res.status(401).json({message: `Not authorized to access resource ${id}`})
         } else if (!resource.organizationID) {
             return res.status(401).json({message: `Not authorized to access global resources ${id}`})
         }
@@ -75,7 +75,7 @@ export const updateResource = async (req, res) => {
 export const deleteResource = async(req, res) =>{
     try {
         const {id} = req.params;
-        const resource = await Resource.findByIdAndDelete(id);
+        const resource = await Resource.findById(id);
         if(!resource){
             return res.status(404).json({message: `cannot find any resource with ID ${id}`})
         } else if (resource.organizationID && resource.organizationID != req.user.organizationID) {
@@ -83,6 +83,7 @@ export const deleteResource = async(req, res) =>{
         } else if (resource.organizationID === undefined) {
             return res.status(401).json({message: `Not authorized to delete global resources ${id}`})
         }
+        await Resource.findByIdAndDelete(id);
         res.status(200).json(resource);
         
     } catch (error) {
