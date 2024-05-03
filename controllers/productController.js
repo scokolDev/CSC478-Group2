@@ -1,6 +1,7 @@
 import Product from '../models/products.js'
 
-
+//return all products
+// (Requirement 2.0.0)
 export const getProducts = async (req, res) => {
     const orgID = req.user != undefined ? req.user.organizationID : req.body.organizationID;
     try {
@@ -12,6 +13,8 @@ export const getProducts = async (req, res) => {
 
 }
 
+//Create Product
+// (Requirement 2.2.0)
 export const createProduct = async (req, res) => {
     req.body.organizationID = req.user.organizationID;
     try {
@@ -23,6 +26,8 @@ export const createProduct = async (req, res) => {
 
 }
 
+//return product by ID
+// (Requirement 2.3.x)
 export const getProductByID = async (req, res) => {
     const {id} = req.params
     try {
@@ -42,6 +47,7 @@ export const getProductByID = async (req, res) => {
 
 }
 
+
 export async function returnProductByID(id) {
     try {
         const product = await Product.findById(id)
@@ -56,6 +62,8 @@ export async function returnProductByID(id) {
 
 }
 
+//Update Product
+// (Requirement 2.3.3, 2.3.4)
 export const updateProduct = async (req, res) => {
     req.body.organizationID = req.user.organizationID;
     const {id} = req.params
@@ -78,6 +86,8 @@ export const updateProduct = async (req, res) => {
 
 }
 
+//Delete a Product
+// (Requirement 2.3.2)
 export const deleteProduct =  async(req, res) =>{
     try {
         const {id} = req.params;

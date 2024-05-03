@@ -1,14 +1,6 @@
-// Import necessary modules
-import express from 'express'
-import Resource from '../models/resources.js'
-import { checkAuthenticated, getVhost } from '../routers/routes.js';
-import { getOrgByDomain } from './organizationController.js';
-
-// Create a router instance
-const router = express.Router();
-
 //return all resources
-router.get('/', getVhost, getOrgByDomain, async (req, res) => {
+// (Requirement 3.0.0)
+export const getResources = async (req, res) => {
     const orgID = req.user != undefined ? req.user.organizationID : req.body.organizationID
     req.query.organizationID = orgID;
     //const query = {products: {$in : [req.query.products]}};
@@ -18,11 +10,11 @@ router.get('/', getVhost, getOrgByDomain, async (req, res) => {
     } catch  (error) {
         res.status(500).json({message: error.message})
     }
-
-})
+}
 
 //Create Resource
-router.post('/', checkAuthenticated, async (req, res) => {
+// (Requirement 3.1.0)
+export const createResource = async (req, res) => {
     req.body.organizationID = req.user.organizationID
     try {
         const resource = await Resource.create(req.body)
@@ -31,16 +23,17 @@ router.post('/', checkAuthenticated, async (req, res) => {
         res.status(500).json({message: error.message})
     }
 
-})
+}
 
 //return resource by ID
-router.get('/:id', getVhost, getOrgByDomain, async (req, res) => {
+// (Requirement 3.2.0)
+export const getResourceByID = async (req, res) => {
     const {id} = req.params
     try {
         const resource = await Resource.findById(id)
         if(!resource){
             return res.status(404).json({message: `cannot find any resource with ID ${id}`})
-        } else if (resource.organizationID && resource.organizationID != req.body.organizationID) {
+        } else if (resource.organizationID && resource.organizationID != req.user.organizationID) {
             return res.status(401).json({message: `Not authorized to access ${id}`})
         } else if (!resource.organizationID) {
             return res.status(401).json({message: `Not authorized to access global resources ${id}`})
@@ -50,17 +43,18 @@ router.get('/:id', getVhost, getOrgByDomain, async (req, res) => {
         res.status(500).json({message: error.message})
     }
 
-})
+}
 
 //Update Resource
-router.put('/:id', getVhost, getOrgByDomain, async (req, res) => {
-    const orgID = req.user != undefined ? req.user.organizationID : req.body.organizationID
+// (Requirement 3.2.0, 3.4.0)
+export const updateResource = async (req, res) => {
+    req.body.organizationID = req.user.organizationID
     const {id} = req.params
     try {
         const resource = await Resource.findById(id)
         if(!resource){
             return res.status(404).json({message: `cannot find any resource with ID ${id}`})
-        } else if (resource.organizationID && resource.organizationID != orgID) {
+        } else if (resource.organizationID && resource.organizationID != req.user.organizationID) {
             return res.status(401).json({message: `Not authorized to modify resource ${id}`})
         } else if (resource.organizationID === undefined) {
             return res.status(401).json({message: `Not authorized to modify global resources ${id}`})
@@ -72,10 +66,11 @@ router.put('/:id', getVhost, getOrgByDomain, async (req, res) => {
         res.status(500).json({message: error.message})
     }
 
-})
+}
 
 //Delete a Resource
-router.delete('/:id', checkAuthenticated, async(req, res) =>{
+// (Requirement 3.3.0)
+export const deleteResource = async(req, res) =>{
     try {
         const {id} = req.params;
         const resource = await Resource.findByIdAndDelete(id);
@@ -91,6 +86,4 @@ router.delete('/:id', checkAuthenticated, async(req, res) =>{
     } catch (error) {
         res.status(500).json({message: error.message})
     }
-})
-
-export default router
+}

@@ -5,7 +5,7 @@ import scheduleController from '../controllers/scheduleController.js'
 import productRouter from './productRouter.js'
 import orderRouter from './orderRouter.js'
 import customerRouter from '../routers/customerRouter.js'
-import resourceController from '../controllers/resourceController.js'
+import resourceRouter from '../routers/resourceRouter.js'
 import organizationRouter from './organizationRouter.js'
 import adminRouter from './adminRouter.js'
 import locationRouter from './locationRouter.js'
@@ -48,6 +48,8 @@ router.get('/', (req, res, next) => {
     res.render('test_copy.ejs', {orgname: req.body.organizationName, stripeKey: process.env.STRIPE_PUBLIC_KEY, customerID: req.user._id, firstName: req.user.firstName, lastName: req.user.lastName})
   });
 
+  //! Deprecated Used for Initial testing
+  //TODO: Remove and update any references to /schedule to something new
   router.get('/schedule', checkAuthenticated, (req, res) => {
     // Serve the index.html file
     res.render('index-main.ejs', {name: req.user.firstName});
@@ -59,6 +61,9 @@ router.get('/login', checkNotAuthenticated, (req, res) => {
   res.render('login.ejs');
 });
 
+
+//! Depricated use /auth/admin/login or /auth/customer/login
+// TODO Need to Remove
 router.post('/login', checkNotAuthenticated, passport.authenticate('user', {
   successRedirect: '/schedule',
   failureRedirect: '/login',
@@ -68,6 +73,8 @@ router.post('/login', checkNotAuthenticated, passport.authenticate('user', {
 
 
 // Route handler for Register
+//! Depricated used for testing
+//TODO: Need to remove
 router.get('/register', checkNotAuthenticated,  (req, res) => {
   // Serve the Register.ejs file
   res.render('register.ejs');
@@ -92,6 +99,8 @@ router.get('/order',  getVhost, getOrgByDomain, (req, res) => {
   res.render('order_form.ejs', {orgname: req.body.organizationName});
 });
 
+//! Depricated use /admin/register
+//TODO: Remove
 router.post('/register', checkNotAuthenticated, async (req, res) => {
     User.register(
       new User({
@@ -109,7 +118,8 @@ router.post('/register', checkNotAuthenticated, async (req, res) => {
     })
 })
 
-
+// Route handler for Logout Function
+// (Requirement 1.4.0)
 router.delete('/logout', function(req, res, next) {
   req.logout(function(err) {
     if (err) { return next(err); }
@@ -125,7 +135,7 @@ router.use('/api/events', scheduleController);
 router.use('/api/products', productRouter);
 router.use('/api/orders', orderRouter);
 router.use('/api/customers', customerRouter);
-router.use('/api/resources', resourceController);
+router.use('/api/resources', resourceRouter);
 router.use('/api/organizations', organizationRouter);
 router.use('/api/locations', locationRouter);
 
@@ -135,6 +145,7 @@ router.use('/customer', customerRouter)
 
 
 // An endpoint for uploading files
+// (Requirement 3.4.0)
 router.post('/upload', upload.single('file'), function (req, res) {
     const file = req.file;
     const params = {
@@ -152,6 +163,7 @@ router.post('/upload', upload.single('file'), function (req, res) {
     });
 });
 
+// Make sure Admin is authenticated
 export function checkAuthenticated(req, res, next) {
   if (req.isAuthenticated()) {
     return next()
@@ -159,6 +171,7 @@ export function checkAuthenticated(req, res, next) {
 
   res.redirect('/login')
 }
+
 
 export function checkOrderAuthenticated(req, res, next) {
   if (req.isAuthenticated()) {
@@ -168,6 +181,8 @@ export function checkOrderAuthenticated(req, res, next) {
   res.render('test.ejs', {orgname: req.body.organizationName, stripeKey: process.env.STRIPE_PUBLIC_KEY})
 }
 
+
+//TODO: Update the name to reflect Admin vs Customer need to a second function for cusotmer
 export function checkNotAuthenticated(req, res, next) {
   if (req.isAuthenticated()) {
     return res.redirect('/schedule')
@@ -175,6 +190,9 @@ export function checkNotAuthenticated(req, res, next) {
   next()
 }
 
+// Get the subdomain and set it to body.orgdomain
+// If not found send 404 error.
+// TODO: Update with 404 Sorry page.
 export function getVhost(req, res, next) {
   if (req.vhost) {
     req.body.orgdomain = req.vhost[0]

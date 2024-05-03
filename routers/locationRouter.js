@@ -5,6 +5,8 @@ import { getLocs, getLocbyID, createLoc, updateLoc, deleteLoc } from '../control
 // Create a router instance
 const router = express.Router();
 
+// Route Handler for API CRUD Operations on the Location model
+// TODO: Impement location integration with the frontend order process
 router.get('/', getLocs)
 router.get('/:id', getLocbyID)
 router.post('/', createLoc)
