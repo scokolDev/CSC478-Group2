@@ -309,7 +309,7 @@ async function calculateTotalCost(productId, start, end){
   }
   switch(prodPriceType){
       case("Flat Rate"):
-          return prodPrice * 100;
+          return Math.round(prodPrice * 100);
       case("Per Hour"):
           timeReserved /= (1000 * 60 * 60)
           break
@@ -318,6 +318,6 @@ async function calculateTotalCost(productId, start, end){
           break
   }
 
-  return (timeReserved * prodPrice ) * 100
+  return Math.round((timeReserved * prodPrice ) * 100)
 }
 
