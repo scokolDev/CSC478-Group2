@@ -118,6 +118,8 @@ const calculate_tax = async (orderAmount, currency) => {
 export const createPaymentIntent = async (req, res) => {
   const { paymentMethodType, currency, paymentMethodOptions } = req.body;
 
+  console.log("----------------------" + req.body)
+
   // Each payment method type has support for different currencies. In order to
   // support many payment method types and several currencies, this server
   // endpoint accepts both the payment method type and the currency as
@@ -278,8 +280,8 @@ async function calculateTotalCost(productId, start, end){
   //if date objects are passed in as strings
   if(typeof start == "string" || typeof end == "string"){
       //convert bookedDate start and end times to date objects
-      const startDateObj = new Date(parseInt(start.substring(0,4)), parseInt(start.substring(5,7))-1, parseInt(start.substring(8,10))) 
-      const endDateObj = new Date(parseInt(end.substring(0,4)), parseInt(end.substring(5,7))-1, parseInt(end.substring(8,10))) 
+      const startDateObj = new Date(parseInt(start.substring(0,4)), parseInt(start.substring(5,7))-1, parseInt(start.substring(8,10)), parseInt(start.substring(11,13)), parseInt(start.substring(14,16))) 
+      const endDateObj = new Date(parseInt(end.substring(0,4)), parseInt(end.substring(5,7))-1, parseInt(end.substring(8,10)), parseInt(end.substring(11,13)), parseInt(end.substring(14,16))) 
 
       var timeReserved = endDateObj - startDateObj
       

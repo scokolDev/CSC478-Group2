@@ -1,3 +1,4 @@
+//get customer id from ejs meta data
 try{
     cID = document.getElementById("customerID").getAttribute("customerID")
 }catch(error){
@@ -8,26 +9,15 @@ try{
 console.log(cID)
 
 document.addEventListener('DOMContentLoaded', function() {
-    // Function to toggle visibility of serviceContainer
-    function toggleServiceContainer() {
-        var serviceContainer = document.getElementById('serviceContainer');
-        if (serviceContainer.style.display === 'none' || serviceContainer.style.display === '') {
-            serviceContainer.style.display = 'block';
-        } else {
-            serviceContainer.style.display = 'none';
-        }
-    }
-    service1Name = document.getElementById("service1Name")
-    service1Price = document.getElementById("service1Price")
-    service1Desc = document.getElementById("service1Desc")
-
-    service2Name = document.getElementById("service2Name")
-    service2Price = document.getElementById("service2Price")
-    service2Desc = document.getElementById("service2Desc")
-
-    service3Name = document.getElementById("service3Name")
-    service3Price = document.getElementById("service3Price")
-    service3Desc = document.getElementById("service3Desc")
+    // // Function to toggle visibility of serviceContainer
+    // function toggleServiceContainer() {
+    //     var serviceContainer = document.getElementById('serviceContainer');
+    //     if (serviceContainer.style.display === 'none' || serviceContainer.style.display === '') {
+    //         serviceContainer.style.display = 'block';
+    //     } else {
+    //         serviceContainer.style.display = 'none';
+    //     }
+    // }
 
     resourceList = document.getElementById("resourceList")
     productsList = document.getElementById("productsList")
@@ -49,6 +39,18 @@ document.addEventListener('DOMContentLoaded', function() {
     
     }
 
+
+    //updates the information on a specified product display on the products tab
+    //
+    //(Requirement 4.1.1) - sets display of a featured product
+    //(Requirement 4.1.2) - adds event listener to product display to get to booking form
+    //
+    //container: product display to be updated
+    //name: name of product
+    //description: product description
+    //price: price rate of product
+    //priceType: type of pricing product uses
+    //id: product id
     function setServiceDisplay(container, name, description, price, priceType, id){
         container.getElementsByClassName("serviceName")[0].innerHTML = name
         priceStr = "$" + price
@@ -70,7 +72,11 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
 
-    // Event listener for the "Services" button
+    // loads the product page when user clicks on products tab
+    //
+    //(Requirement 4.1.0) - displays products tab
+    //(Requirement 4.1.1) - displays three featured products
+    //
     document.getElementById('servicesLink').addEventListener('click', async function(event) {
         event.preventDefault();
         document.getElementById('aboutInfo').style.display = 'none';
@@ -93,7 +99,7 @@ document.addEventListener('DOMContentLoaded', function() {
             serviceContainer1 = document.getElementById("service1Display")
             serviceContainer2 = document.getElementById("service2Display")
             serviceContainer3 = document.getElementById("service3Display")
-            if(products.length > 3){
+            if(products.length > 2){
                 while(selectedIndecies.length < 3){
                     rand = Math.floor(Math.random() * products.length)
                     if(!selectedIndecies.includes(rand)){
@@ -117,6 +123,15 @@ document.addEventListener('DOMContentLoaded', function() {
                     container = document.getElementById("service" + productsDisplayed + "Display")
                     setServiceDisplay(container, product.name, product.description, product.price, product.priceType, product._id)
                 })
+                switch(productsDisplayed){
+                    case(0):
+                        document.getElementById("service1Display").style.visibility = "hidden"
+                    case(1):
+                        document.getElementById("service2Display").style.visibility = "hidden"
+                    case(2):
+                        document.getElementById("service3Display").style.visibility = "hidden"
+                        break
+                }
             }
           } catch (error) {
     
@@ -132,13 +147,6 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('reviews').style.display = 'none'; // Hide the testimonials section
     });
 
-    // Handle click events for service boxes
-    document.querySelectorAll('.service-box').forEach(function(box) {
-        box.addEventListener('click', function() {
-            // Add your functionality here
-            alert('You selected ' + box.textContent);
-        });
-    });
 
     // Event listener for other navigation links
     document.querySelectorAll('nav a:not(#servicesLink)').forEach(function(link) {
@@ -152,12 +160,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Event listener for signing in
     document.getElementById('signInLink').addEventListener('click', function(event) {
-        event.preventDefault();
-        var email = prompt("Enter your email:");
-        var password = prompt("Enter your password:");
-        if (email && password) {
-            alert('You entered email: ' + email + ' and password: ' + password);
-        }
+        location.href = "/customer/login"
     });
 
     // Event listener for reloading the page on clicking "Home" link
@@ -166,6 +169,9 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // Event listener for displaying the about section
+    //
+    //(Requirement 4.2.0) - loads about page
+    //
     document.getElementById('aboutLink').addEventListener('click', function(event) {
         event.preventDefault();
         document.getElementById('aboutInfo').style.display = 'block';
@@ -178,6 +184,10 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // Event listener for displaying the contact form
+    //
+    //(Requirement 4.3.0) - loads contact form
+    //(Requirement 4.3.1) - loads inputs to complete contact form
+    //
     document.getElementById('contactLink').addEventListener('click', function(event) {
         event.preventDefault();
         document.getElementById('aboutInfo').style.display = 'none';
@@ -205,6 +215,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
     // Event listener for clicking the "Book Now" button
+    //
+    //(Requirement 4.4.0) - loads about page
+    //
     document.querySelector('.book-now-button').addEventListener('click', function (event) {
         event.preventDefault(); // Prevent the default action of the button
         toggleBookingForm(); // Toggle the visibility of the booking form
@@ -213,22 +226,22 @@ document.addEventListener('DOMContentLoaded', function() {
     var bookingForm = document.getElementById('bookingForm');
     var paymentFormContainer = document.getElementById('paymentFormContainer');
 
-    bookingForm.addEventListener('submit', function(event) {
-        event.preventDefault(); // Prevent form submission
+    // bookingForm.addEventListener('submit', function(event) {
+    //     event.preventDefault(); // Prevent form submission
         
-        // Hide booking form and show payment form
-        bookingForm.style.display = 'none';
-        paymentFormContainer.style.display = 'block';
-    });
+    //     // Hide booking form and show payment form
+    //     bookingForm.style.display = 'none';
+    //     paymentFormContainer.style.display = 'block';
+    // });
 
-    var paymentForm = document.getElementById('paymentForm');
-    paymentForm.addEventListener('submit', function(event) {
-        event.preventDefault(); // Prevent form submission
+    // var paymentForm = document.getElementById('paymentForm');
+    // paymentForm.addEventListener('submit', function(event) {
+    //     event.preventDefault(); // Prevent form submission
         
-        // Process payment (you can add your payment processing logic here)
-        // Once payment is processed successfully, you may redirect the user to a confirmation page or perform other actions.
-        alert('Payment processed successfully!');
-        location.reload();    });
+    //     // Process payment (you can add your payment processing logic here)
+    //     // Once payment is processed successfully, you may redirect the user to a confirmation page or perform other actions.
+    //     alert('Payment processed successfully!');
+    //     location.reload();    });
 });
 
 
@@ -341,18 +354,20 @@ function monthNumToString(monthNumber){
 }
 
 
-function updateCustomerInputs(){
-    console.log(existingCustomerRadio.checked)
-    if(existingCustomerRadio.checked){
-        newCustomerInputs.style.display = "none"
-        existingCustomerInputs.style.display = "block"
-        isNewCustomer = false
-    }else{
-        existingCustomerInputs.style.display = "none"
-        newCustomerInputs.style.display = "block"
-        isNewCustomer = true
-    }
-}   
+// function updateCustomerInputs(){
+//     console.log(existingCustomerRadio.checked)
+//     if(existingCustomerRadio.checked){
+//         newCustomerInputs.style.display = "none"
+//         existingCustomerInputs.style.display = "block"
+//         isNewCustomer = false
+//     }else{
+//         existingCustomerInputs.style.display = "none"
+//         newCustomerInputs.style.display = "block"
+//         isNewCustomer = true
+//     }
+// }   
+
+
 //checks to see is onDate date value is compatible with a resource dayAvailability and bookedDates
 //
 //onDate: date to check if availible
@@ -768,8 +783,8 @@ async function calculateTotalCost(productId, start, end){
     //if date objects are passed in as strings
     if(typeof start == "string" || typeof end == "string"){
         //convert bookedDate start and end times to date objects
-        startDateObj = new Date(parseInt(start.substring(0,4)), parseInt(start.substring(5,7))-1, parseInt(start.substring(8,10))) 
-        endDateObj = new Date(parseInt(end.substring(0,4)), parseInt(end.substring(5,7))-1, parseInt(end.substring(8,10))) 
+        const startDateObj = new Date(parseInt(start.substring(0,4)), parseInt(start.substring(5,7))-1, parseInt(start.substring(8,10)), parseInt(start.substring(11,13)), parseInt(start.substring(14,16))) 
+        const endDateObj = new Date(parseInt(end.substring(0,4)), parseInt(end.substring(5,7))-1, parseInt(end.substring(8,10)), parseInt(end.substring(11,13)), parseInt(end.substring(14,16))) 
 
         timeReserved = endDateObj - startDateObj
         
@@ -853,14 +868,14 @@ async function sendOrderToDB(){
 
     console.log("before backend error checking")
 
-    // if (backendError) {
-    //     //addMessage(backendError.message);
+    if (backendError) {
+        alert(backendError.message)
   
-    //     // reenable the form.
-    //     submitted = false;
-    //     document.getElementById("submitBooking").disabled = false;
-    //     return;
-    // }
+        // reenable the form.
+        submitted = false;
+        document.getElementById("submitBooking").disabled = false;
+        return;
+    }
     
     console.log("after backend error checking")
     
@@ -895,9 +910,9 @@ async function sendOrderToDB(){
                 card: card,
                 billing_details: {
                     name: customerFirstName + " " + customerLastName,
-                    //productID: tempProducts,
-                    //start: startDateTime,
-                    //end: endDateTime,
+                    // productID: tempProducts,
+                    // start: startDateTime,
+                    // end: endDateTime,
                 }, 
             },
         }
@@ -913,7 +928,7 @@ async function sendOrderToDB(){
         return;
     }
     console.log("after stripe error checking")
-    //addMessage(`Payment ${paymentIntent.status}: ${paymentIntent.id}`);
+    console.log(`Payment ${paymentIntent.status}: ${paymentIntent.id}`)
     
 
 

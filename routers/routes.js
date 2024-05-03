@@ -45,8 +45,7 @@ router.get('/', (req, res, next) => {
   router.get('/', getOrgByDomain, checkOrderAuthenticated, (req, res) => {
   
     // Serve the index.html file
-    
-    res.render('test_copy.ejs', {orgname: req.body.organizationName, stripeKey: process.env.STRIPE_PUBLIC_KEY, customerID: req.user._id})
+    res.render('test_copy.ejs', {orgname: req.body.organizationName, stripeKey: process.env.STRIPE_PUBLIC_KEY, customerID: req.user._id, firstName: req.user.firstName, lastName: req.user.lastName})
   });
 
   router.get('/schedule', checkAuthenticated, (req, res) => {

@@ -166,7 +166,9 @@
             <h2>Booking Form</h2>
             <form action="#" method="post" id="bookingForm">
                 <div id="customerAuthBox">
-                    <div style="color: black;">signed in as <%= customerID %></div>
+                    
+                    <!-- (Requirement 5.0.1) - greet user when signed in to create order -->
+                    <div style="color: black;">signed in as <%= firstName %>  <%= lastName %></div>
                 </div>
                 
                 <!-- <div id="existingCustomerInputs" style="display: none;">
@@ -179,7 +181,7 @@
                 </div> -->
                 
                 
-                <br><br><br>
+                <br>
                 <p style="font-size: x-large;color: #104a63;">Order Information:</p>
 
 
