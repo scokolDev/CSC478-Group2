@@ -4,7 +4,6 @@ import User from '../models/users.js'
 import { checkNotAuthenticated, checkAuthenticated} from './routes.js'
 import { getOrgName } from '../controllers/organizationController.js'
 import {
-    // authenticateAdmin,
     getAdminLogin,
     getAdminDash,
     getAdminListings,
@@ -26,46 +25,41 @@ const router = express.Router();
 router.use(passport.session())
 
 
-
-// router.post('/login', checkNotAuthenticated, authenticateAdmin)
-
+// Get the Admin Login Page
+// (Requirement 1.4.0)
 router.get('/login', checkNotAuthenticated, getAdminLogin);
   
-  // Route handler for Admin Dashboard
-  router.get('/dashboard', checkAuthenticated, getOrgName, getAdminDash);
-  
-  // Route handler for Admin Listings
-  router.get('/listings', checkAuthenticated, getAdminListings);
+// Route handler for Admin Dashboard
+// (Requirement 1.0.0)
+router.get('/dashboard', checkAuthenticated, getOrgName, getAdminDash);
 
-  // Route handler for Admin Resources
-  router.get('/resources', checkAuthenticated, getAdminResource);
+// Route handler for Admin Listings
+// (Requirement 1.1.0)
+router.get('/listings', checkAuthenticated, getAdminListings);
 
-  // Route handler for Admin Resources
-  router.get('/modify_listing', checkAuthenticated, getAdminModifyListing);
+// Route handler for Admin Resources
+// (Requirement 3.0.0)
+router.get('/resources', checkAuthenticated, getAdminResource);
 
-  router.get('/order_details', checkAuthenticated, getAdminOrderDetails);
+// Route handler for Modify Listings
+// (Requirement 3.2.0)
+router.get('/modify_listing', checkAuthenticated, getAdminModifyListing);
 
-  router.get('/orders', checkAuthenticated, getAdminOrders);
+// Route Handler for Order Details 
+// (Requirement 1.0.4)
+router.get('/order_details', checkAuthenticated, getAdminOrderDetails);
 
-  router.get('/register', checkNotAuthenticated,  getAdminRegister);
-  
-  router.post('/register', checkNotAuthenticated, registerAdmin)
+// Route Handle for Admin Orders
+// (Requirement 1.0.1)
+router.get('/orders', checkAuthenticated, getAdminOrders);
+
+// Route Handler for displaing the Admin Registration Page
+router.get('/register', checkNotAuthenticated,  getAdminRegister);
+
+// Route Handler for processing Admin registration data
+// (Requirement 1.4.1)
+router.post('/register', checkNotAuthenticated, registerAdmin)
 
 
-  
-// export function checkAuthenticated(req, res, next) {
-//     if (req.isAuthenticated()) {
-//       return next()
-//     }
-  
-//     res.redirect('/login')
-//   }
-  
-// export function checkNotAuthenticated(req, res, next) {
-//     if (req.isAuthenticated()) {
-//       return res.redirect('/schedule')
-//     }
-//     next()
-//   }
   
 export default router

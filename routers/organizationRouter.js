@@ -5,6 +5,8 @@ import { getOrgs, getOrgbyID, createOrg, updateOrg, deleteOrg } from '../control
 // Create a router instance
 const router = express.Router();
 
+// Route handler for API CRUD operations on Organization model
+// (Requirement 1.5.0)
 router.get('/', getOrgs)
 router.get('/:id', getOrgbyID)
 router.post('/', createOrg)
