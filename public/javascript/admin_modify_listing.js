@@ -229,7 +229,7 @@ document.getElementById("saveButton").addEventListener('click', async function()
       alert('Failed to add product');
     }
 
-    //location.href = "/admin/listings"
+    location.href = "/admin/listings"
 });
 
 //creates an html element to represent a resource and adds the element to a specified resourceContainer

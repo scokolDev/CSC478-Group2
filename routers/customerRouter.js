@@ -1,6 +1,6 @@
 import express from 'express'
 import passport from 'passport'
-import { checkNotAuthenticated, checkAuthenticated, getVhost } from './routes.js'
+import { checkCustomerNotAuthenticated, checkCustomerAuthenticated, getVhost } from './routes.js'
 import { getOrgByDomain } from '../controllers/organizationController.js'
 import {
     getCustomerLogin,
@@ -25,30 +25,30 @@ router.use(passport.session())
 
 // Route handler for serving the Customer login page
 // (Requirement 6.2.0)
-router.get('/login', checkNotAuthenticated, getCustomerLogin);
+router.get('/login', checkCustomerNotAuthenticated, getCustomerLogin);
 
 
-router.get('/order/login', checkNotAuthenticated, getCustomerOrderLogin);
+router.get('/order/login', checkCustomerNotAuthenticated, getCustomerOrderLogin);
   
 // Route handler for Customer Dashboard
 // (Requirement 6.0.0)
-router.get('/dashboard', checkAuthenticated, getCustomerDash);
+router.get('/dashboard', checkCustomerAuthenticated, getCustomerDash);
 
 // Route Handler for Customer Orders
 // (Requirement 6.0.1)
-router.get('/orders', checkAuthenticated, getCustomerOrders);
+router.get('/orders', checkCustomerAuthenticated, getCustomerOrders);
 
 // Route Handler for Modify Customer Order page
 // (Requirement 6.0.4)
-router.get('/modify_order', checkAuthenticated, getCustomerModifyOrder);
+router.get('/modify_order', checkCustomerAuthenticated, getCustomerModifyOrder);
 
 // Route Handler for Customer Registration Page
 // (Requirement 6.2.1)
-router.get('/register', checkNotAuthenticated,  getCustomerRegister);
+router.get('/register', checkCustomerNotAuthenticated,  getCustomerRegister);
 
 // Route Handler for processing Customer Registration Data
 // (Requirement 6.2.1)
-router.post('/register', checkNotAuthenticated, getVhost, getOrgByDomain, registerCustomer)
+router.post('/register', checkCustomerNotAuthenticated, getVhost, getOrgByDomain, registerCustomer)
 
 // Route Handler for Customer Model API Operations
 router.get('/', getCustomers)

@@ -2,7 +2,7 @@
 
 import express from 'express'
 
-import { checkAuthenticated } from './routes.js';
+import { checkCustomerAuthenticated, checkAdminAuthenticated } from './routes.js';
 import { getVhost } from './routes.js';
 import { getOrgByDomain } from '../controllers/organizationController.js'
 import { createOrder, createPaymentIntent, deleteOrder, getOrderById, getOrders, getPaymentNext, getSuccess, updateOrder, webhook } from '../controllers/orderController.js';
@@ -14,7 +14,7 @@ const router = express.Router();
 
 //return all orders
 // (Requirement 1.0.0)
-router.get('/', checkAuthenticated, getOrders)
+router.get('/', checkCustomerAuthenticated, getOrders)
 
 //Create Order
 // (Requirement 5.6.0 )
@@ -22,13 +22,13 @@ router.post('/', getVhost, getOrgByDomain, createOrder)
 
 //return order by ID
 // (Requirement 1.0.4)
-router.get('/:id', checkAuthenticated, getOrderById)
+router.get('/:id', checkCustomerAuthenticated, getOrderById)
 
 //Update Order
-router.put('/:id', checkAuthenticated, updateOrder)
+router.put('/:id', checkAdminAuthenticated, updateOrder)
 
 //Delete a Order
-router.delete('/:id', checkAuthenticated, deleteOrder)
+router.delete('/:id', checkCustomerAuthenticated, deleteOrder)
 
 
 // Stripe Integration for procesing credit cards

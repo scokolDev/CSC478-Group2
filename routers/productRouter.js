@@ -1,6 +1,6 @@
 // Import necessary modules
 import express from 'express'
-import { checkAuthenticated, getVhost } from './routes.js';
+import { checkAdminAuthenticated, getVhost } from './routes.js';
 import { getOrgByDomain } from '../controllers/organizationController.js';
 import { createProduct, deleteProduct, getProductByID, getProducts, updateProduct } from '../controllers/productController.js';
 
@@ -16,19 +16,19 @@ router.get('/', getVhost, getOrgByDomain, getProducts)
 
 //Create Product
 // (Requirement 2.2.0)
-router.post('/', checkAuthenticated, createProduct)
+router.post('/', checkAdminAuthenticated, createProduct)
 
 //return product by ID
 // (Requirement 2.3.x)
-router.get('/:id', checkAuthenticated, getProductByID)
+router.get('/:id', checkAdminAuthenticated, getProductByID)
 
 //Update Product
 // (Requirement 2.3.3, 2.3.4)
-router.put('/:id', checkAuthenticated, updateProduct)
+router.put('/:id', checkAdminAuthenticated, updateProduct)
 
 //Delete a Product
 // (Requirement 2.3.2)
-router.delete('/:id', checkAuthenticated, deleteProduct)
+router.delete('/:id', checkAdminAuthenticated, deleteProduct)
 
 
 

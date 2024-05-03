@@ -50,13 +50,13 @@ router.get('/', (req, res, next) => {
 
   //! Deprecated Used for Initial testing
   //TODO: Remove and update any references to /schedule to something new
-  router.get('/schedule', checkAuthenticated, (req, res) => {
+  router.get('/schedule', checkCustomerAuthenticated, (req, res) => {
     // Serve the index.html file
     res.render('index-main.ejs', {name: req.user.firstName});
   });
 
 // Route handler for Customer Login
-router.get('/login', checkNotAuthenticated, (req, res) => {
+router.get('/login', checkCustomerNotAuthenticated, (req, res) => {
   // Serve the Login.ejs file
   res.render('login.ejs');
 });
@@ -64,7 +64,7 @@ router.get('/login', checkNotAuthenticated, (req, res) => {
 
 //! Depricated use /auth/admin/login or /auth/customer/login
 // TODO Need to Remove
-router.post('/login', checkNotAuthenticated, passport.authenticate('user', {
+router.post('/login', checkCustomerNotAuthenticated, passport.authenticate('user', {
   successRedirect: '/schedule',
   failureRedirect: '/login',
   failureFlash: true
@@ -75,19 +75,19 @@ router.post('/login', checkNotAuthenticated, passport.authenticate('user', {
 // Route handler for Register
 //! Depricated used for testing
 //TODO: Need to remove
-router.get('/register', checkNotAuthenticated,  (req, res) => {
+router.get('/register', checkCustomerNotAuthenticated,  (req, res) => {
   // Serve the Register.ejs file
   res.render('register.ejs');
 });
 
 // Route handler for customer dashboard
-router.get('/dashboard', checkAuthenticated,  (req, res) => {
+router.get('/dashboard', checkCustomerAuthenticated,  (req, res) => {
   // Serve the customer_dash.ejs file
   res.render('customer_dash.ejs');
 });
 
 // Route handler for customer order details page
-router.get('/order_details', checkAuthenticated,  (req, res) => {
+router.get('/order_details', checkCustomerAuthenticated,  (req, res) => {
   // Serve the customer_order_details.ejs file
   res.render('customer_order_details.ejs');
 });
@@ -101,7 +101,7 @@ router.get('/order',  getVhost, getOrgByDomain, (req, res) => {
 
 //! Depricated use /admin/register
 //TODO: Remove
-router.post('/register', checkNotAuthenticated, async (req, res) => {
+router.post('/register', checkCustomerNotAuthenticated, async (req, res) => {
     User.register(
       new User({
         username: req.body.email,
@@ -163,15 +163,28 @@ router.post('/upload', upload.single('file'), function (req, res) {
     });
 });
 
-// Make sure Admin is authenticated
-export function checkAuthenticated(req, res, next) {
-  if (req.isAuthenticated()) {
+// // Make sure Admin is authenticated
+// export function checkAuthenticated(req, res, next) {
+//   if (req.isAuthenticated()) {
+//     return next()
+//   }
+
+//   res.redirect('/login')
+// }
+export function checkCustomerAuthenticated(req, res, next) {
+   if (req.isAuthenticated()) {
+     return next()
+   }
+  
+   res.redirect('/customer/login')
+}
+export function checkAdminAuthenticated(req, res, next) {
+  if (req.isAuthenticated() && req.user.admin) {
     return next()
   }
-
-  res.redirect('/login')
+ 
+  res.redirect('/admin/login')
 }
-
 
 export function checkOrderAuthenticated(req, res, next) {
   if (req.isAuthenticated()) {
@@ -183,9 +196,22 @@ export function checkOrderAuthenticated(req, res, next) {
 
 
 //TODO: Update the name to reflect Admin vs Customer need to a second function for cusotmer
-export function checkNotAuthenticated(req, res, next) {
+// export function checkNotAuthenticated(req, res, next) {
+//   if (req.isAuthenticated()) {
+//     return res.redirect('/schedule')
+//   }
+//   next()
+// }
+export function checkAdminNotAuthenticated(req, res, next) {
+  if (req.isAuthenticated() && req.user.admin) {
+    return res.redirect('/admin/dashboard')
+  }
+  next()
+}
+
+export function checkCustomerNotAuthenticated(req, res, next) {
   if (req.isAuthenticated()) {
-    return res.redirect('/schedule')
+    return res.redirect('/customer/dashboard')
   }
   next()
 }

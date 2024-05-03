@@ -1,7 +1,7 @@
 import express from 'express'
 import passport from 'passport'
 import User from '../models/users.js'
-import { checkNotAuthenticated, checkAuthenticated} from './routes.js'
+import { checkAdminNotAuthenticated, checkAdminAuthenticated} from './routes.js'
 import { getOrgName } from '../controllers/organizationController.js'
 import {
     getAdminLogin,
@@ -27,38 +27,38 @@ router.use(passport.session())
 
 // Get the Admin Login Page
 // (Requirement 1.4.0)
-router.get('/login', checkNotAuthenticated, getAdminLogin);
+router.get('/login', checkAdminNotAuthenticated, getAdminLogin);
   
 // Route handler for Admin Dashboard
 // (Requirement 1.0.0)
-router.get('/dashboard', checkAuthenticated, getOrgName, getAdminDash);
+router.get('/dashboard', checkAdminAuthenticated, getOrgName, getAdminDash);
 
 // Route handler for Admin Listings
 // (Requirement 1.1.0)
-router.get('/listings', checkAuthenticated, getAdminListings);
+router.get('/listings', checkAdminAuthenticated, getAdminListings);
 
 // Route handler for Admin Resources
 // (Requirement 3.0.0)
-router.get('/resources', checkAuthenticated, getAdminResource);
+router.get('/resources', checkAdminAuthenticated, getAdminResource);
 
 // Route handler for Modify Listings
 // (Requirement 3.2.0)
-router.get('/modify_listing', checkAuthenticated, getAdminModifyListing);
+router.get('/modify_listing', checkAdminAuthenticated, getAdminModifyListing);
 
 // Route Handler for Order Details 
 // (Requirement 1.0.4)
-router.get('/order_details', checkAuthenticated, getAdminOrderDetails);
+router.get('/order_details', checkAdminAuthenticated, getAdminOrderDetails);
 
 // Route Handle for Admin Orders
 // (Requirement 1.0.1)
-router.get('/orders', checkAuthenticated, getAdminOrders);
+router.get('/orders', checkAdminAuthenticated, getAdminOrders);
 
 // Route Handler for displaing the Admin Registration Page
-router.get('/register', checkNotAuthenticated,  getAdminRegister);
+router.get('/register', checkAdminNotAuthenticated,  getAdminRegister);
 
 // Route Handler for processing Admin registration data
 // (Requirement 1.4.1)
-router.post('/register', checkNotAuthenticated, registerAdmin)
+router.post('/register', checkAdminNotAuthenticated, registerAdmin)
 
 
   
