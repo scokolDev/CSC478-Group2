@@ -4,8 +4,9 @@ import Product from '../models/products.js'
 // (Requirement 2.0.0)
 export const getProducts = async (req, res) => {
     const orgID = req.user != undefined ? req.user.organizationID : req.body.organizationID;
+    req.query.organizationID = orgID;
     try {
-        const products = await Product.find({ "organizationID": orgID})
+        const products = await Product.find(req.query)
         res.status(200).json(products)
     } catch  (error) {
         res.status(500).json({message: error.message})
@@ -36,13 +37,13 @@ export const getProductByID = async (req, res) => {
         if(!product){
             return res.status(404).json({message: `cannot find any product with ID ${id}`})
         } else if (product.organizationID && product.organizationID != req.user.organizationID) {
-            return res.status(401).json({message: `Not authorized to access ${id}`})
+            return res.status(401).json({message: `Not authorized to access product ${id}`})
         } else if (!product.organizationID) {
             return res.status(401).json({message: `Not authorized to access global products ${id}`})
         }
         
     } catch  (error) {
-        res.status(500)//.json({message: error.message})
+        res.status(500).json({message: error.message})
     }
 
 }
