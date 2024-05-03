@@ -3,7 +3,8 @@ import AWS from 'aws-sdk'
 
 var route53 = new AWS.Route53();
 
-
+// Method for API CRUD operations on Organization model
+// (Requirement 1.5.0)
 export const createOrg = async (req, res) => {
     try {
         const org = await Organization.create(req.body)
@@ -16,6 +17,8 @@ export const createOrg = async (req, res) => {
     
 }
 
+// Method for API CRUD operations on Organization model
+// (Requirement 1.5.0)
 export const getOrgs = async (req, res) => {
     try {
         const orgs = await Organization.find({})
@@ -25,6 +28,8 @@ export const getOrgs = async (req, res) => {
     }
 }
 
+// Method for API CRUD operations on Organization model
+// (Requirement 1.5.0)
 export const getOrgbyID = async (req, res) => {
     try {
         const {id} = req.params
@@ -35,6 +40,8 @@ export const getOrgbyID = async (req, res) => {
     }
 }
 
+// Method for API CRUD operations on Organization model
+// (Requirement 1.5.0)
 export const updateOrg = async (req, res) => {
     try {
         const {id} = req.params
@@ -45,6 +52,8 @@ export const updateOrg = async (req, res) => {
     }
 }
 
+// Method for API CRUD operations on Organization model
+// (Requirement 1.5.0)
 export const deleteOrg = async (req, res) => {
     try {
         const {id} = req.params
@@ -55,6 +64,8 @@ export const deleteOrg = async (req, res) => {
     }
 }
 
+// Method to simplify returning the organizationName as a req.body property
+// (Requirement 1.5.0)
 export const getOrgName = async (req, res, next) => {
   
     const organization = await Organization.findById(req.user.organizationID)
@@ -62,6 +73,8 @@ export const getOrgName = async (req, res, next) => {
     next()
   }
 
+  // Method for simplyifying
+// (Requirement 1.5.0)
 export const getOrgByDomain = async (req, res, next) => {
     const organization = await Organization.findOne({domain: req.body.orgdomain})
     if(!organization || organization == null) {
@@ -76,7 +89,8 @@ export const getOrgByDomain = async (req, res, next) => {
 
 
 
-
+// Method for API CRUD operations on Organization model
+// (Requirement 1.5.0)
    export const updateRoute53 = function(subdomain) {
 
     var params = {

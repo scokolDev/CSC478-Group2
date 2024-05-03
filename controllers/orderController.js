@@ -11,6 +11,8 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY)
 
 const calculateTax = false;
 
+//return all orders
+// (Requirement 1.0.0)
 export const getOrders = async (req, res) => {
   try {
       const orders = await Order.find({"organizationID": req.user.organizationID})
@@ -21,6 +23,8 @@ export const getOrders = async (req, res) => {
 
 }
 
+//Create Order
+// (Requirement 5.6.0 )
 export const createOrder = async (req, res) => {
   try {
       const order = await Order.create(req.body)
@@ -31,6 +35,8 @@ export const createOrder = async (req, res) => {
 
 }
 
+//return order by ID
+// (Requirement 1.0.4)
 export const getOrderById = async (req, res) => {
   const {id} = req.params
   try {
@@ -49,6 +55,7 @@ export const getOrderById = async (req, res) => {
 
 }
 
+//Update Orde
 export const updateOrder = async (req, res) => {
   const {id} = req.params
   try {
@@ -69,6 +76,7 @@ export const updateOrder = async (req, res) => {
 
 }
 
+//Delete a Order
 export const deleteOrder = async(req, res) =>{
   try {
       const {id} = req.params;
@@ -88,6 +96,8 @@ export const deleteOrder = async(req, res) =>{
   }
 }
 
+// Stripe Integration for procesing credit cards
+// (Requirement 5.4.0)
 const calculate_tax = async (orderAmount, currency) => {
   const taxCalculation = await stripe.tax.calculations.create({
     currency,
@@ -114,6 +124,8 @@ const calculate_tax = async (orderAmount, currency) => {
   return taxCalculation;
 };
 
+// Stripe Integration for procesing credit cards
+// (Requirement 5.4.0)
 export const createPaymentIntent = async (req, res) => {
   const { paymentMethodType, currency, paymentMethodOptions } = req.body;
 
@@ -203,6 +215,8 @@ export const createPaymentIntent = async (req, res) => {
   }
 }
 
+// Stripe Integration for procesing credit cards
+// (Requirement 5.4.0)
 export const getPaymentNext = async (req, res) => {
   const intent = await stripe.paymentIntents.retrieve(
     req.query.payment_intent,
@@ -214,11 +228,15 @@ export const getPaymentNext = async (req, res) => {
   res.redirect(`/api/orders/success?payment_intent_client_secret=${intent.client_secret}`);
 }
 
+// Stripe Integration for procesing credit cards
+// (Requirement 5.4.0)
 export const getSuccess = async (req, res) => {
   const path = resolve(process.env.STATIC_DIR + '/success.html');
   res.sendFile(path);
 }
 
+// Stripe Integration for procesing credit cards
+// (Requirement 5.4.0)
 export const webhook = async (req, res) => {
   let data, eventType;
 
@@ -257,6 +275,8 @@ export const webhook = async (req, res) => {
   res.sendStatus(200);
 }
 
+// Stripe Integration for procesing credit cards
+// (Requirement 5.4.0)
 async function calculateTotalCost(productId, start, end){
   const productResponse = await returnProductByID(productId)
   if(!productResponse || productResponse == undefined) {

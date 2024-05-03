@@ -11,18 +11,23 @@ const router = express.Router();
 
 
 //return all products
+// (Requirement 2.0.0)
 router.get('/', getVhost, getOrgByDomain, getProducts)
 
 //Create Product
+// (Requirement 2.2.0)
 router.post('/', checkAuthenticated, createProduct)
 
 //return product by ID
+// (Requirement 2.3.x)
 router.get('/:id', checkAuthenticated, getProductByID)
 
 //Update Product
+// (Requirement 2.3.3, 2.3.4)
 router.put('/:id', checkAuthenticated, updateProduct)
 
 //Delete a Product
+// (Requirement 2.3.2)
 router.delete('/:id', checkAuthenticated, deleteProduct)
 
 

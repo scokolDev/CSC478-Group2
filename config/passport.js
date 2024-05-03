@@ -3,6 +3,8 @@ import LocalStrategy from 'passport-local'
 import User from '../models/users.js'
 import Customer from '../models/customers.js'
 
+
+// (Requirement 1.4.0, 6.2.0)
 function SessionConstructor(userId, userGroup, details) {
 
     this.userId = userId;
@@ -13,7 +15,7 @@ function SessionConstructor(userId, userGroup, details) {
   
   }
 
-
+// (Requirement 1.4.0, 6.2.0)
 const PassportConfig = function(passport) {
 
     passport.serializeUser(function (userObject, done) {

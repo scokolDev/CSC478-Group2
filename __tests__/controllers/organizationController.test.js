@@ -1,16 +1,11 @@
 import {jest} from '@jest/globals'
 
 import Organization from '../../models/organizations.js';
-import AWS from 'aws-sdk';
-import { createOrg, getOrgs, getOrgbyID, updateOrg, getOrgName, getOrgByDomain, deleteOrg} from '../../controllers/organizationController.js';
-import { updateRoute53 } from '../../controllers/organizationController.js';
 
-var route53 = new AWS.Route53();
+import { createOrg, getOrgs, getOrgbyID, updateOrg, getOrgName, getOrgByDomain, deleteOrg} from '../../controllers/organizationController.js';
+//import { updateRoute53 } from '../../controllers/organizationController.js';
 
 jest.mock('../../models/organizations.js', () => jest.fn());
-
-jest.mock('aws-sdk', () => jest.fn());
-
 
 const mockRequest = (userData, body, params) => {
     return {
@@ -28,6 +23,19 @@ const mockResponse = () => {
   };
 
 
+  jest.mock('aws-sdk', () => {
+    const route53Mock = {
+      changeResourceRecordSets: jest.fn().mockImplementation((params, callback) => {
+        callback(null, 'Success');
+      }),
+    };
+    return {
+      Route53: jest.fn(() => route53Mock),
+    };
+  });
+import AWS from 'aws-sdk';
+console.log(jest.isMockFunction(AWS.Route53));
+
 describe('createOrg', () => {
     test('should return 200 if proper data is set', async () => {
         const req = mockRequest({}, {
@@ -44,6 +52,9 @@ describe('createOrg', () => {
         }));
         await createOrg(req, res);
         expect(Organization.create).toHaveBeenCalledWith(req.body);
+        // Assert that Route53 changeResourceRecordSets() was called with the correct parameters
+        expect(AWS.Route53).toHaveBeenCalled();
+        expect(AWS.Route53().changeResourceRecordSets).toHaveBeenCalledWith(expect.any(Object), expect.any(Function));
         expect(res.status).toHaveBeenCalledWith(200);
         expect(res.json).toHaveBeenCalledWith({_id: 1, name: "Org Name", domain: "orgdomain"});
     });
