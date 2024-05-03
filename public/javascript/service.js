@@ -716,13 +716,21 @@ async function verifyInput(){
             return false
         }
         
+        if(startDateObj > endDateObj){
+            alert("Your entered start date is after your entered end date");
+            return false
+        }else if(startDateObj-endDateObj == 0){
+            alert("Your entered start date and time cannot be the same as your entered end date and time");
+            return false
+        }
+
         //making sure selected start time is compatible with resource time availability
-        if(parseInt(SelectedStimes[0] + SelectedStimes[1]) < parseInt(sTime[0] + sTime[1])){
+        if(parseInt(SelectedStimes[0] + SelectedStimes[1]) < parseInt(sTime[0] + sTime[1]) || parseInt(SelectedStimes[0] + SelectedStimes[1]) > parseInt(eTime[0] + eTime[1])){
             alert(resourceName + " is not available on your selected start Time");
             return false
 
         //making sure selected end time is compatible with resource time availability
-        }else if(parseInt(SelectedEtimes[0] + SelectedEtimes[1]) > parseInt(eTime[0] + eTime[1])){
+        }else if(parseInt(SelectedEtimes[0] + SelectedEtimes[1]) > parseInt(eTime[0] + eTime[1])  || parseInt(SelectedEtimes[0] + SelectedEtimes[1]) < parseInt(sTime[0] + sTime[1])){
             alert(resourceName + " is not available on your selected end Time");
             return false
         }
