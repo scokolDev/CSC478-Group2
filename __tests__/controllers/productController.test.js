@@ -2,7 +2,7 @@ import {jest} from '@jest/globals';
 import Product from '../../models/products.js';
 import * as productController from '../../controllers/productController.js';
 
-jest.mock('../../models/products.js', jest.fn());
+jest.mock('../../models/products.js', () => jest.fn());
 
 const mockRequest = (userData, body, params, query) => {
     return {
