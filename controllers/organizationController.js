@@ -77,8 +77,8 @@ export const getOrgName = async (req, res, next) => {
 // (Requirement 1.5.0)
 export const getOrgByDomain = async (req, res, next) => {
     
-    
-         if(req.user.admin != undefined){
+        
+         if(req.user != undefined && req.user.admin != undefined){
             if (req.isAuthenticated && req.user.admin) {
                 
                 next()
