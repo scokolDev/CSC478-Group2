@@ -40,28 +40,6 @@ function monthNumToString(monthNumber){
 
 }
 
-// //returns the product object with the given Prodid
-// //
-// //Prodid: id of product to be returned
-// async function getProductById(Prodid){
-//     //retrieve product from database using prodID
-//     try {
-//         const response = await fetch('/api/products/' + Prodid);
-//         if(!response.ok) {
-//             throw new Error('Failed to get products form Database');
-//         }
-//         const product = await response.json();
-
-//         //return product object
-//         return product.name
-
-//       //handle error
-//       } catch (error) {
-//         console.error(error.message);
-//         return
-//       }
-// }
-
 
 //converts all given order information into an html object and stores the object in the given container
 //

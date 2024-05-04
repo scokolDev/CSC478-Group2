@@ -125,7 +125,6 @@ async function addAppointment(container, order, isWithDateHeader){
         const productResponse = await fetch('/api/products/' + order.products[0]);
         const product = await productResponse.json();
         
-        console.log("--------" + product)
         scheduledTime = order.startTime
         
         //if isWithDateHeader is selected, display order info with a date header above it

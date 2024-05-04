@@ -136,7 +136,6 @@ document.getElementById("saveButton").addEventListener('click', async function()
     }
 
     if(uploadedImage != undefined){
-      console.log(uploadedImage.path)
       const formdata = new FormData();
       formdata.append("file", uploadedImage);
   
@@ -150,31 +149,12 @@ document.getElementById("saveButton").addEventListener('click', async function()
       try {
         const response = await fetch("/upload", requestOptions)
         const result = await response.json()
-        console.log(result.data.Location)
         productImage = result.data.Location;
       } catch (error) {
         console.error(error);
       };
     }
     
-    
-
-    // imgResponse = await fetch("localhost:3000/upload", requestOptions)
-    //   .then((response) => response.text())
-    //   .then((result) => console.log(result))
-    //   .catch((error) => console.error(error));
-
-    //console.log(imgResponse)
-      
-    // try {
-    //     const imageResponse = await fetch('/upload', uploadedImage);
-    // } catch (error) {
-    //   console.error(error.message);
-    //   alert('Failed to add product');
-    // }
-
-
-
     try {
 
       //if id is defined, send a put request to update product information

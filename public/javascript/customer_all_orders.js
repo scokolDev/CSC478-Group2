@@ -149,7 +149,6 @@ async function displayAppointments(userType){
                 addAppointment(order, userType)
 
             }else{
-                console.log(order.customerID + "   ==    " + cID)
                 if(order.customerID == cID){
                     addAppointment(order, userType)
                 }
@@ -164,5 +163,3 @@ async function displayAppointments(userType){
       }
 }
 
-
-//displayAppointments()
