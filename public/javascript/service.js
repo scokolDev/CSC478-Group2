@@ -483,6 +483,7 @@ async function loadProducts(container, selectedID){
     container.innerHTML = "";
     container.innerHTML = "<option disabled selected value> select a product </option>"
     let selectedProduct = null
+    let selectedProductid = null
     try {
         // fetch all products from the database
         const response = await fetch('/api/products');
@@ -502,7 +503,7 @@ async function loadProducts(container, selectedID){
                 //if the current product has the given selectedID, set the product to selected in the menu
                 if(product._id == selectedID){
                     selectedProduct = productListing;
-                    
+                    selectedProductid = product._id
                 }
                 container.appendChild(productListing)
             }
@@ -514,7 +515,7 @@ async function loadProducts(container, selectedID){
 
       if(selectedProduct != null){
         selectedProduct.setAttribute("selected", true)
-        updateProductInformation(product._id)
+        updateProductInformation(selectedProductid)
       }
 }
 

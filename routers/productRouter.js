@@ -20,7 +20,7 @@ router.post('/', checkAdminAuthenticated, createProduct)
 
 //return product by ID
 // (Requirement 2.3.x)
-router.get('/:id', checkAdminAuthenticated, getProductByID)
+router.get('/:id', checkCustomerAuthenticated, getProductByID)
 
 //Update Product
 // (Requirement 2.3.3, 2.3.4)
