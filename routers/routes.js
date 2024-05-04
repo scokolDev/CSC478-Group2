@@ -47,11 +47,11 @@ router.get('/', (req, res, next) => {
     res.render('test_copy.ejs', {orgname: req.body.organizationName, stripeKey: process.env.STRIPE_PUBLIC_KEY, customerID: req.user._id, firstName: req.user.firstName, lastName: req.user.lastName})
   });
 
-// Route handler for Customer Login
-router.get('/login', checkCustomerNotAuthenticated, (req, res) => {
-  // Serve the Login.ejs file
-  res.render('login.ejs');
-});
+// // Route handler for Customer Login
+// router.get('/login', checkCustomerNotAuthenticated, (req, res) => {
+//   // Serve the Login.ejs file
+//   res.render('login.ejs');
+// });
 
 // Route handler for customer dashboard
 router.get('/dashboard', checkCustomerAuthenticated,  (req, res) => {
