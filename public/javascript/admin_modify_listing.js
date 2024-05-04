@@ -68,7 +68,7 @@ function updatePreview(name, image, description, price){
 //
 document.getElementById("previewButton").addEventListener("click", function(){
     const uploadedImage = document.getElementById("image").files[0]
-    let imgPath = "/img/cleaningThumbnail.jpg";
+    let imgPath = productImage;
     //get product name, description, and price from input fields, or pass in default values if user did not enter anything
     serviceName = document.getElementById("name").value != "" ? document.getElementById("name").value : "Service Name";
     serviceDescription = document.getElementById("description").value != "" ? document.getElementById("description").value : "Description of the service";
@@ -100,6 +100,7 @@ document.getElementById("deleteButton").addEventListener("click", async function
     } catch (error) {
       console.error(error.message);
     }
+    location.href = "/admin/listings"
 })
 
 //functionality for the save button, this button saves the product with all user updated values to the database
@@ -135,7 +136,6 @@ document.getElementById("saveButton").addEventListener('click', async function()
     }
 
     if(uploadedImage != undefined){
-      console.log(uploadedImage.path)
       const formdata = new FormData();
       formdata.append("file", uploadedImage);
   
@@ -149,31 +149,12 @@ document.getElementById("saveButton").addEventListener('click', async function()
       try {
         const response = await fetch("/upload", requestOptions)
         const result = await response.json()
-        console.log(result.data.Location)
         productImage = result.data.Location;
       } catch (error) {
         console.error(error);
       };
     }
     
-    
-
-    // imgResponse = await fetch("localhost:3000/upload", requestOptions)
-    //   .then((response) => response.text())
-    //   .then((result) => console.log(result))
-    //   .catch((error) => console.error(error));
-
-    //console.log(imgResponse)
-      
-    // try {
-    //     const imageResponse = await fetch('/upload', uploadedImage);
-    // } catch (error) {
-    //   console.error(error.message);
-    //   alert('Failed to add product');
-    // }
-
-
-
     try {
 
       //if id is defined, send a put request to update product information

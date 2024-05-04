@@ -110,7 +110,13 @@ async function addAppointment(order, userType){
     //add event listener to html object to redirect user to order details of clicked order
     appointment.setAttribute("orderID", order._id)
     appointment.addEventListener("click", function() {
-        location.href = '/' + userType + '/modify_order?ID=' + appointment.getAttribute("orderID")
+        if(userType == "admin"){
+            location.href = '/' + userType + '/order_details?ID=' + appointment.getAttribute("orderID")
+
+        }else{
+            location.href = '/' + userType + '/modify_order?ID=' + appointment.getAttribute("orderID")
+        }
+        
     })
 
     //append order html element to appointments list
@@ -143,7 +149,6 @@ async function displayAppointments(userType){
                 addAppointment(order, userType)
 
             }else{
-                console.log(order.customerID + "   ==    " + cID)
                 if(order.customerID == cID){
                     addAppointment(order, userType)
                 }
@@ -158,5 +163,3 @@ async function displayAppointments(userType){
       }
 }
 
-
-//displayAppointments()

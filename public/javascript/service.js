@@ -13,15 +13,6 @@ try{
 console.log(cID)
 
 document.addEventListener('DOMContentLoaded', function() {
-    // // Function to toggle visibility of serviceContainer
-    // function toggleServiceContainer() {
-    //     var serviceContainer = document.getElementById('serviceContainer');
-    //     if (serviceContainer.style.display === 'none' || serviceContainer.style.display === '') {
-    //         serviceContainer.style.display = 'block';
-    //     } else {
-    //         serviceContainer.style.display = 'none';
-    //     }
-    // }
 
     resourceList = document.getElementById("resourceList")
     productsList = document.getElementById("productsList")
@@ -31,8 +22,6 @@ document.addEventListener('DOMContentLoaded', function() {
     function toggleBookingForm(selectedProductId) {
          // Hide all other forms and sections
         document.getElementById('aboutInfo').style.display = 'none';
-        document.getElementById('contactForm').style.display = 'none';
-        document.getElementById('proApplicationForm').style.display = 'none';
         document.getElementById('serviceContainer').style.display = 'none';
         document.getElementById('home').style.display = 'none';
         document.getElementById('reviews').style.display = 'none';
@@ -40,8 +29,6 @@ document.addEventListener('DOMContentLoaded', function() {
         // Display only the booking form
         document.getElementById('bookingFormContainer').style.display = 'block';
         selectedProductId != undefined ? loadProducts(productsList, selectedProductId) : loadProducts(productsList)
-        console.log("called loadProducts")
-    
     }
 
 
@@ -59,7 +46,7 @@ document.addEventListener('DOMContentLoaded', function() {
     function setServiceDisplay(container, name, description, price, priceType, id){
         container.getElementsByClassName("serviceName")[0].innerHTML = name
         priceStr = "$" + price
-        //console.log(priceType)
+
         switch(priceType){
             case("Per Hour"):
                 priceStr += "/Hour"
@@ -71,7 +58,6 @@ document.addEventListener('DOMContentLoaded', function() {
         container.getElementsByClassName("servicePrice")[0].innerHTML = priceStr
         container.getElementsByClassName("serviceDesc")[0].innerHTML = description
         container.getElementsByClassName("serviceBookNowButton")[0].addEventListener("click", function(){
-            console.log("called toggleBookingForm")
             toggleBookingForm(id)
         })
 
@@ -86,8 +72,6 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('servicesLink').addEventListener('click', async function(event) {
         event.preventDefault();
         document.getElementById('aboutInfo').style.display = 'none';
-        document.getElementById('contactForm').style.display = 'none';
-        document.getElementById('proApplicationForm').style.display = 'none';
         document.getElementById('bookingFormContainer').style.display = 'none';
        
 
@@ -197,41 +181,11 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('aboutLink').addEventListener('click', function(event) {
         event.preventDefault();
         document.getElementById('aboutInfo').style.display = 'block';
-        document.getElementById('contactForm').style.display = 'none';
-        document.getElementById('proApplicationForm').style.display = 'none';
         document.getElementById('serviceContainer').style.display = 'none';
         document.getElementById('home').style.display = 'none'; // Hide the home section
         document.getElementById('reviews').style.display = 'none'; // Hide the testimonials section
         bookingForm.style.display = 'none'; // Hide the testimonials section
     });
-
-    // Event listener for displaying the contact form
-    //
-    //(Requirement 4.3.0) - loads contact form
-    //(Requirement 4.3.1) - loads inputs to complete contact form
-    //
-    document.getElementById('contactLink').addEventListener('click', function(event) {
-        event.preventDefault();
-        document.getElementById('aboutInfo').style.display = 'none';
-        document.getElementById('contactForm').style.display = 'block';
-        document.getElementById('proApplicationForm').style.display = 'none';
-        document.getElementById('serviceContainer').style.display = 'none';
-        document.getElementById('home').style.display = 'none'; // Hide the home section
-        document.getElementById('reviews').style.display = 'none'; // Hide the testimonials section
-        bookingForm.style.display = 'none'; // Hide the testimonials section
-    });
-
-    // Event listener for displaying the pro application form
-    // document.getElementById('proApplicationLink').addEventListener('click', function(event) {
-    //     event.preventDefault();
-    //     document.getElementById('aboutInfo').style.display = 'none';
-    //     document.getElementById('contactForm').style.display = 'none';
-    //     document.getElementById('proApplicationForm').style.display = 'block';
-    //     document.getElementById('serviceContainer').style.display = 'none';
-    //     document.getElementById('home').style.display = 'none'; // Hide the home section
-    //     document.getElementById('reviews').style.display = 'none'; // Hide the testimonials section
-    //     bookingForm.style.display = 'none'; // Hide the testimonials section
-    // });
 
 
 
@@ -247,23 +201,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
     var bookingForm = document.getElementById('bookingForm');
     var paymentFormContainer = document.getElementById('paymentFormContainer');
-
-    // bookingForm.addEventListener('submit', function(event) {
-    //     event.preventDefault(); // Prevent form submission
-        
-    //     // Hide booking form and show payment form
-    //     bookingForm.style.display = 'none';
-    //     paymentFormContainer.style.display = 'block';
-    // });
-
-    // var paymentForm = document.getElementById('paymentForm');
-    // paymentForm.addEventListener('submit', function(event) {
-    //     event.preventDefault(); // Prevent form submission
-        
-    //     // Process payment (you can add your payment processing logic here)
-    //     // Once payment is processed successfully, you may redirect the user to a confirmation page or perform other actions.
-    //     alert('Payment processed successfully!');
-    //     location.reload();    });
 });
 
 
@@ -342,7 +279,6 @@ let submitted = false;
 const stripe = Stripe(stripePublicKey)
 var elements = stripe.elements()
 var card = elements.create('card');
-console.log(card)
 card.mount('#card-element');
 
 
@@ -437,7 +373,6 @@ function initCalendar(monthIndex, year, dayAvailability, bookedDates){
         day.setAttribute("year", curDate.getFullYear())
         day.setAttribute("month", curDate.getMonth())
         day.setAttribute("day", curDate.getDate())
-        console.log(dayAvailability)
 
         //checking if resource is available on current day
         
@@ -460,7 +395,6 @@ function initCalendar(monthIndex, year, dayAvailability, bookedDates){
 
                     //set start date input to day selected by user
                     tempDate = new Date(day.getAttribute("year"), day.getAttribute("month"), day.getAttribute("day"))
-                    console.log(tempDate.toISOString())
                     document.getElementById("start-date").value = tempDate.toISOString().substr(0, 10);
                     
                     //changing select day prompt and isSelectStart depending on the selected product price type
@@ -485,7 +419,6 @@ function initCalendar(monthIndex, year, dayAvailability, bookedDates){
 
                     //set end date input to day selected by user
                     tempDate = new Date(day.getAttribute("year"), day.getAttribute("month"), day.getAttribute("day"))
-                    console.log(tempDate.toISOString())
                     document.getElementById("end-date").value = tempDate.toISOString().substr(0, 10);
                     
                     //changing select day prompt and isSelectStart
@@ -547,9 +480,9 @@ function clearOrderInputs(){
 //selectedID: optional - will select the product with this id
 async function loadProducts(container, selectedID){
     //add a placeholder option to dropdown menu
-    console.log("---------------------called load Products")
     container.innerHTML = "";
     container.innerHTML = "<option disabled selected value> select a product </option>"
+    let selectedProduct = null
     try {
         // fetch all products from the database
         const response = await fetch('/api/products');
@@ -558,8 +491,6 @@ async function loadProducts(container, selectedID){
         }
   
         const products = await response.json();
-        console.log(products.length)
-        console.log(products)
         products.forEach((product) => {
 
             //if the product display is set to active show the product
@@ -570,8 +501,8 @@ async function loadProducts(container, selectedID){
 
                 //if the current product has the given selectedID, set the product to selected in the menu
                 if(product._id == selectedID){
-                    productListing.setAttribute("selected", true)
-                    updateProductInformation(product._id)
+                    selectedProduct = productListing;
+                    
                 }
                 container.appendChild(productListing)
             }
@@ -580,13 +511,17 @@ async function loadProducts(container, selectedID){
         console.error(error.message);
         alert("Failed to Fetch products")
       }
+
+      if(selectedProduct != null){
+        selectedProduct.setAttribute("selected", true)
+        updateProductInformation(product._id)
+      }
 }
 
 //function to update the schedule selector wrapper with proper values after user enters schedule inputs
 function updateHours(){
     //making sure that all inputs are filled prior to updating calculations
     if(inputEndTime.value != "" && inputStartTime.value != "" && inputStartDate.value != ""){
-        //console.log("-------------------------")
         switch(priceType){ 
             case("Flat Rate"):
                 if(inputEndDate.value != ""){
@@ -687,26 +622,17 @@ async function verifyInput(){
     selectedResourceID = resourceList.options[resourceList.selectedIndex].id
     try {
         // fetch resource from the database
-        // const response = await fetch('/api/resources/' + selectedResourceID);
-        // if(!response.ok) {
-        //   throw new Error('Failed to verify resource from database');
-        // }
-        // const resource = await response.json();
-        //TODO: Fix resource retrieval
-        // fetch resource from the database
         const resourceResponse = await fetch('/api/resources');
         
         if(!resourceResponse.ok) {
             throw new Error('Failed to get resources from Database');
         }
         const resources = await resourceResponse.json();
-        //console.log(resources)
         for(j = 0; j < resources.length; j++){
             if(resources[j]._id == selectedResourceID){
                 resource = resources[j]
             }
         }
-        //end of temporary code section
 
         //resource name
         resourceName = resource.name
@@ -722,6 +648,7 @@ async function verifyInput(){
         
         //day of the week booking date is on
         let dayIndex = startDateObj.getDay();
+        
         //checking if resource is available to start on day
         if(!daysAvailable[dayIndex]){
             alert(resourceName + " is not available on your selected start date");
@@ -804,9 +731,6 @@ async function calculateTotalCost(productId, start, end){
     
     prodPriceType = product.priceType[0]
     prodPrice = product.price
-
-    //console.log(prodPriceType)
-    //console.log(prodPrice)
     
 
     //if date objects are passed in as strings
@@ -891,7 +815,6 @@ async function sendOrderToDB(){
     }
     ).then((r) => r.json());
 
-    console.log("before backend error checking")
 
     if (backendError) {
         alert(backendError.message)
@@ -902,7 +825,6 @@ async function sendOrderToDB(){
         return;
     }
     
-    console.log("after backend error checking")
     
     //addMessage(`Client secret returned.`);
 
@@ -943,7 +865,6 @@ async function sendOrderToDB(){
         }
     );
     
-    console.log("before stripe error checking")
     if (stripeError) {
         alert(stripeError.message);
   
@@ -952,21 +873,11 @@ async function sendOrderToDB(){
         document.getElementById("submitBooking").disabled = false;
         return;
     }
-    console.log("after stripe error checking")
     console.log(`Payment ${paymentIntent.status}: ${paymentIntent.id}`)
     
 
-
-
-    
-
-    
-
-    console.log(startDateTime)
-    console.log(endDateTime)
-
     //create order object
-    //try{
+    try{
         const OrderResponse = await fetch('/api/orders', {
             method: 'POST',
             headers: {
@@ -988,19 +899,16 @@ async function sendOrderToDB(){
 
         // If product added successfully,  and render the updated schedule
         console.log("Successfully added order");
-    // } catch (error) {
-    //     console.error(error.message);
-    //     alert('Failed to add order');
-    // }
+    } catch (error) {
+         console.error(error.message);
+         alert('Failed to add order');
+     }
 
 
 
 
     let prevBookingDates = []
-    // const existingResponse = await fetch('/api/resources/' + resourceId)
-    // const existingResourceJSON = await existingResponse.json()
 
-    //TODO: Fix resource retrieval
     // fetch resource from the database
     const resourceResponse = await fetch('/api/resources');
         
@@ -1008,7 +916,7 @@ async function sendOrderToDB(){
         throw new Error('Failed to get resources from Database');
     }
     const resources = await resourceResponse.json();
-    //console.log(resources)
+
     for(j = 0; j < resources.length; j++){
         if(resources[j]._id == resourceId){
             existingResourceJSON = resources[j]
@@ -1020,7 +928,6 @@ async function sendOrderToDB(){
     prevBookingDates = existingResourceJSON.bookedDates
         
     prevBookingDates.push({"orderId":sentOrder._id, "start":startDateTime, "end":endDateTime})
-    //console.log(prevBookingDates)
     const response = await fetch('/api/resources/' + resourceId, {
         method: 'PUT',
         headers: {
@@ -1030,20 +937,7 @@ async function sendOrderToDB(){
             bookedDates: prevBookingDates
         })
     });
-    //console.log(response.json())
 
-    // try{
-        
-    //     if (!response.ok) {
-    //         throw new Error('Failed to add order');
-    //     }
-
-    //     // If product added successfully,  and render the updated schedule
-    //     console.log("Successfully added order");
-    // } catch (error) {
-    //     console.error(error.message);
-    //     alert('Failed to add order');
-    // }
     if (paymentIntent.status == "succeeded") {
         window.location.href = '/success.html';
     }
@@ -1055,6 +949,7 @@ async function sendOrderToDB(){
 //
 document.getElementById("submitBooking").addEventListener("click", async function(){
     if(submitted) { return; }
+
     //verify inputs
     if(await verifyInput() == false){
         return
@@ -1064,8 +959,6 @@ document.getElementById("submitBooking").addEventListener("click", async functio
     //send order to database
     sendOrderToDB();
 
-    //redirect to dashboard
-    //location.href = "/dashboard"
 })
 
 //creates the schedule selector section with proper fields based off of the selected product and selected resource
@@ -1074,7 +967,6 @@ document.getElementById("submitBooking").addEventListener("click", async functio
 //
 //resourceID: id of the selected resource
 async function updateScheduleSelector(resourceID){
-    //console.log(priceType)
 
     //boolean array to hold days of the week the resource can be scheduled on
     let dayAvailability = []
@@ -1083,12 +975,6 @@ async function updateScheduleSelector(resourceID){
 
     //get the selected resource from database
     try {
-        // const resourceResponse = await fetch('/api/resources/' + resourceID);
-        // if(!resourceResponse.ok) {
-        //     throw new Error('Failed to get resources form Database');
-        // }
-        // const resource = await resourceResponse.json();
-        //TODO: Fix resource retrieval
         // fetch resource from the database
         const resourceResponse = await fetch('/api/resources');
         
@@ -1096,13 +982,11 @@ async function updateScheduleSelector(resourceID){
             throw new Error('Failed to get resources from Database');
         }
         const resources = await resourceResponse.json();
-        //console.log(resources)
         for(j = 0; j < resources.length; j++){
             if(resources[j]._id == resourceID){
                 resource = resources[j]
             }
         }
-        //end of temporary code section
 
         //retrieving selected resource data
         dayAvailability = resource.availability
@@ -1176,9 +1060,8 @@ async function updateProductInformation(prodId){
     clearOrderInputs()
 
     //get the selected product from database to find all coupled resources
-    try {
+     try {
 
-        //TODO: Fix product retrieval
         // fetch product from the database
         const response = await fetch('/api/products');
         
@@ -1186,13 +1069,11 @@ async function updateProductInformation(prodId){
           throw new Error('Failed to get product from Database');
         }
         const products = await response.json();
-        //console.log(products)
         for(i = 0; i < products.length; i++){
             if(products[i]._id == prodId){
                 product = products[i]
             }
         }
-        //end of temporary code section
 
 
 
@@ -1224,44 +1105,43 @@ async function updateProductInformation(prodId){
                 inputRate.value += "/Day"
                 break
         }
-        
+
+        const resourceResponse = await fetch('/api/resources');
+            
+
+        if(!resourceResponse.ok) {
+            throw new Error('Failed to get resources from Database');
+        }
+
+        const orgResources = await resourceResponse.json();
+
         //iterate through all resources coupled to the selected product
         for(i = 0; i < product.resources.length; i++){
+            let resource = undefined
 
-            //retrieve the resource from the database
-            // const resourceResponse = await fetch('/api/resources/' + product.resources[i]);
-            // if(!resourceResponse.ok) {
-            //     throw new Error('Failed to get resources from Database');
-            // }
-            // const resource = await resourceResponse.json();
+            desiredResource = product.resources[i]
 
-            //TODO: Fix resource retrieval
-            // fetch resource from the database
-            const resourceResponse = await fetch('/api/resources');
-        
-            if(!resourceResponse.ok) {
-                throw new Error('Failed to get resources from Database');
-            }
-            const resources = await resourceResponse.json();
-            //console.log(resources)
-            for(j = 0; j < resources.length; j++){
-                if(resources[j]._id == product.resources[i]){
-                    resource = resources[j]
+            for(j = 0; j < orgResources.length; j++){
+                
+                if(orgResources[j]._id == desiredResource){
+                    resource = orgResources[j]
                 }
             }
             //end of temporary code section
 
 
             //create option for resource drop down menu with resource name and resource id
-            resourceListing = document.createElement("option")
-            resourceListing.innerHTML =  `${resource.name}`
-            resourceListing.setAttribute("id", `${resource._id}`)
-
-            //add resource option to drop down menu
-            resourceList.appendChild(resourceListing)
+            if(resource != undefined){
+                resourceListing = document.createElement("option")
+                resourceListing.innerHTML =  `${resource.name}`
+                resourceListing.setAttribute("id", `${resource._id}`)
+    
+                //add resource option to drop down menu
+                resourceList.appendChild(resourceListing)
+            }
         }
-      } catch (error) {
-        console.error(error.message);
-        alert("Failed to Fetch products")
-    }
+    } catch (error) {
+         console.error(error.message);
+         alert("Failed to Fetch products")
+     }
 }

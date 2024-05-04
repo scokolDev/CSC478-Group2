@@ -57,8 +57,6 @@ async function calculateTotalCost(productId, start, end){
     prodPriceType = product.priceType[0]
     prodPrice = product.price
 
-    console.log(prodPriceType)
-    console.log(start)
     
 
     //if date objects are passed in as strings
@@ -73,7 +71,6 @@ async function calculateTotalCost(productId, start, end){
         timeReserved = end - start
     }
 
-    console.log(timeReserved)
 
     switch(prodPriceType){
         case("Flat Rate"):
@@ -86,7 +83,6 @@ async function calculateTotalCost(productId, start, end){
             break
     }
 
-    console.log(timeReserved)
 
     return timeReserved * prodPrice
 }
@@ -129,7 +125,6 @@ async function displayOrderDetails(){
 
 
         const totalCost = await calculateTotalCost(order.products[0], order.startTime, order.endTime)
-        console.log(totalCost)
         cost.innerHTML += totalCost.toFixed(2)
 
         //setting all product information fields to selected order's product details
@@ -174,12 +169,9 @@ async function deleteOrder(redirectPath) {
 
     //find and delete bookedDate that the order was taking up within the bookedDates resource field
     UpdatedBookedDates = resourceDetails.bookedDates
-    console.log(UpdatedBookedDates)
     for(i = 0; i < UpdatedBookedDates.length; i++){
         if(UpdatedBookedDates[i].orderId == id){
-            console.log(UpdatedBookedDates)
             UpdatedBookedDates.splice(i, 1)
-            console.log(UpdatedBookedDates)
             break
         }
     }
