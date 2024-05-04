@@ -47,7 +47,7 @@ router.get('/modify_listing', checkAdminAuthenticated, getAdminModifyListing);
 
 // Route Handler for Order Details 
 // (Requirement 1.0.4)
-router.get('/order_details', checkAdminAuthenticated, getAdminOrderDetails);
+router.get('/order_details', checkAdminAuthenticated, getOrgName, getAdminOrderDetails);
 
 // Route Handle for Admin Orders
 // (Requirement 1.0.1)

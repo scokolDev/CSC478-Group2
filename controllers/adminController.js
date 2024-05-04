@@ -46,7 +46,7 @@ export const getAdminModifyListing = (req, res) => {
 // (Requirement 1.0.4)
 export const getAdminOrderDetails = (req, res) => {
   // Serve the admin_order_details.ejs file
-  res.render('admin_order_details.ejs')
+  res.render('admin_order_details.ejs', {orgName: req.body.organizationName})
 }
 
 // Method for rendering Admin Orders
