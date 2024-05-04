@@ -22,7 +22,7 @@ router.get('/:id', checkCustomerAuthenticated, getResourceByID)
 
 //Update Resource
 // (Requirement 3.2.0, 3.4.0)
-router.put('/:id', checkAdminAuthenticated, updateResource)
+router.put('/:id', checkCustomerAuthenticated, updateResource)
 
 //Delete a Resource
 // (Requirement 3.3.0)
