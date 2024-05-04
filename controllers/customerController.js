@@ -103,8 +103,9 @@ export const getCustomerOrders = (req, res) => {
 // Method for Modify Customer Order page
 // (Requirement 6.0.4)
 export const getCustomerModifyOrder = (req, res) => {
+    console.log("--------------------" + req.body.organizationName)
     // Serve the Customer Modify Order page
-    res.render('customer_order_details.ejs');
+    res.render('customer_order_details.ejs', {orgName: req.body.organizationName});
   }
 
 // Method for Customer Registration Page

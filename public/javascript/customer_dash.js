@@ -150,7 +150,7 @@ async function addAppointment(container, order, isWithDateHeader){
 
             //click event listener that redirects user to order details page if user clicks on order element
             appointment.addEventListener("click", function() {
-                location.href = '/order_details?ID=' + appointment.getAttribute("orderID")
+                location.href = '/customer/modify_order?ID=' + appointment.getAttribute("orderID")
             })
 
             //add order to appointment header object
@@ -173,7 +173,7 @@ async function addAppointment(container, order, isWithDateHeader){
 
             //click event listener that redirects user to order details page if user clicks on order element
             appointment.addEventListener("click", function() {
-                location.href = '/order_details?ID=' + appointment.getAttribute("orderID")
+                location.href = '/customer/modify_order?ID=' + appointment.getAttribute("orderID")
             })
 
             //add order object to given container

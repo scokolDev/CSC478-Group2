@@ -1,7 +1,7 @@
 import express from 'express'
 import passport from 'passport'
 import { checkCustomerNotAuthenticated, checkCustomerAuthenticated, getVhost } from './routes.js'
-import { getOrgByDomain } from '../controllers/organizationController.js'
+import { getOrgByDomain, getOrgName } from '../controllers/organizationController.js'
 import {
     getCustomerLogin,
     getCustomerOrderLogin,
@@ -40,7 +40,7 @@ router.get('/orders', checkCustomerAuthenticated, getCustomerOrders);
 
 // Route Handler for Modify Customer Order page
 // (Requirement 6.0.4)
-router.get('/modify_order', checkCustomerAuthenticated, getCustomerModifyOrder);
+router.get('/modify_order', checkCustomerAuthenticated, getOrgName, getCustomerModifyOrder);
 
 // Route Handler for Customer Registration Page
 // (Requirement 6.2.1)
