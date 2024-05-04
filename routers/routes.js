@@ -1,7 +1,6 @@
 // Import necessary modules
 import express from 'express'
 import vhost from 'vhost'
-import scheduleController from '../controllers/scheduleController.js'
 import productRouter from './productRouter.js'
 import orderRouter from './orderRouter.js'
 import customerRouter from '../routers/customerRouter.js'
@@ -48,28 +47,11 @@ router.get('/', (req, res, next) => {
     res.render('test_copy.ejs', {orgname: req.body.organizationName, stripeKey: process.env.STRIPE_PUBLIC_KEY, customerID: req.user._id, firstName: req.user.firstName, lastName: req.user.lastName})
   });
 
-  //! Deprecated Used for Initial testing
-  //TODO: Remove and update any references to /schedule to something new
-  router.get('/schedule', checkCustomerAuthenticated, (req, res) => {
-    // Serve the index.html file
-    res.render('index-main.ejs', {name: req.user.firstName});
-  });
-
 // Route handler for Customer Login
 router.get('/login', checkCustomerNotAuthenticated, (req, res) => {
   // Serve the Login.ejs file
   res.render('login.ejs');
 });
-
-
-//! Depricated use /auth/admin/login or /auth/customer/login
-// TODO Need to Remove
-router.post('/login', checkCustomerNotAuthenticated, passport.authenticate('user', {
-  successRedirect: '/schedule',
-  failureRedirect: '/login',
-  failureFlash: true
-}))
-
 
 
 // Route handler for Register
@@ -195,13 +177,6 @@ export function checkOrderAuthenticated(req, res, next) {
 }
 
 
-//TODO: Update the name to reflect Admin vs Customer need to a second function for cusotmer
-// export function checkNotAuthenticated(req, res, next) {
-//   if (req.isAuthenticated()) {
-//     return res.redirect('/schedule')
-//   }
-//   next()
-// }
 export function checkAdminNotAuthenticated(req, res, next) {
   if (req.isAuthenticated() && req.user.admin) {
     return res.redirect('/admin/dashboard')
