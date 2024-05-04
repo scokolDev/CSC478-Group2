@@ -124,7 +124,7 @@
 <% if (messages.error) { %>
     <%= messages.error %>
   <% } %>
-<form action="/login" method="POST">
+<form action="/customer/login" method="POST">
   <div>
     <label for="email">Email</label>
     <input type="email" id="email" name="email" required>
@@ -135,7 +135,7 @@
   </div>
   <button type="submit">Login</button>
 </form>
-<a href="/register">Register</a>
+<a href="/customer/register">Register</a>
 
 </div>
 
