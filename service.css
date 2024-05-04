@@ -7,21 +7,21 @@ body, h1, h2, p, ul, li, form {
 
 /* General Styles */
 body {
-    font-family: 'Arial', sans-serif;
+    font-family: 'Roboto', sans-serif; /* Update font family */
     text-align: center;
     line-height: 1.6;
-    background: linear-gradient(to bottom, #64a699, #f8f8f8);
+    background: #f2f2f2; /* Update background color */
 }
-
 
 header {
     padding: 20px;
-    background-color: #104a63;
+    background-color: #007bff; /* Update header color */
+    color: #fff; /* Update text color */
 }
 
 h1 {
     font-size: 36px;
-    color: #ffffff;
+    margin-bottom: 20px;
 }
 
 .signin a {
@@ -31,14 +31,14 @@ h1 {
 }
 
 nav {
-    background-color: #315785;
+    background-color: #0056b3; /* Update navigation color */
     display: flex;
     justify-content: center;
     padding: 10px 0;
 }
 
 nav a {
-    color: #ffffff;
+    color: #fff;
     text-decoration: none;
     margin: 0 20px;
     font-size: 18px;
@@ -46,7 +46,8 @@ nav a {
 }
 
 nav a:hover {
-    color: #007bff;
+    color: #fff;
+    opacity: 0.7;
 }
 
 main {
@@ -63,7 +64,7 @@ h2 {
 }
 
 .container {
-    max-width: 1000px;
+    max-width: 1200px; /* Increase max-width for larger screens */
     margin: 0 auto;
 }
 
@@ -74,15 +75,9 @@ h2 {
     justify-content: center;
 }
 
-.service-info-header p {
-    font-size: 23px; /* Adjust the font size as needed */
-    background-color: transparent;
-
-}
-
 .service {
-    background-color: #ffffff;
-    color: #333333;
+    background-color: #fff;
+    color: #333;
     border-radius: 10px;
     padding: 20px;
     margin: 20px;
@@ -94,6 +89,7 @@ h2 {
 
 .service:hover {
     transform: translateY(-5px);
+    box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
 }
 
 .service h3 {
@@ -105,19 +101,23 @@ h2 {
 .service p {
     font-size: 16px;
     margin-bottom: 15px;
-    color: #333333;
-}
-.service-title {
-    color: #007bff; /* Change to the desired color */
+    color: #333;
 }
 
-.service-description {
-    color: #5b1f1f; /* Change to the desired color */
+.learn-more-button {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
 }
 
-#servicesPage #reviews {
-    display: none;
+.learn-more-button:hover {
+    background-color: #0056b3;
 }
+
 /* Pricing Items */
 .pricing-item {
     text-align: center;
@@ -145,28 +145,6 @@ h2 {
     background-color: #5ba4e9;
 }
 
-#services {
-    background-color: transparent;
-    padding: 200px 0;
-    margin-bottom: 200px;
-    border-radius: 300px;
-    box-shadow: transparent;
-}
-
-.learn-more-button {
-    background-color: #007bff; /* Set the background color */
-    color: #ffffff; /* Set the text color */
-    border: none; /* Remove the border */
-    padding: 10px 20px; /* Add padding */
-    border-radius: 5px; /* Add border radius for rounded corners */
-    cursor: pointer; /* Add cursor pointer on hover */
-    transition: background-color 0.3s ease; /* Add transition effect */
-}
-
-.learn-more-button:hover {
-    background-color: #0056b3; /* Change background color on hover */
-}
-
 /* Adjusting background color for its parent containers */
 .container, .row, .col-md-6 {
     background-color: transparent; /* Set background color to transparent */
@@ -174,9 +152,10 @@ h2 {
 
 /* Contact and Pro Application Form */
 form {
-    width: 222%;
+    width: 100%; /* Adjust width to fit container */
+    max-width: 600px; /* Limit maximum width for better readability */
     margin: 0 auto;
-    background-color: transparent;
+    background-color: #fff; /* Set background color for form */
     border-radius: 30px; /* Increased border-radius for a bubbly appearance */
     padding: 30px; /* Increased padding for better spacing */
     box-shadow: 0 8px 12px rgba(0, 0, 0, 0.1); /* Added box shadow for depth */
@@ -206,7 +185,7 @@ form select {
 
 form input[type="submit"] {
     background-color: #007bff;
-    color: #ffffff;
+    color: #fff;
     border: none;
     padding: 12px 20px;
     border-radius: 5px;
@@ -222,7 +201,7 @@ form input[type="submit"]:hover {
 .about-content {
     padding: 20px;
     margin-top: 20px;
-    background-color: transparent;
+    background-color: #fff; /* Set background color for about section */
     border-radius: 10px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
@@ -234,14 +213,10 @@ form input[type="submit"]:hover {
 .about-content p {
     font-size: 18px;
     line-height: 1.6;
-    color: #333333;
+    color: #333;
 }
 
 /* Styling for reviews */
-#reviews {
-    margin-top: 55px;
-}
-
 .review {
     margin-bottom: 66px;
     padding: 20px;
@@ -253,27 +228,14 @@ form input[type="submit"]:hover {
 .review p {
     font-size: 16px;
     line-height: 1.6;
-    color: #ffffff;
+    color: #fff;
 }
 
 .review p:first-child {
     font-style: italic;
-    color: #ffffff;
+    color: #fff;
     margin-bottom: 10px;
 }
-.learn-more-button {
-    background-color: #007bff; /* Set the background color */
-    color: #ffffff; /* Set the text color */
-}
-
-#home {
-    margin-top: 50px; /* Increase the top margin for more space */
-    text-align: center; /* Center align the text */
-    font-size: 22px; /* Increase the font size */
-    font-weight: bold; /* Add bold font weight for emphasis */
-    color: #104a63; /* Set the text color */
-}
-
 
 /* Visual Elements */
 footer {
@@ -281,7 +243,7 @@ footer {
     bottom: 0;
     width: 100%;
     background-color: #333;
-    color: #ffffff;
+    color: #fff;
     text-align: center;
     padding: 10px;
 }
