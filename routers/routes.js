@@ -53,15 +53,6 @@ router.get('/login', checkCustomerNotAuthenticated, (req, res) => {
   res.render('login.ejs');
 });
 
-
-// Route handler for Register
-//! Depricated used for testing
-//TODO: Need to remove
-router.get('/register', checkCustomerNotAuthenticated,  (req, res) => {
-  // Serve the Register.ejs file
-  res.render('register.ejs');
-});
-
 // Route handler for customer dashboard
 router.get('/dashboard', checkCustomerAuthenticated,  (req, res) => {
   // Serve the customer_dash.ejs file
@@ -80,25 +71,6 @@ router.get('/order',  getVhost, getOrgByDomain, (req, res) => {
   // Serve the Order From ejs file
   res.render('order_form.ejs', {orgname: req.body.organizationName});
 });
-
-//! Depricated use /admin/register
-//TODO: Remove
-router.post('/register', checkCustomerNotAuthenticated, async (req, res) => {
-    User.register(
-      new User({
-        username: req.body.email,
-        email: req.body.email,
-        firstName: req.body.firstname,
-        lastName: req.body.lastname
-    }), req.body.password, function (err, msg) {
-      if (err) {
-        //res.send(err)
-        res.status(500).json({message: err.message})
-      } else {
-        res.redirect('/login')
-      }
-    })
-})
 
 // Route handler for Logout Function
 // (Requirement 1.4.0)
