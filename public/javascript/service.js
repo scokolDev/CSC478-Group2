@@ -927,7 +927,7 @@ async function sendOrderToDB(){
 
         
     prevBookingDates = existingResourceJSON.bookedDates
-        
+    
     prevBookingDates.push({"orderId":sentOrder._id, "start":startDateTime, "end":endDateTime})
     const response = await fetch('/api/resources/' + resourceId, {
         method: 'PUT',
@@ -938,7 +938,7 @@ async function sendOrderToDB(){
             bookedDates: prevBookingDates
         })
     });
-
+    
     if (paymentIntent.status == "succeeded") {
         window.location.href = '/success.html';
     }
