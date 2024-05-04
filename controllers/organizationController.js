@@ -76,14 +76,19 @@ export const getOrgName = async (req, res, next) => {
   // Method for simplyifying
 // (Requirement 1.5.0)
 export const getOrgByDomain = async (req, res, next) => {
-    const organization = await Organization.findOne({domain: req.body.orgdomain})
-    if(!organization || organization == null) {
-        return res.status(404).json({message: "Page not found"})
+    if (req.isAuthenticated && req.user.admin) {
+        next()
+    } else {
+        const organization = await Organization.findOne({domain: req.body.orgdomain})
+        if(!organization || organization == null) {
+            return res.status(404).json({message: "Page not found"})
+        }
+        
+        req.body.organizationName = organization.name
+        req.body.organizationID = organization._id;
+        next() 
     }
-    
-    req.body.organizationName = organization.name
-    req.body.organizationID = organization._id;
-    next() 
+
 }
 
 

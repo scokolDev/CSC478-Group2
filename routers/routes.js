@@ -157,6 +157,8 @@ export function getVhost(req, res, next) {
   if (req.vhost) {
     req.body.orgdomain = req.vhost[0]
     next()
+  } else if (req.isAuthenticated && req.user.admin) {
+    next()
   } else {
     res.status(404).json({messaage: "Subdomain not found."})
   }
