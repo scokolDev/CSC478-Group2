@@ -1,6 +1,6 @@
 // Import necessary modules
 import express from 'express'
-import { checkAdminAuthenticated, getVhost } from './routes.js';
+import { checkAdminAuthenticated, checkCustomerAuthenticated, getVhost } from './routes.js';
 import { getOrgByDomain } from '../controllers/organizationController.js';
 import { createProduct, deleteProduct, getProductByID, getProducts, updateProduct } from '../controllers/productController.js';
 

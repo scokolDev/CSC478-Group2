@@ -83,7 +83,7 @@ router.delete('/logout', function(req, res, next) {
 
 
 // Use scheduleController middleware for '/api/events' routes
-router.use('/api/events', scheduleController);
+//router.use('/api/events', scheduleController);
 
 //Use middleware for '/api/{controller}'
 router.use('/api/products', productRouter);
@@ -117,14 +117,6 @@ router.post('/upload', upload.single('file'), function (req, res) {
     });
 });
 
-// // Make sure Admin is authenticated
-// export function checkAuthenticated(req, res, next) {
-//   if (req.isAuthenticated()) {
-//     return next()
-//   }
-
-//   res.redirect('/login')
-// }
 export function checkCustomerAuthenticated(req, res, next) {
    if (req.isAuthenticated()) {
      return next()

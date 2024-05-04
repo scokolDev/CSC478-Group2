@@ -1,7 +1,7 @@
 // Import necessary modules
 import express from 'express'
 
-import { checkAdminAuthenticated, getVhost } from './routes.js';
+import { checkAdminAuthenticated, checkCustomerAuthenticated, getVhost } from './routes.js';
 import { getOrgByDomain } from '../controllers/organizationController.js';
 import { createResource, deleteResource, getResourceByID, getResources, updateResource } from '../controllers/resourceController.js';
 
@@ -18,7 +18,7 @@ router.post('/', checkAdminAuthenticated, createResource)
 
 //return resource by ID
 // (Requirement 3.2.0)
-router.get('/:id', checkAdminAuthenticated, getResourceByID)
+router.get('/:id', checkCustomerAuthenticated, getResourceByID)
 
 //Update Resource
 // (Requirement 3.2.0, 3.4.0)
